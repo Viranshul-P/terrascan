@@ -1,0 +1,13 @@
+# Tiny 1-layer model, only for testing the training loop (step 2.1).
+run_name: tiny
+model: tiny
+data_config: configs/data.yaml
+
+epochs: 20
+lr: 0.001
+weight_decay: 0.05
+patience: 5          # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan
