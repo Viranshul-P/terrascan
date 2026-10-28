@@ -36,3 +36,27 @@
   change: "Same as #6, seed 43"
   reason: "Second seed for label smoothing"
   kept: "no for now (2-seed average lower; this seed was early-stopped at epoch 17)"
+- run: small_cnn_e6_patience15/seed42
+  change: "Early-stopping patience 5 -> 15 (on top of #5)"
+  reason: "Patience 5 stopped runs by chance while val was still jumpy, making results depend on luck"
+  kept: "yes (fairness fix; new reference, average of #9 and #10)"
+- run: small_cnn_e6_patience15/seed43
+  change: "Same as #9, seed 43"
+  reason: "From here on every experiment is run with seeds 42 and 43"
+  kept: "-"
+- run: small_cnn_e7_label_smoothing/seed42
+  change: "Label smoothing 0.1, re-tested with patience 15 (on top of #9)"
+  reason: "#6/#8 were not a fair test: one run was stopped at epoch 17"
+  kept: "yes (both seeds beat both reference seeds)"
+- run: small_cnn_e7_label_smoothing/seed43
+  change: "Same as #11, seed 43"
+  reason: "Second seed"
+  kept: "-"
+- run: small_cnn_e8_wider/seed42
+  change: "Wider blocks 64/128/256, re-tested with patience 15 (on top of #11)"
+  reason: "#4 was not a fair test: it was stopped at epoch 28"
+  kept: "yes (gain above noise, but 3.5x the weights and slower)"
+- run: small_cnn_e8_wider/seed43
+  change: "Same as #13, seed 43"
+  reason: "Second seed"
+  kept: "-"

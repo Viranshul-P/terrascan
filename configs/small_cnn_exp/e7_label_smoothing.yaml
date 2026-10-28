@@ -1,0 +1,18 @@
+# 2.2c experiment 7: label smoothing 0.1, re-tested fairly. Only change vs e6 (current best):
+# label_smoothing 0 -> 0.1. e5 tried this with patience 5 and one seed was stopped at epoch 17.
+# Val loss stays plain cross-entropy, so it compares fairly with the runs before.
+run_name: small_cnn_e7_label_smoothing
+model: small_cnn
+model_args:
+  convs: 2
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 15         # early stopping: stop after this many epochs without a better val loss
+label_smoothing: 0.1
+
+wandb:
+  enabled: true
+  project: terrascan

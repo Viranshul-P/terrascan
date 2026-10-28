@@ -1,0 +1,18 @@
+# 2.2c experiment 8: wider blocks, re-tested fairly. Only change vs e7 (current best):
+# widths 32/64/128 -> 64/128/256. e3 tried this with patience 5 and was stopped at epoch 28.
+run_name: small_cnn_e8_wider
+model: small_cnn
+model_args:
+  convs: 2
+  widths: [64, 128, 256]
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 15         # early stopping: stop after this many epochs without a better val loss
+label_smoothing: 0.1
+
+wandb:
+  enabled: true
+  project: terrascan

@@ -1,0 +1,18 @@
+# 2.2c experiment 6: patience 5 -> 15. Only change vs e4 (current best: 50 epochs, two convs).
+# Why: with patience 5, runs were stopped by chance while val loss was still jumpy (high LR),
+# which made the seed-to-seed noise ~0.007 in val macro-F1. Run with seeds 42 and 43;
+# this becomes the new reference for the experiments after it.
+run_name: small_cnn_e6_patience15
+model: small_cnn
+model_args:
+  convs: 2
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 15         # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan

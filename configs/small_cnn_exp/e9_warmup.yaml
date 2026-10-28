@@ -1,0 +1,20 @@
+# 2.2c experiment 9: LR warmup. Only change vs e8 (current best): warmup_epochs 0 -> 3.
+# Why: val was jumpy in the early epochs; starting at 10% of the LR and ramping up over
+# 3 epochs gives the weights a gentler start. Cosine decay then runs over the other 47 epochs.
+run_name: small_cnn_e9_warmup
+model: small_cnn
+model_args:
+  convs: 2
+  widths: [64, 128, 256]
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 15         # early stopping: stop after this many epochs without a better val loss
+label_smoothing: 0.1
+warmup_epochs: 3
+
+wandb:
+  enabled: true
+  project: terrascan
