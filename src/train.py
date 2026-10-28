@@ -13,13 +13,14 @@ import time
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import torch
 import wandb
 import yaml
 from torch import nn
 
 from src.data import build_dataloaders
-from src.models import build_model
+from src.models import build_model, count_parameters
 
 
 def seed_everything(seed):
@@ -76,7 +77,7 @@ def evaluate(model, loader, device, max_batches=None):
 def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
     """Train with AdamW + cosine LR, stop early on val loss.
 
-    Returns (best weights, metrics dict).
+    Returns (best weights, metrics dict, history: one dict per epoch).
     """
     model.to(device)
     optimizer = torch.optim.AdamW(
@@ -90,6 +91,7 @@ def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
     best_val_loss = float("inf")
     best_state, best_epoch, best_val_acc = None, 0, 0.0
     epochs_without_improvement = 0
+    history = []
     start = time.time()
     for epoch in range(1, cfg["epochs"] + 1):
         lr = optimizer.param_groups[0]["lr"]
@@ -99,17 +101,17 @@ def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
         val_loss, val_acc = evaluate(model, val_loader, device, max_batches)
         scheduler.step()
         peak_mem_mb = torch.cuda.max_memory_allocated() / 2**20 if device.type == "cuda" else 0.0
-        run.log(
-            {
-                "epoch": epoch,
-                "train/loss": train_loss,
-                "train/acc": train_acc,
-                "val/loss": val_loss,
-                "val/acc": val_acc,
-                "lr": lr,
-                "peak_gpu_mem_mb": peak_mem_mb,
-            }
-        )
+        row = {
+            "epoch": epoch,
+            "train/loss": train_loss,
+            "train/acc": train_acc,
+            "val/loss": val_loss,
+            "val/acc": val_acc,
+            "lr": lr,
+            "peak_gpu_mem_mb": peak_mem_mb,
+        }
+        history.append(row)
+        run.log(row)
         print(
             f"epoch {epoch}: train loss {train_loss:.4f} acc {train_acc:.4f} | "
             f"val loss {val_loss:.4f} acc {val_acc:.4f} | lr {lr:.2e}"
@@ -133,16 +135,17 @@ def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
         "peak_gpu_mem_mb": peak_mem_mb,
         "train_seconds": time.time() - start,
     }
-    return best_state, metrics
+    return best_state, metrics, history
 
 
-def save_run(out_dir, best_state, cfg, metrics):
-    """Save best weights, the exact config, and metrics.json to out_dir."""
+def save_run(out_dir, best_state, cfg, metrics, history):
+    """Save best weights, the exact config, metrics.json and history.csv to out_dir."""
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     torch.save(best_state, out_dir / "best.pt")
     (out_dir / "config.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
     (out_dir / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
+    pd.DataFrame(history).to_csv(out_dir / "history.csv", index=False)
 
 
 def main():
@@ -176,11 +179,14 @@ def main():
     )
     train_loader, val_loader, _ = build_dataloaders(data_cfg)  # test split is not used here
     model = build_model(cfg["model"])
-    best_state, metrics = fit(model, train_loader, val_loader, cfg, device, run, max_batches)
+    best_state, metrics, history = fit(
+        model, train_loader, val_loader, cfg, device, run, max_batches
+    )
     metrics["seed"] = args.seed
+    metrics["params"] = count_parameters(model)
 
     out_dir = Path("models") / run_name / f"seed{args.seed}"
-    save_run(out_dir, best_state, {**cfg, "data": data_cfg}, metrics)
+    save_run(out_dir, best_state, {**cfg, "data": data_cfg}, metrics, history)
     run.summary.update(metrics)
     run.finish()
     print(f"Saved to {out_dir}")

@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-2.2b
+2.2c
 
 ## Status
 not started
@@ -22,7 +22,7 @@ not started
 - [x] 1.3 Figures for the README
 - [x] 2.1 Training loop
 - [x] 2.2a Write SmallCNN (Claude writes it)
-- [ ] 2.2b Train SmallCNN v1
+- [x] 2.2b Train SmallCNN v1
 - [ ] 2.2c Make SmallCNN better (experiments)
 - [ ] 2.3 ResNet-18 (ImageNet)
 - [ ] 2.4 EfficientNet-B0
@@ -57,6 +57,7 @@ not started
 - 1.3 — commits 8e73222, 2af23c0 + fix — scripts/make_figures.py saves class_balance, samples_per_class, augmented_samples to reports/figures/
 - 2.1 — src/train.py (AdamW, cosine LR, early stopping on val loss, AMP, W&B, --seed, --fast-dev-run) tested with TinyNet; fast-dev-run on CUDA saved models/tiny-fast-dev-run/seed42/, W&B run tiny-fast-dev-run-seed42
 - 2.2a — SmallCNN (3 conv blocks + dropout 0.3 + linear) in src/models.py, count_parameters, shape test, docs/learn/small_cnn.md, feature-map demo (scripts/cnn_shapes.py)
+- 2.2b — SmallCNN v1 trained (seed 42, 30 epochs, W&B run small_cnn_v1-seed42 / 1y2580s3); runs now save history.csv + params; curves in reports/figures/small_cnn_v1_curves.png
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -74,6 +75,9 @@ not started
 - Training: run with `python -m src.train --config configs/<x>.yaml --seed N`. Fast-dev-run (2 batches, 1 epoch) saves to `models/<run_name>-fast-dev-run/seed<N>/` and is tagged `fast-dev-run` in W&B, so it can't be mixed up with real models.
 - Plan change (commit 3340337): user is a beginner (ML basics, no neural nets yet), so Claude writes SmallCNN and explains it in `docs/learn/`. User learns it later (see "Learn it later" in PLAN.md).
 - SmallCNN v1: 3 blocks conv3x3(pad 1) → BatchNorm → ReLU → MaxPool2, channels 3→32→64→128, size 64→32→16→8, then flatten → Dropout(0.3) → Linear(8192→10). Dropout 0.3 chosen as a common middle value; 2.2c can test others.
+- SmallCNN v1 training settings (configs/small_cnn_v1.yaml): AdamW lr 0.001, weight decay 0.05, cosine LR over 30 epochs, patience 5, batch 64. Plain starting values, not tuned.
+- Every run also saves `history.csv` (one row per epoch) and `params` in metrics.json. Curves: `python scripts/plot_curves.py <run_dir> <out.png>`.
+- ruff: `wandb` marked as known third-party in pyproject.toml, because the local `wandb/` log folder made ruff treat it as our own package.
 - W&B on/off is `wandb.enabled` in the train config; off = `wandb.init(mode="disabled")`. Tests never call W&B online.
 - Cosine LR steps once per epoch over `epochs` (T_max = epochs). Early stopping keeps the weights from the epoch with the lowest val loss.
 
@@ -82,6 +86,10 @@ not started
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
 - scripts/compute_stats.py takes ~3 min (reads 18,900 images one by one). Only run once, so left simple.
 - In fast-dev-run, the 2 val batches are all AnnualCrop (val isn't shuffled), so fast-dev-run val accuracy means nothing. Only real runs count.
+- GPU is mostly idle during SmallCNN training (1–6% busy, ~3–7 W, measured with nvidia-smi during 2.2b): image loading on the CPU (num_workers 2, JPEG decode every epoch) is the bottleneck. Try at the start of 2.2c: more workers (6–8) and/or decoding all images into memory once. Changes speed only, not results.
+- SmallCNN v1 hit its best val loss at the last epoch (30) and never early-stopped, so it may not be fully trained. Longer training is a candidate experiment for 2.2c.
+- When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
+- SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)

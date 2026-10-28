@@ -6,6 +6,10 @@ target-version = "py312"
 # E/W: style errors, F: pyflakes (unused imports, undefined names), I: import order
 select = ["E", "W", "F", "I"]
 
+[tool.ruff.lint.isort]
+# The local wandb/ run-log folder would otherwise make ruff think wandb is our own package
+known-third-party = ["wandb"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]

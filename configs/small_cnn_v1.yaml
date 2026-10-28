@@ -1,0 +1,13 @@
+# SmallCNN v1 (step 2.2b): plain starting settings, nothing tuned yet.
+run_name: small_cnn_v1
+model: small_cnn
+data_config: configs/data.yaml
+
+epochs: 30
+lr: 0.001
+weight_decay: 0.05
+patience: 5          # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan
