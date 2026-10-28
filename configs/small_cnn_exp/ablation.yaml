@@ -60,3 +60,19 @@
   change: "Same as #13, seed 43"
   reason: "Second seed"
   kept: "-"
+- run: small_cnn_e9_warmup/seed42
+  change: "LR warmup: 3 epochs from 10% up to the full LR (on top of #13)"
+  reason: "Val was jumpy in the early epochs; a gentler start might help"
+  kept: "no (tie within noise, and not simpler)"
+- run: small_cnn_e9_warmup/seed43
+  change: "Same as #15, seed 43"
+  reason: "Second seed"
+  kept: "-"
+- run: small_cnn_e10_dropout01/seed42
+  change: "Dropout 0.3 -> 0.1 (on top of #13)"
+  reason: "Train and val stay close, so the model may need less random switching-off in training"
+  kept: "no (tie within noise, and not simpler)"
+- run: small_cnn_e10_dropout01/seed43
+  change: "Same as #17, seed 43"
+  reason: "Second seed"
+  kept: "-"

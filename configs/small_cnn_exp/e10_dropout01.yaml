@@ -1,0 +1,20 @@
+# 2.2c experiment 10: less dropout. Only change vs e8 (current best): dropout 0.3 -> 0.1.
+# Why: train and val scores stay close (no sign of memorising), so the model may need less of
+# this "randomly switch off numbers in training" regularisation.
+run_name: small_cnn_e10_dropout01
+model: small_cnn
+model_args:
+  convs: 2
+  widths: [64, 128, 256]
+  dropout: 0.1
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 15         # early stopping: stop after this many epochs without a better val loss
+label_smoothing: 0.1
+
+wandb:
+  enabled: true
+  project: terrascan
