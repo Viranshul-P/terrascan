@@ -1,0 +1,19 @@
+# SmallCNN v2 (step 2.2c): the kept changes from results/small_cnn_ablation.md (= experiment 8).
+# Architecture (SmallCNN only): 2 convs per block, widths 64/128/256.
+# Shared training recipe for later models: 50 epochs, label smoothing 0.1, patience 15.
+run_name: small_cnn_v2
+model: small_cnn
+model_args:
+  convs: 2
+  widths: [64, 128, 256]
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 15         # early stopping: stop after this many epochs without a better val loss
+label_smoothing: 0.1
+
+wandb:
+  enabled: true
+  project: terrascan

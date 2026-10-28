@@ -103,3 +103,48 @@ python -c "from src.models import SmallCNN, count_parameters; print(count_parame
 
 `tests/test_models.py` checks that number against the layer-by-layer sum. The biggest single layer is
 the last linear one (8192 × 10 weights + 10), bigger than any one conv block.
+
+## 8. SmallCNN v2: what we changed and why (step 2.2c)
+
+Everything above describes **v1**. In step 2.2c we tried one change at a time, and only kept a change
+if it beat the old version on the **val** split by more than the "noise": how much the score moves
+just from changing the random seed. Scores and sources for every try are in
+`results/small_cnn_ablation.md`. The settings are in `configs/small_cnn_v2.yaml`.
+
+### Kept: train longer (30 → 50 epochs)
+An **epoch** is one pass over all training images. v1's best epoch was its very last one, so it was
+still improving when it stopped. More epochs gave it time to finish learning.
+
+### Kept: two convs per block
+Each block now looks at the image **twice** before shrinking it:
+
+```
+ v1 block:  conv -> batchnorm -> ReLU ------------------------------------> maxpool
+ v2 block:  conv -> batchnorm -> ReLU -> conv -> batchnorm -> ReLU -> maxpool
+```
+
+The second conv builds on what the first one found, so a block can spot more complex patterns.
+
+### Kept: patience 5 → 15 (a fairness fix)
+**Early stopping** ends training when val loss hasn't improved for a while ("patience" epochs).
+Early in training val loss jumps up and down, so with patience 5 some runs were stopped by bad luck,
+and a good idea could look bad. With patience 15, runs nearly always go the full 50 epochs.
+
+### Kept: label smoothing 0.1
+Normally the target for the right class is 100% and 0% for the other 9. With label smoothing it's
+91%, and 1% for each other class. The model stops trying to be totally sure, which helps it on new
+images. (We still measure val loss the normal way, so it's a fair comparison.)
+
+### Kept: wider blocks (64 / 128 / 256 filters instead of 32 / 64 / 128)
+Twice the filters per block means it can track more kinds of patterns. The cost: the model is
+several times bigger and slower to train. Run the parameter-count command above with
+`SmallCNN(convs=2, widths=(64, 128, 256))` to see the new size.
+
+### Tried and not kept
+- **Average pooling head:** average each 8 × 8 feature map down to 1 number before the last layer.
+  Much smaller model, but clearly worse here.
+- **LR warmup:** start with a small learning rate and ramp up. No real difference.
+- **Less dropout (0.3 → 0.1):** no real difference.
+
+"Not kept" doesn't mean the idea is bad in general. It means it didn't help **this** model on
+**this** data by more than the noise.

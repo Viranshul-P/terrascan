@@ -8,12 +8,19 @@ Run from the repo root:
 """
 
 import json
+import statistics
 from pathlib import Path
 
 import yaml
 
 ROWS_PATH = Path("configs/small_cnn_exp/ablation.yaml")
 OUT_PATH = Path("results/small_cnn_ablation.md")
+FINAL_DIR = Path("models/small_cnn_v2")
+SEEDS = [42, 43, 44]
+
+
+def mean_std(values):
+    return f"{statistics.mean(values):.4f} ± {statistics.stdev(values):.4f}"
 
 
 def main():
@@ -37,6 +44,21 @@ def main():
             f"| {m['best_val_f1']:.4f} | {m['params']:,} | {m['best_epoch']} / {m['epochs_run']} "
             f"| {row['kept']} | `{metrics_path.as_posix()}` |"
         )
+    # Final model: mean ± std over seeds 42, 43, 44 (std = sample standard deviation)
+    finals = [
+        json.loads((FINAL_DIR / f"seed{s}" / "metrics.json").read_text(encoding="utf-8"))
+        for s in SEEDS
+    ]
+    lines += [
+        "",
+        "## Final SmallCNN v2 (`configs/small_cnn_v2.yaml`), seeds 42, 43, 44",
+        "",
+        "| Val acc | Val macro-F1 | Params | Source |",
+        "|---|---|---|---|",
+        f"| {mean_std([m['best_val_acc'] for m in finals])} "
+        f"| {mean_std([m['best_val_f1'] for m in finals])} | {finals[0]['params']:,} "
+        f"| `{FINAL_DIR.as_posix()}/seed{{42,43,44}}/metrics.json` |",
+    ]
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Saved {OUT_PATH} ({len(rows)} rows)")
