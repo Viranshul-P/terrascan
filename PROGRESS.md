@@ -3,10 +3,10 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-2.2a
+2.2b
 
 ## Status
-in progress
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
@@ -21,7 +21,7 @@ in progress
 - [x] 1.2 Dataset + augmentations
 - [x] 1.3 Figures for the README
 - [x] 2.1 Training loop
-- [ ] 2.2a Write SmallCNN (Claude writes it)
+- [x] 2.2a Write SmallCNN (Claude writes it)
 - [ ] 2.2b Train SmallCNN v1
 - [ ] 2.2c Make SmallCNN better (experiments)
 - [ ] 2.3 ResNet-18 (ImageNet)
@@ -56,6 +56,7 @@ in progress
 - 1.2 — commit 1647533 — EuroSATDataset + DataLoaders in src/data.py, train-only mean/std in data/stats.json
 - 1.3 — commits 8e73222, 2af23c0 + fix — scripts/make_figures.py saves class_balance, samples_per_class, augmented_samples to reports/figures/
 - 2.1 — src/train.py (AdamW, cosine LR, early stopping on val loss, AMP, W&B, --seed, --fast-dev-run) tested with TinyNet; fast-dev-run on CUDA saved models/tiny-fast-dev-run/seed42/, W&B run tiny-fast-dev-run-seed42
+- 2.2a — SmallCNN (3 conv blocks + dropout 0.3 + linear) in src/models.py, count_parameters, shape test, docs/learn/small_cnn.md, feature-map demo (scripts/cnn_shapes.py)
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -71,6 +72,8 @@ in progress
 - `data/stats.json` (train-only per-channel mean/std, pixels in 0–1) is committed, like the splits.
 - Added `matplotlib==3.11.2` to requirements.txt (figures, step 1.3). README figures in reports/figures/ are committed.
 - Training: run with `python -m src.train --config configs/<x>.yaml --seed N`. Fast-dev-run (2 batches, 1 epoch) saves to `models/<run_name>-fast-dev-run/seed<N>/` and is tagged `fast-dev-run` in W&B, so it can't be mixed up with real models.
+- Plan change (commit 3340337): user is a beginner (ML basics, no neural nets yet), so Claude writes SmallCNN and explains it in `docs/learn/`. User learns it later (see "Learn it later" in PLAN.md).
+- SmallCNN v1: 3 blocks conv3x3(pad 1) → BatchNorm → ReLU → MaxPool2, channels 3→32→64→128, size 64→32→16→8, then flatten → Dropout(0.3) → Linear(8192→10). Dropout 0.3 chosen as a common middle value; 2.2c can test others.
 - W&B on/off is `wandb.enabled` in the train config; off = `wandb.init(mode="disabled")`. Tests never call W&B online.
 - Cosine LR steps once per epoch over `epochs` (T_max = epochs). Early stopping keeps the weights from the epoch with the lowest val loss.
 
