@@ -30,7 +30,7 @@ Hugging Face, writing your own analysis). Claude marks the step `waiting on you`
 Do it, then type `/next`. It checks your work and moves on.
 
 ## Use `/review-step` after these steps
-2.2b and 2.2c (your SmallCNN), 2.4b (satellite-pretrained model), 2.5 (comparison table), 4.1 (imagery pipeline), 4.3 and 4.4 (domain shift numbers), 4.7 and 4.8 (change study),
+2.2c (SmallCNN experiments), 2.4b (satellite-pretrained model), 2.5 (comparison table), 4.1 (imagery pipeline), 4.3 and 4.4 (domain shift numbers), 4.7 and 4.8 (change study),
 5.3 (website), 6.3 (README). These produce the numbers that go on your resume, so a second pair of eyes is worth it.
 If it says **FAIL**, type: `fix the Must-fix items from the review`, then run `/review-step` again.
 

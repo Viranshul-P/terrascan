@@ -6,7 +6,7 @@ Claude updates this at the end of every step. Keep entries short.
 2.2a
 
 ## Status
-not started
+in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
@@ -21,9 +21,9 @@ not started
 - [x] 1.2 Dataset + augmentations
 - [x] 1.3 Figures for the README
 - [x] 2.1 Training loop
-- [ ] 2.2a Learn CNNs, write SmallCNN yourself
-- [ ] 2.2b Review and train SmallCNN
-- [ ] 2.2c Make SmallCNN exceptional (experiments)
+- [ ] 2.2a Write SmallCNN (Claude writes it)
+- [ ] 2.2b Train SmallCNN v1
+- [ ] 2.2c Make SmallCNN better (experiments)
 - [ ] 2.3 ResNet-18 (ImageNet)
 - [ ] 2.4 EfficientNet-B0
 - [ ] 2.4b ResNet-18 (satellite-pretrained)

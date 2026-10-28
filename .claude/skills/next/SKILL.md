@@ -64,8 +64,9 @@ Then STOP and wait for the user to say OK. Don't write code before that.
 - If any check fails, fix it or tell the user. Never mark a failing step done.
 
 ## 6. Hand-off for "You do" parts
-Never do the user's "You do" work for them, even if asked mid-step. In 2.2a especially: explain concepts and error
-messages, but do not write the SmallCNN layers.
+Never do the user's "You do" work for them, even if asked mid-step. The user is a beginner (currently learning ML
+basics, not neural networks yet). When explaining, assume no ML knowledge: short, plain words, one idea at a time,
+small text diagrams.
 
 If the step has a **You do** part: finish your part, commit it, set Status to `waiting on you`, write the exact
 instructions in "Waiting on you" (what to do, where, and what file or result you'll check next time), and STOP.

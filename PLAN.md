@@ -74,56 +74,41 @@ in tests. Explain AMP to me in 3 sentences.
 Test it with a tiny 1-layer model in fast-dev-run mode only.
 **Done when:** fast-dev-run finishes, the model folder appears, a W&B run shows up.
 
-### 2.2a Learn CNNs, then write SmallCNN yourself (guided)
-This is the part interviewers grill you on, so you write it. Claude teaches and sets things up; it does NOT write the layers.
-**Ask:** Teach me CNNs using our own data, not textbook theory:
-1. Write `scripts/cnn_shapes.py`: take ONE real EuroSAT image (shape 1×3×64×64), pass it through a conv, a batchnorm,
-   a ReLU and a maxpool one at a time, print the shape after each, and save a picture of a few feature maps
-   to `reports/figures/feature_maps.png`.
-2. Run it, then explain each layer in 2–3 plain sentences tied to what the printout and picture show
-   (what a filter is, why channels go up, why maxpool halves the size, what batchnorm and dropout are for).
-3. Quiz me with 3 short questions. Correct my answers. Don't move on until I get them.
-4. Create `src/models.py` with a `SmallCNN` skeleton: the class, `__init__` and `forward`, with TODO comments that
-   say *what* goes where (e.g. "block 1: 3 → 32 channels, then halve the size") but not the code.
-   Add `tests/test_models.py`: output shape is (batch, 10) for a (batch, 3, 64, 64) input. It should fail for now.
-**Done when (Claude's part):** script runs, figure exists, skeleton and failing test are committed.
-**You do:** fill in the TODOs yourself (3–4 blocks of conv → batchnorm → ReLU → maxpool, then flatten → dropout → linear).
-Run `pytest tests/test_models.py` until it passes. Stuck? Ask Claude to explain a *concept* or an *error message*,
-not to write the layer. Expect 1–2 hours; that time is the point.
-**Step is done when:** the shape test passes with your code.
+### 2.2a Write SmallCNN (Claude writes it, explains it simply)
+**Ask:** Write `SmallCNN` in `src/models.py`: 3 blocks of conv → batchnorm → ReLU → maxpool (3 → 32 → 64 → 128
+channels, size 64 → 32 → 16 → 8), then flatten → dropout → linear to 10 classes. Add a short comment on every line
+saying what it does in plain English, a shape test in `tests/test_models.py`, and a parameter count.
+Also write `docs/learn/small_cnn.md`: a beginner explainer of this exact model (what an image is to a computer, what a
+filter does, what each block does, why the sizes shrink), with simple diagrams in text. Assume the reader has not
+learned neural networks yet. Keep it short.
+**Done when:** the shape test passes.
+**You check:** skim `docs/learn/small_cnn.md` once. You'll come back to it when your course reaches CNNs.
 
-### 2.2b Review and train SmallCNN
-**Ask:** Review my `SmallCNN` like an interviewer would: correctness, shape maths, parameter count, anything odd.
-For each problem, explain it and let me fix it myself (only fix one-character typos directly). Then add a parameter
-count, run `--fast-dev-run`, then full training (seed 42) with `configs/small_cnn_v1.yaml`.
+### 2.2b Train SmallCNN v1
+**Ask:** Run `--fast-dev-run`, then full training (seed 42) with `configs/small_cnn_v1.yaml`. Show me the curves and
+tell me in 3 plain sentences what they say.
 **Done when:** training finishes, `models/small_cnn_v1/seed42/metrics.json` exists, val accuracy is in W&B.
-**You check:** explain out loud, layer by layer, why the size goes 64 → 32 → 16 → 8 and where the parameter count comes
-from. Don't chase a number yet: this is v1, the starting point for 2.2c.
 
-### 2.2c Make SmallCNN exceptional (experiments, together)
+### 2.2c Make SmallCNN better (experiments)
 **Effort: high**
-**Goal:** improve your CNN the way an ML engineer does: one change at a time, each one measured, kept only if it helps
-on **val**. You end with a much better model *and* an ablation table for the README showing what worked and what didn't.
-**Ask:** Act as my senior ML engineer mentor. Read my SmallCNN v1 results and W&B curves and tell me in plain words what
-they say (underfitting? overfitting? unstable?). Then propose a ranked list of 5–8 experiments chosen from that evidence,
-each with: what changes, why it should help, expected effect, cost. Possible ideas (pick by evidence, not all of them):
-wider or deeper blocks, global average pooling instead of flatten, residual (skip) connections, dropout amount,
-weight decay, label smoothing, LR warmup, stronger or weaker augmentation.
-For each experiment:
-1. Explain it in plain words.
-2. Small changes: I write them, you review. Bigger changes: you write them, then I explain them back to you before we keep them.
-3. Train one seed, compare val accuracy and val macro-F1 to the current best.
-4. Keep or revert. Add a row to `results/small_cnn_ablation.md`: change, val acc, val macro-F1, params, kept?, one-line
-   reason. Numbers are copied by code from each run's `metrics.json`, never typed by hand.
+**Goal:** improve the CNN the way an ML engineer does: one change at a time, each one measured, kept only if it helps
+on **val**. End with a better model and an ablation table for the README showing what worked and what didn't.
+**Ask:** Read the SmallCNN v1 results and W&B curves and tell me in plain words what they say. Then propose a ranked list
+of 5–8 experiments chosen from that evidence (for example: wider blocks, global average pooling, skip connections,
+dropout amount, weight decay, label smoothing, LR warmup, augmentation strength). For each experiment: explain it in one
+or two plain sentences, make the change, train one seed, compare val accuracy and val macro-F1 to the current best,
+then keep or revert. Add a row to `results/small_cnn_ablation.md`: change, plain-English reason, val acc, val macro-F1,
+params, kept? Numbers are copied by code from each run's `metrics.json`, never typed by hand. Add a short section per
+kept change to `docs/learn/small_cnn.md`.
 **Rules:** decide using **val only**, never test. One change at a time. Stop after ~6 experiments or when gains are
 smaller than the seed-to-seed noise (rerun the best one with another seed to check). Training-recipe changes that help
 (label smoothing, warmup, weight decay) become the shared default config for every later model so the comparison stays
 fair; architecture changes stay SmallCNN-only.
 Finally train the final version with seeds 42/43/44 into `models/small_cnn_v2/`.
 **Done when:** the ablation table exists, every number traces to a `metrics.json`, and the 3 final runs are saved.
-**You check:** for every kept change, can you say what it does and why it helped? If not, it doesn't stay.
-**Expect:** a well-built small CNN may still trail the pretrained models on accuracy, at a fraction of their size and
-CPU time. That trade-off *is* the finding. Run `/review-step` after this one.
+**You check:** read the ablation table. Each row should make sense in plain words.
+**Expect:** a small CNN may still trail the pretrained models on accuracy, at a fraction of their size and CPU time.
+That trade-off is the finding. Run `/review-step` after this one.
 
 ### 2.3 ResNet-18 (transfer learning)
 **Ask:** Add ResNet-18 with ImageNet weights, replace the final layer for 10 classes, fine-tune all layers.
@@ -363,6 +348,17 @@ issue templates, README badges (CI, live site, model, dataset), and write up 3�
    dataset as a torchgeo dataset. A merged contribution to a major open-source library is a strong resume line.
 **Claude can help:** draft each post for its audience. Rewrite them in your own voice before posting.
 **Then:** reply to every issue and comment in the first two weeks. That's when people decide whether a repo is alive.
+
+---
+
+## Learn it later (when your course reaches each topic)
+Claude Code builds the project now. You learn it properly as your course gets there, using the `docs/learn/` files
+and your own code. Before interviews, you must be able to explain each of these in your own words:
+- **After your ML basics:** train/val/test splits, overfitting, accuracy vs F1, confusion matrix (Phases 1–2)
+- **After neural networks:** what training does, loss, learning rate, ReLU, dropout
+- **After CNNs:** read `docs/learn/small_cnn.md`, then rebuild SmallCNN yourself in a scratch file without looking,
+  and compare with ours. Then transfer learning (2.3–2.4b) and Grad-CAM (3.2)
+- **Anytime:** domain shift and why the area-based split matters (4.3), the change check (4.8), the offset fix (4.1)
 
 ---
 
