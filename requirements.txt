@@ -1,0 +1,10 @@
+# Pinned versions. Don't upgrade without asking (see CLAUDE.md).
+# Laptop: install the CUDA build of torch/torchvision first (step 0.2), then `pip install -r requirements.txt`.
+# CI: installs the CPU build from https://download.pytorch.org/whl/cpu (see .github/workflows/ci.yml).
+torch==2.14.1
+torchvision==0.29.1
+numpy==2.1.1
+pandas==3.0.2
+PyYAML==6.0.3
+pytest==9.0.2
+ruff==0.12.9

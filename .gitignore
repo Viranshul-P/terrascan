@@ -1,0 +1,27 @@
+# Large files: never commit
+data/
+models/
+imagery/
+*.tif
+*.tiff
+*.pt
+*.pth
+*.onnx
+
+# Experiment tracking
+wandb/
+
+# Claude Code: keep .claude/ tracked, except local settings
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Secrets
+.env
