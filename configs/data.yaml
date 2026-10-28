@@ -1,0 +1,11 @@
+# EuroSAT RGB data settings (step 1.1).
+# Source: Zenodo record 7711810, linked from the authors' README (github.com/phelber/EuroSAT).
+download_url: https://zenodo.org/api/records/7711810/files/EuroSAT_RGB.zip/content
+download_md5: f46e308c4d50d4bf32fedad2d3d62f3b
+
+raw_dir: data/raw          # zip + extracted images (git-ignored)
+splits_dir: data/splits    # train.csv, val.csv, test.csv (committed)
+
+seed: 42
+train_frac: 0.70
+val_frac: 0.15             # test gets the rest (0.15)

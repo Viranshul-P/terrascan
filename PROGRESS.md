@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-1.1
+1.2
 
 ## Status
 not started
@@ -17,7 +17,7 @@ not started
 ## Steps
 - [x] 0.1 Repo skeleton
 - [x] 0.2 Environment check
-- [ ] 1.1 Download + split
+- [x] 1.1 Download + split
 - [ ] 1.2 Dataset + augmentations
 - [ ] 1.3 Figures for the README
 - [ ] 2.1 Training loop
@@ -59,6 +59,9 @@ not started
 - Project uses a virtual env in `.venv` (git-ignored). Activate with `.venv\Scripts\activate`.
 - PyTorch CUDA build: cu126 (`--index-url https://download.pytorch.org/whl/cu126`). Reason: laptop driver 560.94 supports CUDA up to 12.6, and torch 2.14.1 has a cu126 Windows wheel.
 - Added `wandb==0.31.0` to requirements.txt (needed for `wandb login` in 0.2).
+- EuroSAT RGB source: Zenodo record 7711810 (linked from the authors' GitHub README). MD5 in configs/data.yaml matches Zenodo's API record.
+- Split CSVs in `data/splits/` are committed to git (rest of `data/` stays ignored), so everyone and CI use the exact same split. Paths in the CSVs are relative to `data/raw/`.
+- Split done with plain pandas/numpy (per class: seeded shuffle, cut 70/15/15), no scikit-learn dependency.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
