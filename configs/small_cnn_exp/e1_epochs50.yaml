@@ -1,0 +1,14 @@
+# 2.2c experiment 1: train longer. Only change vs e0_baseline: epochs 30 -> 50.
+# Why: v1's best val loss came at its very last epoch, so it may not be fully trained.
+run_name: small_cnn_e1_epochs50
+model: small_cnn
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 5          # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan

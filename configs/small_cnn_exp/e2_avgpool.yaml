@@ -1,0 +1,17 @@
+# 2.2c experiment 2: global average pooling head. Only change vs e1 (kept): head flatten -> avgpool.
+# Why: the final layer has 81,930 of the 175,626 weights; averaging each 8x8 map to 1 number
+# cuts it to 1,290 and makes the model care less about *where* a pattern sits.
+run_name: small_cnn_e2_avgpool
+model: small_cnn
+model_args:
+  head: avgpool
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 5          # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan

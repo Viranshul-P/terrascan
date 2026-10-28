@@ -8,3 +8,31 @@
   change: "Same as #0, seed 43"
   reason: "Noise check: how much the score moves from the seed alone"
   kept: "-"
+- run: small_cnn_e1_epochs50/seed42
+  change: "Train 50 epochs instead of 30"
+  reason: "The best val loss came at or near the last epoch, so the model looked under-trained"
+  kept: "yes"
+- run: small_cnn_e2_avgpool/seed42
+  change: "Global average pooling head (on top of #2)"
+  reason: "Averages each 8x8 map to 1 number: far fewer weights in the last layer"
+  kept: "no (worse, model learned less)"
+- run: small_cnn_e3_wider/seed42
+  change: "Wider blocks: 64/128/256 feature maps (on top of #2)"
+  reason: "Train and val stay close, so the model looked too small; more maps = more patterns"
+  kept: "no (worse; early stopping ended it at epoch 28 while val was still jumpy)"
+- run: small_cnn_e4_two_convs/seed42
+  change: "Two conv layers per block (on top of #2)"
+  reason: "Each block looks twice before shrinking the image, so it can build more complex patterns"
+  kept: "yes"
+- run: small_cnn_e5_label_smoothing/seed42
+  change: "Label smoothing 0.1 (on top of #5)"
+  reason: "Target 0.91 instead of 1 for the true class, so the model is not pushed to be 100% sure"
+  kept: "see #8"
+- run: small_cnn_e4_two_convs/seed43
+  change: "Same as #5, seed 43"
+  reason: "Small win in #6, so both #5 and #6 are re-run with a second seed"
+  kept: "-"
+- run: small_cnn_e5_label_smoothing/seed43
+  change: "Same as #6, seed 43"
+  reason: "Second seed for label smoothing"
+  kept: "no for now (2-seed average lower; this seed was early-stopped at epoch 17)"

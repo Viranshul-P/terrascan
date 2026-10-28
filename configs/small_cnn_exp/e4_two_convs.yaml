@@ -1,0 +1,17 @@
+# 2.2c experiment 4: two conv layers per block. Only change vs e1 (current best): convs 1 -> 2.
+# Why: each block looks at the image twice before shrinking it, so it can build more complex
+# patterns (deeper, not wider). Adds weights in the blocks only; the last layer stays the same.
+run_name: small_cnn_e4_two_convs
+model: small_cnn
+model_args:
+  convs: 2
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 5          # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan

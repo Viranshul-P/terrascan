@@ -1,0 +1,17 @@
+# 2.2c experiment 3: wider blocks. Only change vs e1 (current best): widths 32/64/128 -> 64/128/256.
+# Why: train and val scores stay close, so the model looks too small rather than overfitting;
+# more feature maps per block = more patterns it can learn.
+run_name: small_cnn_e3_wider
+model: small_cnn
+model_args:
+  widths: [64, 128, 256]
+data_config: configs/data.yaml
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 5          # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan
