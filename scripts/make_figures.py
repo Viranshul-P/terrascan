@@ -96,7 +96,8 @@ def main():
     torch.manual_seed(seed)  # the augmentations use torch's random numbers
 
     raw_dir = Path(cfg["raw_dir"])
-    splits = {n: pd.read_csv(Path(cfg["splits_dir"]) / f"{n}.csv") for n in ["train", "val", "test"]}
+    splits_dir = Path(cfg["splits_dir"])
+    splits = {n: pd.read_csv(splits_dir / f"{n}.csv") for n in ["train", "val", "test"]}
     stats = json.loads(Path(cfg["stats_path"]).read_text())
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 

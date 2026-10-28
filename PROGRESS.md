@@ -3,10 +3,10 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-1.3
+2.1
 
 ## Status
-in progress
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
@@ -19,7 +19,7 @@ in progress
 - [x] 0.2 Environment check
 - [x] 1.1 Download + split
 - [x] 1.2 Dataset + augmentations
-- [ ] 1.3 Figures for the README
+- [x] 1.3 Figures for the README
 - [ ] 2.1 Training loop
 - [ ] 2.2a Learn CNNs, write SmallCNN yourself
 - [ ] 2.2b Review and train SmallCNN
@@ -65,6 +65,7 @@ in progress
 - Label number = position in alphabetical class list `CLASSES` in src/data.py (AnnualCrop=0 … SeaLake=9).
 - Train augmentations: random h/v flips, random 0/90/180/270° rotation (own `RandomRot90`, since v2.RandomRotation picks any angle), ColorJitter(0.1, 0.1, 0.1). Val/test: normalise only.
 - `data/stats.json` (train-only per-channel mean/std, pixels in 0–1) is committed, like the splits.
+- Added `matplotlib==3.11.2` to requirements.txt (figures, step 1.3). README figures in reports/figures/ are committed.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
