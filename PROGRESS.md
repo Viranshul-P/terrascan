@@ -3,24 +3,20 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-0.2
+1.1
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Step 0.2: set up Weights & Biases (W&B).
-1. Create a free account at https://wandb.ai (personal/free plan, no credit card).
-2. Copy your API key from https://wandb.ai/authorize
-3. In the repo folder, run: `.venv\Scripts\activate` then `wandb login` and paste the key.
-Next time, /next checks that `wandb login` worked (wandb shows you as logged in).
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
 ## Steps
 - [x] 0.1 Repo skeleton
-- [ ] 0.2 Environment check
+- [x] 0.2 Environment check
 - [ ] 1.1 Download + split
 - [ ] 1.2 Dataset + augmentations
 - [ ] 1.3 Figures for the README
@@ -55,6 +51,7 @@ Next time, /next checks that `wandb login` worked (wandb shows you as logged in)
 ## Log
 <!-- One line per finished step: - 0.1 — commit abc1234 — short note -->
 - 0.1 — commit a5151ca — repo skeleton pushed to public GitHub repo, CI green
+- 0.2 — commit 76c9913 — CUDA torch (cu126) in .venv, check_env.py finds RTX 4060, W&B logged in
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
