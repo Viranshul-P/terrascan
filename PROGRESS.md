@@ -6,11 +6,15 @@ Claude updates this at the end of every step. Keep entries short.
 0.2
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+Step 0.2: set up Weights & Biases (W&B).
+1. Create a free account at https://wandb.ai (personal/free plan, no credit card).
+2. Copy your API key from https://wandb.ai/authorize
+3. In the repo folder, run: `.venv\Scripts\activate` then `wandb login` and paste the key.
+Next time, /next checks that `wandb login` worked (wandb shows you as logged in).
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -55,6 +59,9 @@ not started
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
 - Python 3.12 (not 3.11). Reason: laptop only has 3.12.5; pinned packages resolve fine on it. CLAUDE.md and START-HERE.md updated.
+- Project uses a virtual env in `.venv` (git-ignored). Activate with `.venv\Scripts\activate`.
+- PyTorch CUDA build: cu126 (`--index-url https://download.pytorch.org/whl/cu126`). Reason: laptop driver 560.94 supports CUDA up to 12.6, and torch 2.14.1 has a cu126 Windows wheel.
+- Added `wandb==0.31.0` to requirements.txt (needed for `wandb login` in 0.2).
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->

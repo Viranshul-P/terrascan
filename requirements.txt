@@ -8,3 +8,4 @@ pandas==3.0.2
 PyYAML==6.0.3
 pytest==9.0.2
 ruff==0.12.9
+wandb==0.31.0
