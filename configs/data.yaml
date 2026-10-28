@@ -9,3 +9,8 @@ splits_dir: data/splits    # train.csv, val.csv, test.csv (committed)
 seed: 42
 train_frac: 0.70
 val_frac: 0.15             # test gets the rest (0.15)
+
+# Step 1.2: loading
+stats_path: data/stats.json  # train-only mean/std per channel (committed)
+batch_size: 64
+num_workers: 2

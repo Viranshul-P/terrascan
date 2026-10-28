@@ -1,6 +1,7 @@
 # Large files: never commit
 data/*
 !data/splits/
+!data/stats.json
 models/
 imagery/
 *.tif

@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-1.2
+1.3
 
 ## Status
 not started
@@ -18,7 +18,7 @@ not started
 - [x] 0.1 Repo skeleton
 - [x] 0.2 Environment check
 - [x] 1.1 Download + split
-- [ ] 1.2 Dataset + augmentations
+- [x] 1.2 Dataset + augmentations
 - [ ] 1.3 Figures for the README
 - [ ] 2.1 Training loop
 - [ ] 2.2a Learn CNNs, write SmallCNN yourself
@@ -62,9 +62,14 @@ not started
 - EuroSAT RGB source: Zenodo record 7711810 (linked from the authors' GitHub README). MD5 in configs/data.yaml matches Zenodo's API record.
 - Split CSVs in `data/splits/` are committed to git (rest of `data/` stays ignored), so everyone and CI use the exact same split. Paths in the CSVs are relative to `data/raw/`.
 - Split done with plain pandas/numpy (per class: seeded shuffle, cut 70/15/15), no scikit-learn dependency.
+- Label number = position in alphabetical class list `CLASSES` in src/data.py (AnnualCrop=0 … SeaLake=9).
+- Train augmentations: random h/v flips, random 0/90/180/270° rotation (own `RandomRot90`, since v2.RandomRotation picks any angle), ColorJitter(0.1, 0.1, 0.1). Val/test: normalise only.
+- `data/stats.json` (train-only per-channel mean/std, pixels in 0–1) is committed, like the splits.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
+- torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
+- scripts/compute_stats.py takes ~3 min (reads 18,900 images one by one). Only run once, so left simple.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
