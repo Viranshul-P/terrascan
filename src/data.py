@@ -153,6 +153,9 @@ def build_dataloaders(cfg):
                 batch_size=cfg["batch_size"],
                 shuffle=is_train,
                 num_workers=cfg["num_workers"],
+                # keep the worker processes alive between epochs; on Windows starting them
+                # takes several seconds, every epoch, for each loader
+                persistent_workers=cfg["num_workers"] > 0,
             )
         )
     return tuple(loaders)

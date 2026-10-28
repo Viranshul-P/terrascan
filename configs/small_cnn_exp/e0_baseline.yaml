@@ -1,0 +1,15 @@
+# 2.2c experiment 0: v1 again, retrained with the faster loader (4 persistent workers).
+# Same model and recipe as configs/small_cnn_v1.yaml. Run with seeds 42 and 43:
+# the gap between the two is the seed-to-seed noise used by the keep rule.
+run_name: small_cnn_e0_baseline
+model: small_cnn
+data_config: configs/data.yaml
+
+epochs: 30
+lr: 0.001
+weight_decay: 0.05
+patience: 5          # early stopping: stop after this many epochs without a better val loss
+
+wandb:
+  enabled: true
+  project: terrascan

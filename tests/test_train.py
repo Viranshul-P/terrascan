@@ -3,6 +3,7 @@
 import json
 
 import pandas as pd
+import pytest
 import torch
 import wandb
 from torch.utils.data import DataLoader, TensorDataset
@@ -37,6 +38,8 @@ def test_fit_lowers_val_loss_and_returns_metrics():
     assert len(history) == 3
     assert 1 <= metrics["best_epoch"] <= 3
     assert metrics["best_val_acc"] > 0.5
+    assert 0.0 <= metrics["best_val_f1"] <= 1.0
+    assert "val/f1" in history[0]
     assert set(best_state) == {"linear.weight", "linear.bias"}
 
 
@@ -44,6 +47,19 @@ def test_same_seed_gives_same_result():
     _, first, _ = run_fit()
     _, second, _ = run_fit()
     assert first["best_val_loss"] == second["best_val_loss"]
+
+
+def test_warmup_starts_low_then_reaches_full_lr():
+    seed_everything(42)
+    run = wandb.init(mode="disabled")
+    cfg = {**CFG, "epochs": 4, "warmup_epochs": 2, "label_smoothing": 0.1}
+    loader = fake_loader()
+    _, _, history = fit(build_model("tiny"), loader, loader, cfg, torch.device("cpu"), run)
+    run.finish()
+    lrs = [row["lr"] for row in history]
+    assert lrs[0] == pytest.approx(0.1 * CFG["lr"])  # epoch 1: 10% of the LR
+    assert lrs[2] == pytest.approx(CFG["lr"])  # after 2 warmup epochs: full LR
+    assert lrs[3] < lrs[2]  # then cosine decay
 
 
 def test_save_run_writes_four_files(tmp_path):

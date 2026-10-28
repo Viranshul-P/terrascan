@@ -6,7 +6,7 @@ Claude updates this at the end of every step. Keep entries short.
 2.2c
 
 ## Status
-not started
+in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
@@ -80,13 +80,17 @@ not started
 - ruff: `wandb` marked as known third-party in pyproject.toml, because the local `wandb/` log folder made ruff treat it as our own package.
 - W&B on/off is `wandb.enabled` in the train config; off = `wandb.init(mode="disabled")`. Tests never call W&B online.
 - Cosine LR steps once per epoch over `epochs` (T_max = epochs). Early stopping keeps the weights from the epoch with the lowest val loss.
+- 2.2c keep rule (agreed with user): keep a change only if val macro-F1 rises by more than the seed-to-seed noise (baseline seed 42 vs 43). On a tie, keep it only if it makes the model smaller or simpler; otherwise revert.
+- Val macro-F1 is written by hand in `src/metrics.py` (no scikit-learn). `metrics.json` has `best_val_f1`, taken at the same epoch as best val loss.
+- Loader (2.2c): `persistent_workers` on, `num_workers` 4. Measured with a timing script: decoding is cheap, the waste was Windows restarting workers every epoch. Images are not cached in memory (didn't need it). This changes the random augmentations, so v1 is retrained as `small_cnn_e0_baseline` for a fair comparison.
+- 2.2c options all default to v1: `model_args` (widths, convs, head, dropout) in the config; `label_smoothing` and `warmup_epochs` in the train config. Val loss stays plain cross-entropy even with label smoothing, so early stopping and comparisons stay fair.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
 - scripts/compute_stats.py takes ~3 min (reads 18,900 images one by one). Only run once, so left simple.
 - In fast-dev-run, the 2 val batches are all AnnualCrop (val isn't shuffled), so fast-dev-run val accuracy means nothing. Only real runs count.
-- GPU is mostly idle during SmallCNN training (1–6% busy, ~3–7 W, measured with nvidia-smi during 2.2b): image loading on the CPU (num_workers 2, JPEG decode every epoch) is the bottleneck. Try at the start of 2.2c: more workers (6–8) and/or decoding all images into memory once. Changes speed only, not results.
+- GPU is mostly idle during SmallCNN training (seen by eye in nvidia-smi during 2.2b, not saved to a file): image loading on the CPU (num_workers 2, JPEG decode every epoch) is the bottleneck. Careful: changing `num_workers` (or how workers start) changes which random augmentations each image gets, so it changes results slightly, not just speed. After any loader change, retrain the baseline before comparing experiments to it.
 - SmallCNN v1 hit its best val loss at the last epoch (30) and never early-stopped, so it may not be fully trained. Longer training is a candidate experiment for 2.2c.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 

@@ -20,6 +20,7 @@ import yaml
 from torch import nn
 
 from src.data import build_dataloaders
+from src.metrics import macro_f1
 from src.models import build_model, count_parameters
 
 
@@ -29,10 +30,16 @@ def seed_everything(seed):
     torch.manual_seed(seed)  # also seeds CUDA
 
 
-def train_one_epoch(model, loader, optimizer, scaler, device, max_batches=None):
-    """One pass over the training data. Returns (mean loss, accuracy)."""
+def train_one_epoch(
+    model, loader, optimizer, scaler, device, max_batches=None, label_smoothing=0.0
+):
+    """One pass over the training data. Returns (mean loss, accuracy).
+
+    label_smoothing > 0: the target is e.g. 0.91 for the true class and 0.01 for each other
+    class instead of 1 and 0, so the model is not pushed to be 100% sure.
+    """
     model.train()
-    loss_fn = nn.CrossEntropyLoss()
+    loss_fn = nn.CrossEntropyLoss(label_smoothing=label_smoothing)
     total_loss, correct, seen = 0.0, 0, 0
     use_amp = scaler.is_enabled()
     for i, (images, labels) in enumerate(loader):
@@ -56,10 +63,11 @@ def train_one_epoch(model, loader, optimizer, scaler, device, max_batches=None):
 
 @torch.no_grad()
 def evaluate(model, loader, device, max_batches=None):
-    """Returns (mean loss, accuracy) on a loader, without changing the model."""
+    """Returns (mean loss, accuracy, macro-F1) on a loader, without changing the model."""
     model.eval()
     loss_fn = nn.CrossEntropyLoss()
-    total_loss, correct, seen = 0.0, 0, 0
+    total_loss, seen = 0.0, 0
+    all_preds, all_labels = [], []
     use_amp = device.type == "cuda"
     for i, (images, labels) in enumerate(loader):
         if max_batches is not None and i >= max_batches:
@@ -69,36 +77,51 @@ def evaluate(model, loader, device, max_batches=None):
             outputs = model(images)
             loss = loss_fn(outputs, labels)
         total_loss += loss.item() * len(labels)
-        correct += (outputs.argmax(dim=1) == labels).sum().item()
         seen += len(labels)
-    return total_loss / seen, correct / seen
+        all_preds.append(outputs.argmax(dim=1).cpu())
+        all_labels.append(labels.cpu())
+    preds, labels = torch.cat(all_preds), torch.cat(all_labels)
+    accuracy = (preds == labels).sum().item() / seen
+    return total_loss / seen, accuracy, macro_f1(preds, labels, num_classes=outputs.shape[1])
 
 
 def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
     """Train with AdamW + cosine LR, stop early on val loss.
 
+    Optional cfg keys (default = off, as in v1): label_smoothing, warmup_epochs.
+    Val loss is always plain cross-entropy, so runs with and without smoothing compare fairly.
     Returns (best weights, metrics dict, history: one dict per epoch).
     """
     model.to(device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"]
     )
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=cfg["epochs"])
+    label_smoothing = cfg.get("label_smoothing", 0.0)
+    warmup = cfg.get("warmup_epochs", 0)
+    cosine = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=cfg["epochs"] - warmup)
+    if warmup > 0:
+        # Warmup: start at 10% of the LR and grow linearly to the full LR, then cosine decay
+        ramp = torch.optim.lr_scheduler.LinearLR(optimizer, start_factor=0.1, total_iters=warmup)
+        scheduler = torch.optim.lr_scheduler.SequentialLR(
+            optimizer, schedulers=[ramp, cosine], milestones=[warmup]
+        )
+    else:
+        scheduler = cosine
     scaler = torch.amp.GradScaler(device.type, enabled=device.type == "cuda")
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats()
 
     best_val_loss = float("inf")
-    best_state, best_epoch, best_val_acc = None, 0, 0.0
+    best_state, best_epoch, best_val_acc, best_val_f1 = None, 0, 0.0, 0.0
     epochs_without_improvement = 0
     history = []
     start = time.time()
     for epoch in range(1, cfg["epochs"] + 1):
         lr = optimizer.param_groups[0]["lr"]
         train_loss, train_acc = train_one_epoch(
-            model, train_loader, optimizer, scaler, device, max_batches
+            model, train_loader, optimizer, scaler, device, max_batches, label_smoothing
         )
-        val_loss, val_acc = evaluate(model, val_loader, device, max_batches)
+        val_loss, val_acc, val_f1 = evaluate(model, val_loader, device, max_batches)
         scheduler.step()
         peak_mem_mb = torch.cuda.max_memory_allocated() / 2**20 if device.type == "cuda" else 0.0
         row = {
@@ -107,6 +130,7 @@ def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
             "train/acc": train_acc,
             "val/loss": val_loss,
             "val/acc": val_acc,
+            "val/f1": val_f1,
             "lr": lr,
             "peak_gpu_mem_mb": peak_mem_mb,
         }
@@ -114,11 +138,12 @@ def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
         run.log(row)
         print(
             f"epoch {epoch}: train loss {train_loss:.4f} acc {train_acc:.4f} | "
-            f"val loss {val_loss:.4f} acc {val_acc:.4f} | lr {lr:.2e}"
+            f"val loss {val_loss:.4f} acc {val_acc:.4f} f1 {val_f1:.4f} | lr {lr:.2e}"
         )
 
         if val_loss < best_val_loss:
             best_val_loss, best_val_acc, best_epoch = val_loss, val_acc, epoch
+            best_val_f1 = val_f1
             best_state = copy.deepcopy(model.state_dict())
             epochs_without_improvement = 0
         else:
@@ -131,6 +156,7 @@ def fit(model, train_loader, val_loader, cfg, device, run, max_batches=None):
         "best_epoch": best_epoch,
         "best_val_loss": best_val_loss,
         "best_val_acc": best_val_acc,
+        "best_val_f1": best_val_f1,
         "epochs_run": epoch,
         "peak_gpu_mem_mb": peak_mem_mb,
         "train_seconds": time.time() - start,
@@ -178,7 +204,7 @@ def main():
         mode="online" if cfg["wandb"]["enabled"] else "disabled",
     )
     train_loader, val_loader, _ = build_dataloaders(data_cfg)  # test split is not used here
-    model = build_model(cfg["model"])
+    model = build_model(cfg["model"], cfg.get("model_args"))
     best_state, metrics, history = fit(
         model, train_loader, val_loader, cfg, device, run, max_batches
     )
