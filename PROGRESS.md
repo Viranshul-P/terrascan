@@ -3,22 +3,19 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-0.1
+0.2
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-1. On github.com, create an empty **public** repo named `terrascan` (no README, no licence, no .gitignore).
-2. Paste its URL to Claude (e.g. `https://github.com/<you>/terrascan.git`). Claude adds it as `origin` and pushes.
-   If git asks you to log in, follow the prompt (or run `gh auth login` yourself).
-3. Open the repo's **Actions** tab and confirm the CI run has a green tick. Tell Claude; 0.1 is done when CI is green.
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
 ## Steps
-- [ ] 0.1 Repo skeleton
+- [x] 0.1 Repo skeleton
 - [ ] 0.2 Environment check
 - [ ] 1.1 Download + split
 - [ ] 1.2 Dataset + augmentations
@@ -53,6 +50,7 @@ waiting on you
 
 ## Log
 <!-- One line per finished step: - 0.1 — commit abc1234 — short note -->
+- 0.1 — commit a5151ca — repo skeleton pushed to public GitHub repo, CI green
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
