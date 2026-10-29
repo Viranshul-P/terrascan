@@ -1,0 +1,26 @@
+# ResNet-18 with ImageNet weights (step 2.3). All layers are fine-tuned; the last layer is new (10 classes).
+# Training recipe = the shared recipe from step 2.2c (same as configs/small_cnn_v2.yaml).
+run_name: resnet18
+model: resnet18
+model_args:
+  pretrained: true   # start from torchvision's ResNet18_Weights.IMAGENET1K_V1
+data_config: configs/data.yaml
+
+# Image-size rule (step 2.3): every image (train, val, test) is scaled up from 64x64 to 128x128
+# with bilinear smoothing. Reason: ImageNet models work better on bigger inputs; 224 has ~3x the pixels (not measured).
+image_size: 128
+# Normalise the way the ImageNet weights were trained (not our data/stats.json).
+# Values from torchvision ResNet18_Weights.IMAGENET1K_V1.transforms(); a test checks they match.
+norm_stats:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 15         # early stopping: stop after this many epochs without a better val loss
+label_smoothing: 0.1
+
+wandb:
+  enabled: true
+  project: terrascan

@@ -1,6 +1,11 @@
-"""Models. Every model takes images (B, 3, 64, 64) and returns 10 class scores (B, 10)."""
+"""Models. Every model takes images (B, 3, H, W) and returns 10 class scores (B, 10).
+
+SmallCNN expects 64x64. ResNet-18 works on any size
+(step 2.3 uses 128x128, see configs/resnet18.yaml).
+"""
 
 from torch import nn
+from torchvision.models import ResNet18_Weights, resnet18
 
 
 class TinyNet(nn.Module):
@@ -74,6 +79,18 @@ class SmallCNN(nn.Module):
         return self.classifier(x)  # -> (B, 10)
 
 
+def build_resnet18(num_classes=10, pretrained=True):
+    """ResNet-18 from torchvision. pretrained=True starts from ImageNet weights (downloaded once).
+
+    Its last layer `fc` maps 512 numbers to 1000 ImageNet classes; we swap it for a new
+    layer with 10 outputs (random start). All layers are trained (fine-tuned), not just fc.
+    """
+    weights = ResNet18_Weights.IMAGENET1K_V1 if pretrained else None
+    model = resnet18(weights=weights)
+    model.fc = nn.Linear(model.fc.in_features, num_classes)  # 512 -> 10 class scores
+    return model
+
+
 def count_parameters(model):
     """Number of trainable numbers (weights and biases) in the model."""
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -86,4 +103,6 @@ def build_model(name, model_args=None):
         return TinyNet(**model_args)
     if name == "small_cnn":
         return SmallCNN(**model_args)
+    if name == "resnet18":
+        return build_resnet18(**model_args)
     raise ValueError(f"Unknown model: {name}")

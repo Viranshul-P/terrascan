@@ -52,6 +52,22 @@ def test_train_transform_keeps_shape():
     assert transform(torch.rand(3, 64, 64)).shape == (3, 64, 64)
 
 
+def test_resize_to_image_size():
+    for train in [True, False]:
+        transform = build_transforms(load_stats(), train=train, image_size=128)
+        assert transform(torch.rand(3, 64, 64)).shape == (3, 128, 128)
+
+
+def test_resnet18_config_uses_imagenet_stats():
+    # the mean/std typed in the config must match what torchvision ships with the weights
+    from torchvision.models import ResNet18_Weights
+
+    cfg = yaml.safe_load(open(ROOT / "configs" / "resnet18.yaml"))
+    expected = ResNet18_Weights.IMAGENET1K_V1.transforms()
+    assert cfg["norm_stats"]["mean"] == list(expected.mean)
+    assert cfg["norm_stats"]["std"] == list(expected.std)
+
+
 @needs_images
 def test_batches_have_right_shape_and_labels():
     for loader in build_dataloaders(CFG):

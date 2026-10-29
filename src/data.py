@@ -97,22 +97,26 @@ class RandomRot90(torch.nn.Module):
         return torch.rot90(image, k, dims=(1, 2))
 
 
-def build_transforms(stats, train):
+def build_transforms(stats, train, image_size=64):
     """Train: flips, 90-degree rotations, light colour jitter, then normalise.
     Val/test: normalise only, so the same image always gives the same tensor.
+    image_size other than 64: scale every image (train, val and test) up to that size
+    with bilinear smoothing, after augmenting and before normalising (step 2.3).
     """
-    normalise = v2.Normalize(mean=stats["mean"], std=stats["std"])
-    if not train:
-        return normalise
-    return v2.Compose(
-        [
+    steps = []
+    if train:
+        steps += [
             v2.RandomHorizontalFlip(),
             v2.RandomVerticalFlip(),
             RandomRot90(),
             v2.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),
-            normalise,
         ]
-    )
+    if image_size != 64:
+        steps.append(v2.Resize(image_size, interpolation=v2.InterpolationMode.BILINEAR))
+    steps.append(v2.Normalize(mean=stats["mean"], std=stats["std"]))
+    if len(steps) == 1:
+        return steps[0]  # val/test at 64x64: just normalise
+    return v2.Compose(steps)
 
 
 class EuroSATDataset(Dataset):
@@ -133,19 +137,22 @@ class EuroSATDataset(Dataset):
         return self.transform(image), label
 
 
-def build_dataloaders(cfg):
+def build_dataloaders(cfg, image_size=64, norm_stats=None):
     """Return (train, val, test) DataLoaders built from the data config.
 
     Only train is shuffled and augmented.
+    image_size: size the model sees (64 = no resizing).
+    norm_stats: {"mean": [...], "std": [...]} to normalise with;
+        None = our train-only data/stats.json.
     """
-    stats = json.loads(Path(cfg["stats_path"]).read_text())
+    stats = norm_stats or json.loads(Path(cfg["stats_path"]).read_text())
     loaders = []
     for name in ["train", "val", "test"]:
         is_train = name == "train"
         dataset = EuroSATDataset(
             Path(cfg["splits_dir"]) / f"{name}.csv",
             cfg["raw_dir"],
-            build_transforms(stats, train=is_train),
+            build_transforms(stats, train=is_train, image_size=image_size),
         )
         loaders.append(
             DataLoader(

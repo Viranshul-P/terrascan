@@ -46,3 +46,11 @@ def test_eval_mode_is_deterministic():
     model = SmallCNN().eval()
     x = torch.randn(2, 3, 64, 64)
     assert torch.equal(model(x), model(x))  # eval mode: no dropout, same answer every time
+
+
+def test_resnet18_output_shape():
+    # pretrained=False: random weights, so the test never downloads anything
+    model = build_model("resnet18", {"pretrained": False})
+    out = model(torch.randn(2, 3, 128, 128))
+    assert out.shape == (2, 10)
+    assert model.fc.out_features == 10

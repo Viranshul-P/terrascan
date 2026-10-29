@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-2.3
+2.4
 
 ## Status
 not started
@@ -24,7 +24,7 @@ not started
 - [x] 2.2a Write SmallCNN (Claude writes it)
 - [x] 2.2b Train SmallCNN v1
 - [x] 2.2c Make SmallCNN better (experiments)
-- [ ] 2.3 ResNet-18 (ImageNet)
+- [x] 2.3 ResNet-18 (ImageNet)
 - [ ] 2.4 EfficientNet-B0
 - [ ] 2.4b ResNet-18 (satellite-pretrained)
 - [ ] 2.5 Evaluation + comparison table
@@ -59,6 +59,7 @@ not started
 - 2.2a — SmallCNN (3 conv blocks + dropout 0.3 + linear) in src/models.py, count_parameters, shape test, docs/learn/small_cnn.md, feature-map demo (scripts/cnn_shapes.py)
 - 2.2b — SmallCNN v1 trained (seed 42, 30 epochs, W&B run small_cnn_v1-seed42 / 1y2580s3); runs now save history.csv + params; curves in reports/figures/small_cnn_v1_curves.png
 - 2.2c — val macro-F1, faster loader, 10 experiments (results/small_cnn_ablation.md), SmallCNN v2 trained with seeds 42/43/44 in models/small_cnn_v2/, docs/learn/small_cnn.md section 8
+- 2.3 — ResNet-18 (ImageNet weights, 128×128 input, ImageNet mean/std) trained with seeds 42/43/44 in models/resnet18/; image_size + norm_stats config options
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -88,6 +89,13 @@ not started
 - 2.2c method change (agreed with user mid-step): patience 5 stopped runs by chance while val loss was still jumpy, so from experiment 6 on patience is 15 and every experiment runs with seeds 42 and 43; decisions use the 2-seed average. Noise = gap between the two seeds of experiment 6.
 - SmallCNN v2 = experiment 8 (`configs/small_cnn_v2.yaml`): 2 convs per block, widths 64/128/256, flatten head, dropout 0.3.
 - **Shared training recipe for 2.3, 2.4, 2.4b** (from 2.2c): max 50 epochs, AdamW lr 0.001, weight decay 0.05, cosine LR, label smoothing 0.1, patience 15. No warmup (tested, no gain). Architecture changes stay SmallCNN-only.
+- **Image-size rule (2.3, also for 2.4 and 2.4b; put it in the README in 6.3):** pretrained models see every image
+  (train, val, test) scaled up from 64×64 to 128×128 with bilinear smoothing (`image_size: 128` in the config).
+  SmallCNN stays at 64×64. Reason: ImageNet models work better on bigger inputs; 224 has ~3× the pixels of 128 (estimate from pixel count, not measured), so much slower to train.
+- ResNet-18 (2.3) is normalised with ImageNet mean/std (`norm_stats` in configs/resnet18.yaml, taken from torchvision's
+  `ResNet18_Weights.IMAGENET1K_V1.transforms()`; a test checks they match), not data/stats.json. Rule: feed pretrained
+  weights the way they were trained. ResNet-18 = torchvision `resnet18` with its last layer `fc` swapped for 512→10;
+  all layers fine-tuned. Same shared recipe and batch size 64 as SmallCNN v2.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -97,9 +105,11 @@ not started
 - Data loading was the bottleneck in 2.2b (GPU mostly idle, seen by eye in nvidia-smi, not saved to a file). Fixed in 2.2c with persistent workers. Careful: changing `num_workers` (or how workers start) changes which random augmentations each image gets, so it changes results slightly, not just speed. After any loader change, retrain the baseline before comparing experiments to it.
 - Experiments 3 and 5 in the ablation table (wider, label smoothing with patience 5) were unfair tests (stopped early); both were re-run fairly as experiments 8 and 7. The table keeps all rows so the story is visible.
 - SmallCNN v2's best epoch is still near the end (44–48 of 50, models/small_cnn_v2/seed*/metrics.json), so more epochs might help a little. Not tried: we stopped when gains fell below the noise.
+- ResNet-18's best epoch is 50 of 50 for all 3 seeds (models/resnet18/seed*/metrics.json). Val loss had flattened by then (seed 42 curve, looked at by eye: flat from ~epoch 35), and the cosine LR is near 0 at the end, so more epochs would likely add little. Not tested.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)
 - SmallCNN v2, seeds 42/43/44 (VAL split, not test): val acc 0.9830 ± 0.0022, val macro-F1 0.9825 ± 0.0023, 1,311,050 params (results/small_cnn_ablation.md, from models/small_cnn_v2/seed{42,43,44}/metrics.json)
+- ResNet-18 (ImageNet), seeds 42/43/44 (VAL split, not test): val acc 0.9846 ± 0.0021, val macro-F1 0.9842 ± 0.0021, 11,181,642 params, ~596 s training per seed (computed from models/resnet18/seed{42,43,44}/metrics.json, sample std). Overlaps SmallCNN v2's range, so no "better" claim yet; step 2.5 compares on test.

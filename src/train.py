@@ -203,7 +203,9 @@ def main():
         tags=["fast-dev-run"] if args.fast_dev_run else None,
         mode="online" if cfg["wandb"]["enabled"] else "disabled",
     )
-    train_loader, val_loader, _ = build_dataloaders(data_cfg)  # test split is not used here
+    train_loader, val_loader, _ = build_dataloaders(  # test split is not used here
+        data_cfg, cfg.get("image_size", 64), cfg.get("norm_stats")
+    )
     model = build_model(cfg["model"], cfg.get("model_args"))
     best_state, metrics, history = fit(
         model, train_loader, val_loader, cfg, device, run, max_batches
