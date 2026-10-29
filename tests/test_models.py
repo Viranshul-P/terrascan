@@ -54,3 +54,10 @@ def test_resnet18_output_shape():
     out = model(torch.randn(2, 3, 128, 128))
     assert out.shape == (2, 10)
     assert model.fc.out_features == 10
+
+
+def test_efficientnet_b0_output_shape():
+    # pretrained=False: random weights, so the test never downloads anything
+    model = build_model("efficientnet_b0", {"pretrained": False})
+    out = model(torch.randn(2, 3, 128, 128))
+    assert out.shape == (2, 10)

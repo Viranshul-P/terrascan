@@ -1,9 +1,10 @@
 """Models. Every model takes images (B, 3, H, W) and returns 10 class scores (B, 10).
 
-SmallCNN expects 64x64. ResNet-18 works on any size
-(step 2.3 uses 128x128, see configs/resnet18.yaml).
+SmallCNN expects 64x64. ResNet-18 and EfficientNet-B0 work on any size
+(steps 2.3 and 2.4 use 128x128, see configs/resnet18.yaml).
 """
 
+import timm
 from torch import nn
 from torchvision.models import ResNet18_Weights, resnet18
 
@@ -91,6 +92,14 @@ def build_resnet18(num_classes=10, pretrained=True):
     return model
 
 
+def build_efficientnet_b0(num_classes=10, pretrained=True, weights="efficientnet_b0.ra_in1k"):
+    """EfficientNet-B0 from timm. pretrained=True starts from the named ImageNet weights
+    (downloaded once from Hugging Face). timm swaps the 1000-class last layer for a new
+    layer with num_classes outputs itself. All layers are trained (fine-tuned).
+    """
+    return timm.create_model(weights, pretrained=pretrained, num_classes=num_classes)
+
+
 def count_parameters(model):
     """Number of trainable numbers (weights and biases) in the model."""
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -105,4 +114,6 @@ def build_model(name, model_args=None):
         return SmallCNN(**model_args)
     if name == "resnet18":
         return build_resnet18(**model_args)
+    if name == "efficientnet_b0":
+        return build_efficientnet_b0(**model_args)
     raise ValueError(f"Unknown model: {name}")

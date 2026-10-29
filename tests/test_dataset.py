@@ -68,6 +68,16 @@ def test_resnet18_config_uses_imagenet_stats():
     assert cfg["norm_stats"]["std"] == list(expected.std)
 
 
+def test_efficientnet_b0_config_uses_timm_stats():
+    # the mean/std typed in the config must match what timm lists for these weights
+    import timm
+
+    cfg = yaml.safe_load(open(ROOT / "configs" / "efficientnet_b0.yaml"))
+    model = timm.create_model(cfg["model_args"]["weights"], pretrained=False)
+    assert cfg["norm_stats"]["mean"] == list(model.pretrained_cfg["mean"])
+    assert cfg["norm_stats"]["std"] == list(model.pretrained_cfg["std"])
+
+
 @needs_images
 def test_batches_have_right_shape_and_labels():
     for loader in build_dataloaders(CFG):

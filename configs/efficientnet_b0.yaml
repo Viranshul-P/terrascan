@@ -1,0 +1,30 @@
+# EfficientNet-B0 with ImageNet weights from timm (step 2.4). All layers are fine-tuned; the last layer is new (10 classes).
+# Training recipe = the shared recipe from step 2.2c; image size and normalisation rule = step 2.3 (configs/resnet18.yaml).
+run_name: efficientnet_b0
+model: efficientnet_b0
+model_args:
+  pretrained: true
+  weights: efficientnet_b0.ra_in1k   # exact timm weights: ImageNet-1k, timm's RandAugment recipe
+data_config: configs/data.yaml
+
+# Image-size rule (same as 2.3): every image (train, val, test) is scaled up from 64x64 to 128x128
+# with bilinear smoothing. (These weights were trained at 224 with bicubic; we keep one rule for all models.)
+image_size: 128
+# Normalise the way these weights were trained. Values from timm's pretrained_cfg; a test checks they match.
+norm_stats:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+# patience 50 = never stop early: always run all 50 epochs and keep the epoch with the lowest val loss.
+# Changed from 15 in step 2.4: with 15, two of three seeds stopped by chance while the LR was still high
+# (first attempt kept in models/efficientnet_b0_patience15/). SmallCNN v2 and ResNet-18 never stopped early,
+# so for them 15 and 50 give the same runs.
+patience: 50
+label_smoothing: 0.1
+
+wandb:
+  enabled: true
+  project: terrascan
