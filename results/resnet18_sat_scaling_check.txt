@@ -1,0 +1,6 @@
+Gap between conv1 output means and bn1's stored means, in std units (lower = closer)
+512 train images, 128x128, seed 42
+JPEG / 255 as is: 1.679
+authors' 8-bit stretch (mean +- 2 std -> 0-1): 2.260
+rescale to band stats in authors' EuroSAT script / 10000: 0.180
+rescale to SSL4EO-S12 band stats / 10000 (config): 0.042

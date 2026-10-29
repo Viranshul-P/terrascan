@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-2.4b
+2.5
 
 ## Status
 not started
@@ -26,7 +26,7 @@ not started
 - [x] 2.2c Make SmallCNN better (experiments)
 - [x] 2.3 ResNet-18 (ImageNet)
 - [x] 2.4 EfficientNet-B0
-- [ ] 2.4b ResNet-18 (satellite-pretrained)
+- [x] 2.4b ResNet-18 (satellite-pretrained)
 - [ ] 2.5 Evaluation + comparison table
 - [ ] 3.1 Confusion analysis
 - [ ] 3.2 Grad-CAM
@@ -61,6 +61,7 @@ not started
 - 2.2c — val macro-F1, faster loader, 10 experiments (results/small_cnn_ablation.md), SmallCNN v2 trained with seeds 42/43/44 in models/small_cnn_v2/, docs/learn/small_cnn.md section 8
 - 2.3 — ResNet-18 (ImageNet weights, 128×128 input, ImageNet mean/std) trained with seeds 42/43/44 in models/resnet18/; image_size + norm_stats config options
 - 2.4 — EfficientNet-B0 (timm 1.0.30, `efficientnet_b0.ra_in1k`) trained with seeds 42/43/44 in models/efficientnet_b0/; shared recipe now runs all 50 epochs (patience 50)
+- 2.4b — ResNet-18 with torchgeo SENTINEL2_RGB_MOCO weights (torchgeo 0.10.1), input rescaled to SSL4EO-S12 band stats (checked with scripts/check_sat_scaling.py), seeds 42/43/44 in models/resnet18_sat/
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -107,6 +108,17 @@ not started
   so a timm update can't switch them. Downloaded from Hugging Face without a token (no account needed).
   Same 128×128 bilinear rule and ImageNet mean/std as 2.3 (a test checks the mean/std against timm's pretrained_cfg).
   timm's default dropout (0) kept. These weights were trained at 224 with bicubic resizing; we keep one rule for all models.
+- **ResNet-18 satellite (2.4b) input scaling.** Weights: torchgeo 0.10.1 (`torchgeo==0.10.1` added to requirements.txt;
+  pulls in ~30 packages incl. lightning, kornia, rasterio, geopandas; torch/numpy/pandas unchanged)
+  `ResNet18_Weights.SENTINEL2_RGB_MOCO`: SSL4EO-S12 dataset, Sentinel-2 L1C bands B4/B3/B2, MoCo self-supervised,
+  downloaded from torchgeo's Hugging Face link. torchgeo says they expect raw Sentinel-2 numbers / 10000; our EuroSAT
+  images are 8-bit JPEGs, so that can't be copied directly. Rule used: standardise with data/stats.json, then rescale
+  each colour to SSL4EO-S12's B4/B3/B2 mean/std / 10000 (`target_stats` in configs/resnet18_sat.yaml; stats from
+  torchgeo `models/resnet.py` `_mean_s2`/`_std_s2`, the same as the SSL4EO authors' `convert_rgb.py`; a test checks them).
+  How it was chosen (no val/test used): `scripts/check_sat_scaling.py` feeds 512 train images through the pretrained
+  first layer and compares its output with the averages stored in the first BatchNorm layer during pretraining; the
+  config's scaling was the closest of 4 candidates (numbers in results/resnet18_sat_scaling_check.txt).
+  The model is torchgeo's (timm) ResNet-18: same design and parameter count as 2.3's.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -123,6 +135,9 @@ not started
   W&B run can be ignored. The rerun finished normally.
 - EfficientNet-B0 seed 44 rerun gave the same best val acc as the first attempt's seed 44 (0.9911, both of their metrics.json),
   as expected since that first run never stopped early. Good sign that runs are repeatable.
+- Low laptop RAM made Claude Code stop background training twice (2.4 seed 44, 2.4b seed 44 at epoch 40); both reruns
+  finished. The cut-off W&B runs (`efficientnet_b0-seed44`, `resnet18_sat-seed44`, partial) can be ignored. Close
+  Chrome tabs before long runs, or run training in your own terminal.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
@@ -131,3 +146,4 @@ not started
 - SmallCNN v2, seeds 42/43/44 (VAL split, not test): val acc 0.9830 ± 0.0022, val macro-F1 0.9825 ± 0.0023, 1,311,050 params (results/small_cnn_ablation.md, from models/small_cnn_v2/seed{42,43,44}/metrics.json)
 - ResNet-18 (ImageNet), seeds 42/43/44 (VAL split, not test): val acc 0.9846 ± 0.0021, val macro-F1 0.9842 ± 0.0021, 11,181,642 params, ~596 s training per seed (computed from models/resnet18/seed{42,43,44}/metrics.json, sample std). Overlaps SmallCNN v2's range, so no "better" claim yet; step 2.5 compares on test.
 - EfficientNet-B0 (ImageNet, timm), seeds 42/43/44 (VAL split, not test): val acc 0.9897 ± 0.0014, val macro-F1 0.9894 ± 0.0014, 4,020,358 params, ~888 s training per seed (computed from models/efficientnet_b0/seed{42,43,44}/metrics.json, sample std). On val its range doesn't overlap ResNet-18's; the real comparison is on test in step 2.5.
+- ResNet-18 satellite (torchgeo SENTINEL2_RGB_MOCO), seeds 42/43/44 (VAL split, not test): val acc 0.9854 ± 0.0002, val macro-F1 0.9849 ± 0.0002, 11,181,642 params, ~643 s training per seed (computed from models/resnet18_sat/seed{42,43,44}/metrics.json, sample std). Overlaps ResNet-18 ImageNet's range (0.9846 ± 0.0021), so on val there's no evidence that satellite pretraining beats photo pretraining here; step 2.5 compares on test.

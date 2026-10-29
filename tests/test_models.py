@@ -61,3 +61,12 @@ def test_efficientnet_b0_output_shape():
     model = build_model("efficientnet_b0", {"pretrained": False})
     out = model(torch.randn(2, 3, 128, 128))
     assert out.shape == (2, 10)
+
+
+def test_resnet18_sat_matches_resnet18_design():
+    # pretrained=False: random weights, so the test never downloads anything
+    model = build_model("resnet18_sat", {"pretrained": False})
+    assert model(torch.randn(2, 3, 128, 128)).shape == (2, 10)
+    # same design as the ImageNet ResNet-18 (step 2.3): only the starting weights differ
+    imagenet = build_model("resnet18", {"pretrained": False})
+    assert count_parameters(model) == count_parameters(imagenet)

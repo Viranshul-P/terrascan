@@ -97,11 +97,28 @@ class RandomRot90(torch.nn.Module):
         return torch.rot90(image, k, dims=(1, 2))
 
 
-def build_transforms(stats, train, image_size=64):
+class RescaleTo(torch.nn.Module):
+    """Give a standardised image (mean 0, std 1 per channel) a new mean and std per channel.
+
+    Used for satellite-pretrained weights (step 2.4b): makes our JPEG colours look like the
+    Sentinel-2 numbers those weights were trained on.
+    """
+
+    def __init__(self, mean, std):
+        super().__init__()
+        self.mean = torch.tensor(mean).view(3, 1, 1)
+        self.std = torch.tensor(std).view(3, 1, 1)
+
+    def forward(self, image):
+        return image * self.std + self.mean
+
+
+def build_transforms(stats, train, image_size=64, target_stats=None):
     """Train: flips, 90-degree rotations, light colour jitter, then normalise.
     Val/test: normalise only, so the same image always gives the same tensor.
     image_size other than 64: scale every image (train, val and test) up to that size
     with bilinear smoothing, after augmenting and before normalising (step 2.3).
+    target_stats: if given, after normalising rescale to this {"mean", "std"} (step 2.4b).
     """
     steps = []
     if train:
@@ -114,6 +131,8 @@ def build_transforms(stats, train, image_size=64):
     if image_size != 64:
         steps.append(v2.Resize(image_size, interpolation=v2.InterpolationMode.BILINEAR))
     steps.append(v2.Normalize(mean=stats["mean"], std=stats["std"]))
+    if target_stats:
+        steps.append(RescaleTo(target_stats["mean"], target_stats["std"]))
     if len(steps) == 1:
         return steps[0]  # val/test at 64x64: just normalise
     return v2.Compose(steps)
@@ -137,13 +156,14 @@ class EuroSATDataset(Dataset):
         return self.transform(image), label
 
 
-def build_dataloaders(cfg, image_size=64, norm_stats=None):
+def build_dataloaders(cfg, image_size=64, norm_stats=None, target_stats=None):
     """Return (train, val, test) DataLoaders built from the data config.
 
     Only train is shuffled and augmented.
     image_size: size the model sees (64 = no resizing).
     norm_stats: {"mean": [...], "std": [...]} to normalise with;
         None = our train-only data/stats.json.
+    target_stats: optional {"mean", "std"} to rescale to after normalising (see RescaleTo).
     """
     stats = norm_stats or json.loads(Path(cfg["stats_path"]).read_text())
     loaders = []
@@ -152,7 +172,7 @@ def build_dataloaders(cfg, image_size=64, norm_stats=None):
         dataset = EuroSATDataset(
             Path(cfg["splits_dir"]) / f"{name}.csv",
             cfg["raw_dir"],
-            build_transforms(stats, train=is_train, image_size=image_size),
+            build_transforms(stats, is_train, image_size, target_stats),
         )
         loaders.append(
             DataLoader(

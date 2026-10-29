@@ -1,0 +1,30 @@
+# ResNet-18 pretrained on Sentinel-2 satellite images (step 2.4b): torchgeo ResNet18_Weights.SENTINEL2_RGB_MOCO
+# (SSL4EO-S12 dataset, Sentinel-2 L1C bands B4/B3/B2 = red/green/blue, MoCo self-supervised pretraining).
+# Same as configs/resnet18.yaml except the starting weights and the input scaling they need.
+run_name: resnet18_sat
+model: resnet18_sat
+model_args:
+  pretrained: true
+data_config: configs/data.yaml
+
+# Same image-size rule as 2.3: every image (train, val, test) scaled up from 64x64 to 128x128, bilinear.
+image_size: 128
+# Input scaling: torchgeo says these weights expect raw Sentinel-2 numbers divided by 10000. Our images are
+# 8-bit JPEGs, so: standardise with our train-only data/stats.json (norm_stats unset), then rescale each
+# colour to the mean/std of SSL4EO-S12 L1C bands B4, B3, B2 divided by 10000. Band stats from torchgeo's
+# models/resnet.py (_mean_s2/_std_s2, same as zhu-xlab/SSL4EO-S12 src/download_data/convert_rgb.py);
+# a test checks these values. Chosen in step 2.4b by checking the first layer's stored BatchNorm stats
+# (see PROGRESS.md "Decisions made").
+target_stats:
+  mean: [0.13731, 0.13223, 0.13976]   # B4 1373.1, B3 1322.3, B2 1397.6, / 10000
+  std: [0.11449, 0.08787, 0.08543]    # B4 1144.9, B3 878.7, B2 854.3, / 10000
+
+epochs: 50
+lr: 0.001
+weight_decay: 0.05
+patience: 50         # = no early stopping: run all 50 epochs, keep the lowest-val-loss epoch (rule from 2.4)
+label_smoothing: 0.1
+
+wandb:
+  enabled: true
+  project: terrascan

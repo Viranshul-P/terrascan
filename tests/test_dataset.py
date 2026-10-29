@@ -78,6 +78,31 @@ def test_efficientnet_b0_config_uses_timm_stats():
     assert cfg["norm_stats"]["std"] == list(model.pretrained_cfg["std"])
 
 
+def test_rescale_to_target_stats():
+    # a standardised image (mean 0, std 1) should come out with the target mean and std
+    target = {"mean": [0.1, 0.2, 0.3], "std": [0.01, 0.02, 0.03]}
+    transform = build_transforms(load_stats(), train=False, image_size=128, target_stats=target)
+    stats = load_stats()
+    mean = torch.tensor(stats["mean"]).view(3, 1, 1)
+    std = torch.tensor(stats["std"]).view(3, 1, 1)
+    image = torch.randn(3, 64, 64) * std + mean  # an image with roughly our stats
+    out = transform(image)
+    assert out.shape == (3, 128, 128)
+    assert torch.allclose(out.mean(dim=(1, 2)), torch.tensor(target["mean"]), atol=0.01)
+
+
+def test_resnet18_sat_config_uses_ssl4eo_band_stats():
+    # target_stats must be torchgeo's SSL4EO-S12 band stats for B4, B3, B2, divided by 10000
+    from torchgeo.models import resnet
+
+    cfg = yaml.safe_load(open(ROOT / "configs" / "resnet18_sat.yaml"))
+    bands = resnet._sentinel2_toa_bands
+    for i, band in enumerate(resnet._sentinel2_rgb_bands):
+        j = bands.index(band)
+        assert cfg["target_stats"]["mean"][i] == pytest.approx(resnet._mean_s2[j] / 10000)
+        assert cfg["target_stats"]["std"][i] == pytest.approx(resnet._std_s2[j] / 10000)
+
+
 @needs_images
 def test_batches_have_right_shape_and_labels():
     for loader in build_dataloaders(CFG):

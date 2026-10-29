@@ -204,7 +204,7 @@ def main():
         mode="online" if cfg["wandb"]["enabled"] else "disabled",
     )
     train_loader, val_loader, _ = build_dataloaders(  # test split is not used here
-        data_cfg, cfg.get("image_size", 64), cfg.get("norm_stats")
+        data_cfg, cfg.get("image_size", 64), cfg.get("norm_stats"), cfg.get("target_stats")
     )
     model = build_model(cfg["model"], cfg.get("model_args"))
     best_state, metrics, history = fit(

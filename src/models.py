@@ -1,10 +1,11 @@
 """Models. Every model takes images (B, 3, H, W) and returns 10 class scores (B, 10).
 
 SmallCNN expects 64x64. ResNet-18 and EfficientNet-B0 work on any size
-(steps 2.3 and 2.4 use 128x128, see configs/resnet18.yaml).
+(steps 2.3, 2.4 and 2.4b use 128x128, see configs/resnet18.yaml).
 """
 
 import timm
+import torchgeo.models
 from torch import nn
 from torchvision.models import ResNet18_Weights, resnet18
 
@@ -100,6 +101,18 @@ def build_efficientnet_b0(num_classes=10, pretrained=True, weights="efficientnet
     return timm.create_model(weights, pretrained=pretrained, num_classes=num_classes)
 
 
+def build_resnet18_sat(num_classes=10, pretrained=True):
+    """ResNet-18 from torchgeo. pretrained=True starts from weights learned on Sentinel-2 RGB
+    satellite images (SSL4EO-S12 dataset, MoCo self-supervised method), downloaded once.
+
+    Same ResNet-18 design as build_resnet18 (built by timm instead of torchvision): only the
+    starting weights differ. The last layer `fc` is new, with num_classes outputs.
+    All layers are trained.
+    """
+    weights = torchgeo.models.ResNet18_Weights.SENTINEL2_RGB_MOCO if pretrained else None
+    return torchgeo.models.resnet18(weights=weights, num_classes=num_classes)
+
+
 def count_parameters(model):
     """Number of trainable numbers (weights and biases) in the model."""
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -116,4 +129,6 @@ def build_model(name, model_args=None):
         return build_resnet18(**model_args)
     if name == "efficientnet_b0":
         return build_efficientnet_b0(**model_args)
+    if name == "resnet18_sat":
+        return build_resnet18_sat(**model_args)
     raise ValueError(f"Unknown model: {name}")

@@ -11,3 +11,4 @@ ruff==0.12.9
 wandb==0.31.0
 matplotlib==3.11.2
 timm==1.0.30
+torchgeo==0.10.1
