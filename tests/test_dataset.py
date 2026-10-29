@@ -79,16 +79,18 @@ def test_efficientnet_b0_config_uses_timm_stats():
 
 
 def test_rescale_to_target_stats():
-    # a standardised image (mean 0, std 1) should come out with the target mean and std
+    # a standardised image (mean 0, std 1) should come out with the target mean and std.
+    # Checked at 64x64: scaling random noise up to 128 blurs it, which lowers its std.
     target = {"mean": [0.1, 0.2, 0.3], "std": [0.01, 0.02, 0.03]}
-    transform = build_transforms(load_stats(), train=False, image_size=128, target_stats=target)
     stats = load_stats()
     mean = torch.tensor(stats["mean"]).view(3, 1, 1)
     std = torch.tensor(stats["std"]).view(3, 1, 1)
     image = torch.randn(3, 64, 64) * std + mean  # an image with roughly our stats
-    out = transform(image)
-    assert out.shape == (3, 128, 128)
+    out = build_transforms(stats, train=False, target_stats=target)(image)
     assert torch.allclose(out.mean(dim=(1, 2)), torch.tensor(target["mean"]), atol=0.01)
+    assert torch.allclose(out.std(dim=(1, 2)), torch.tensor(target["std"]), atol=0.005)
+    resized = build_transforms(stats, train=False, image_size=128, target_stats=target)
+    assert resized(image).shape == (3, 128, 128)
 
 
 def test_resnet18_sat_config_uses_ssl4eo_band_stats():

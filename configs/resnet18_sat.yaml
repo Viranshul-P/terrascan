@@ -11,10 +11,10 @@ data_config: configs/data.yaml
 image_size: 128
 # Input scaling: torchgeo says these weights expect raw Sentinel-2 numbers divided by 10000. Our images are
 # 8-bit JPEGs, so: standardise with our train-only data/stats.json (norm_stats unset), then rescale each
-# colour to the mean/std of SSL4EO-S12 L1C bands B4, B3, B2 divided by 10000. Band stats from torchgeo's
-# models/resnet.py (_mean_s2/_std_s2, same as zhu-xlab/SSL4EO-S12 src/download_data/convert_rgb.py);
-# a test checks these values. Chosen in step 2.4b by checking the first layer's stored BatchNorm stats
-# (see PROGRESS.md "Decisions made").
+# colour to the mean/std of SSL4EO-S12 L1C bands B4, B3, B2 divided by 10000. Band stats from torchgeo 0.10.1
+# models/resnet.py (_mean_s2/_std_s2; a test checks these values). The same numbers are S2C_MEAN/S2C_STD in
+# zhu-xlab/SSL4EO-S12 src/download_data/convert_rgb.py (main branch, checked by hand on 2026-10-29).
+# Chosen in step 2.4b with scripts/check_sat_scaling.py (results/resnet18_sat_scaling_check.txt).
 target_stats:
   mean: [0.13731, 0.13223, 0.13976]   # B4 1373.1, B3 1322.3, B2 1397.6, / 10000
   std: [0.11449, 0.08787, 0.08543]    # B4 1144.9, B3 878.7, B2 854.3, / 10000

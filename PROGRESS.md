@@ -114,10 +114,14 @@ not started
   downloaded from torchgeo's Hugging Face link. torchgeo says they expect raw Sentinel-2 numbers / 10000; our EuroSAT
   images are 8-bit JPEGs, so that can't be copied directly. Rule used: standardise with data/stats.json, then rescale
   each colour to SSL4EO-S12's B4/B3/B2 mean/std / 10000 (`target_stats` in configs/resnet18_sat.yaml; stats from
-  torchgeo `models/resnet.py` `_mean_s2`/`_std_s2`, the same as the SSL4EO authors' `convert_rgb.py`; a test checks them).
+  torchgeo `models/resnet.py` `_mean_s2`/`_std_s2`, a test checks them. The same numbers are `S2C_MEAN`/`S2C_STD` in the
+  SSL4EO authors' `src/download_data/convert_rgb.py`, main branch, checked by hand on 2026-10-29. torchgeo itself cites
+  their `linear_BE_moco.py`/`eurosat_dataset.py` for the normalisation; that script's band stats are a different set,
+  tested as a candidate in the check).
   How it was chosen (no val/test used): `scripts/check_sat_scaling.py` feeds 512 train images through the pretrained
-  first layer and compares its output with the averages stored in the first BatchNorm layer during pretraining; the
-  config's scaling was the closest of 4 candidates (numbers in results/resnet18_sat_scaling_check.txt).
+  first layer and compares its output mean and spread with those stored in the first BatchNorm layer during
+  pretraining; the config's scaling was the closest of 4 candidates on both (results/resnet18_sat_scaling_check.txt;
+  spread added after /review-step).
   The model is torchgeo's (timm) ResNet-18: same design and parameter count as 2.3's.
 
 ## Known issues / things to revisit
