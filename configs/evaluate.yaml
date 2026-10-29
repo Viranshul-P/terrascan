@@ -1,0 +1,28 @@
+# Step 2.5: evaluate every saved model on the TEST split (the only time Phase 2 uses it).
+# Each run is loaded with its own saved models/<run>/seed<N>/config.yaml, so it gets the same
+# image size and input scaling it was trained with.
+models:
+  - name: small_cnn_v1
+    run_dir: models/small_cnn_v1
+    seeds: [42]          # v1 was trained with one seed only (step 2.2b)
+  - name: small_cnn_v2
+    run_dir: models/small_cnn_v2
+    seeds: [42, 43, 44]
+  - name: resnet18
+    run_dir: models/resnet18
+    seeds: [42, 43, 44]
+  - name: efficientnet_b0
+    run_dir: models/efficientnet_b0
+    seeds: [42, 43, 44]
+  - name: resnet18_sat
+    run_dir: models/resnet18_sat
+    seeds: [42, 43, 44]
+
+# CPU time per image: model only (no JPEG reading or resizing), batch size 1, float32.
+cpu_threads: 1           # fixed, steadiest numbers and closest to a small free-tier server
+warmup_runs: 20
+timed_runs: 200          # we report the median of these
+
+confusion_seed: 42       # confusion matrix PNG is drawn for this seed
+results_dir: results
+figures_dir: reports/figures

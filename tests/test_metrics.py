@@ -3,7 +3,7 @@
 import pytest
 import torch
 
-from src.metrics import macro_f1
+from src.metrics import confusion_matrix, macro_f1, per_class_f1
 
 
 def test_perfect_predictions_give_one():
@@ -27,3 +27,18 @@ def test_every_class_counts_equally():
     preds = torch.tensor([0] * 10)
     # class 0: TP 9, FP 1, FN 0 -> 18/19 ; class 1: TP 0 -> 0
     assert macro_f1(preds, labels, num_classes=2) == pytest.approx((18 / 19 + 0) / 2)
+
+
+def test_per_class_f1_hand_worked():
+    labels = torch.tensor([0, 0, 1, 1])
+    preds = torch.tensor([0, 1, 1, 1])
+    assert per_class_f1(preds, labels, num_classes=2) == pytest.approx([2 / 3, 4 / 5])
+
+
+def test_confusion_matrix_rows_are_true_columns_are_predicted():
+    labels = torch.tensor([0, 0, 1, 1, 2])
+    preds = torch.tensor([0, 1, 1, 1, 0])
+    expected = torch.tensor([[1, 1, 0], [0, 2, 0], [1, 0, 0]])
+    matrix = confusion_matrix(preds, labels, num_classes=3)
+    assert torch.equal(matrix, expected)
+    assert matrix.sum() == len(labels)  # every image counted once

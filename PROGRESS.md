@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-2.5
+3.1
 
 ## Status
 not started
@@ -27,7 +27,7 @@ not started
 - [x] 2.3 ResNet-18 (ImageNet)
 - [x] 2.4 EfficientNet-B0
 - [x] 2.4b ResNet-18 (satellite-pretrained)
-- [ ] 2.5 Evaluation + comparison table
+- [x] 2.5 Evaluation + comparison table
 - [ ] 3.1 Confusion analysis
 - [ ] 3.2 Grad-CAM
 - [ ] 4.1 Imagery pipeline
@@ -62,6 +62,7 @@ not started
 - 2.3 — ResNet-18 (ImageNet weights, 128×128 input, ImageNet mean/std) trained with seeds 42/43/44 in models/resnet18/; image_size + norm_stats config options
 - 2.4 — EfficientNet-B0 (timm 1.0.30, `efficientnet_b0.ra_in1k`) trained with seeds 42/43/44 in models/efficientnet_b0/; shared recipe now runs all 50 epochs (patience 50)
 - 2.4b — ResNet-18 with torchgeo SENTINEL2_RGB_MOCO weights (torchgeo 0.10.1), input rescaled to SSL4EO-S12 band stats (checked with scripts/check_sat_scaling.py), seeds 42/43/44 in models/resnet18_sat/
+- 2.5 — src/evaluate.py ran once on the TEST split (5 models, 13 runs) → results/<model>.json; scripts/comparison_table.py → results/comparison.md; confusion PNGs in reports/figures/
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -123,6 +124,11 @@ not started
   pretraining; the config's scaling was the closest of 4 candidates on both (results/resnet18_sat_scaling_check.txt;
   spread added after /review-step).
   The model is torchgeo's (timm) ResNet-18: same design and parameter count as 2.3's.
+- Evaluation (2.5): each run is reloaded with its own saved config.yaml (same image size and scaling as in training),
+  predictions in float32 (no AMP). CPU time = model only, batch 1, 1 thread, median of 200 after 20 warm-ups, on this
+  laptop. Settings in configs/evaluate.yaml. No W&B for evaluation (PLAN asks for JSON files; PLAN wins over SPEC).
+  Before the test run, 5 reloaded runs were checked on VAL and matched their saved best_val_acc exactly.
+  The test split has now been used once; no model or setting may be changed because of these results.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -142,6 +148,9 @@ not started
 - Low laptop RAM made Claude Code stop background training twice (2.4 seed 44, 2.4b seed 44 at epoch 40); both reruns
   finished. The cut-off W&B runs (`efficientnet_b0-seed44`, `resnet18_sat-seed44`, partial) can be ignored. Close
   Chrome tabs before long runs, or run training in your own terminal.
+- PLAN's 2.2c "Expect" (small CNN trails pretrained models, at a fraction of their CPU time) did not hold on test:
+  SmallCNN v2 is about the same as EfficientNet-B0 on accuracy and slower on CPU (results/comparison.md).
+  Not measured why; a likely reason is that v2 runs wide convs (64 channels, twice) at full 64×64 resolution.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
@@ -151,3 +160,9 @@ not started
 - ResNet-18 (ImageNet), seeds 42/43/44 (VAL split, not test): val acc 0.9846 ± 0.0021, val macro-F1 0.9842 ± 0.0021, 11,181,642 params, ~596 s training per seed (computed from models/resnet18/seed{42,43,44}/metrics.json, sample std). Overlaps SmallCNN v2's range, so no "better" claim yet; step 2.5 compares on test.
 - EfficientNet-B0 (ImageNet, timm), seeds 42/43/44 (VAL split, not test): val acc 0.9897 ± 0.0014, val macro-F1 0.9894 ± 0.0014, 4,020,358 params, ~888 s training per seed (computed from models/efficientnet_b0/seed{42,43,44}/metrics.json, sample std). On val its range doesn't overlap ResNet-18's; the real comparison is on test in step 2.5.
 - ResNet-18 satellite (torchgeo SENTINEL2_RGB_MOCO), seeds 42/43/44 (VAL split, not test): val acc 0.9854 ± 0.0002, val macro-F1 0.9849 ± 0.0002, 11,181,642 params, ~643 s training per seed (computed from models/resnet18_sat/seed{42,43,44}/metrics.json, sample std). Overlaps ResNet-18 ImageNet's range (0.9846 ± 0.0021), so on val there's no evidence that satellite pretraining beats photo pretraining here; step 2.5 compares on test.
+- **TEST split (step 2.5), all from results/comparison.md (generated from results/<model>.json):**
+  SmallCNN v1 (1 seed) acc 0.9615; SmallCNN v2 0.9874 ± 0.0007, 11.82 ms/image CPU; ResNet-18 ImageNet
+  0.9854 ± 0.0002, 14.53 ms; EfficientNet-B0 0.9869 ± 0.0013, 7.57 ms; ResNet-18 satellite 0.9852 ± 0.0011, 14.35 ms.
+  Ranges overlap for: SmallCNN v2 vs EfficientNet-B0, and among all three pretrained models (so satellite vs ImageNet
+  pretraining: about the same on EuroSAT). SmallCNN v2 vs both ResNet-18s: no overlap, but the gap between the best and
+  worst 3-seed means is only 0.22 percentage points (about 9 of 4050 test images).
