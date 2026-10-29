@@ -127,7 +127,8 @@ not started
 - Evaluation (2.5): each run is reloaded with its own saved config.yaml (same image size and scaling as in training),
   predictions in float32 (no AMP). CPU time = model only, batch 1, 1 thread, median of 200 after 20 warm-ups, on this
   laptop. Settings in configs/evaluate.yaml. No W&B for evaluation (PLAN asks for JSON files; PLAN wins over SPEC).
-  Before the test run, 5 reloaded runs were checked on VAL and matched their saved best_val_acc exactly.
+  Reload check on VAL (scripts/val_reload_check.py): seed 42 of all 5 models, reloaded, match their saved
+  best_val_acc exactly (results/val_reload_check.txt; first run as a scratch script before the test run, saved after /review-step).
   The test split has now been used once; no model or setting may be changed because of these results.
 
 ## Known issues / things to revisit

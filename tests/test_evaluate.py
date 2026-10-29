@@ -46,8 +46,10 @@ def test_predict_returns_one_label_per_image():
 
 
 def test_cpu_timing_is_positive():
+    threads_before = torch.get_num_threads()
     ms = cpu_ms_per_image(build_model("tiny"), 64, threads=1, warmup_runs=2, timed_runs=5)
     assert ms > 0
+    assert torch.get_num_threads() == threads_before  # thread count is put back
 
 
 def test_confusion_png_is_saved(tmp_path):

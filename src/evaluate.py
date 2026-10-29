@@ -56,7 +56,9 @@ def cpu_ms_per_image(model, image_size, threads, warmup_runs, timed_runs):
     """Median CPU time (milliseconds) for one image, batch size 1, after warm-up runs.
 
     Times the model only: the input is a random tensor of the right size.
+    The thread count is put back afterwards, so later predictions use all threads again.
     """
+    old_threads = torch.get_num_threads()
     torch.set_num_threads(threads)
     model = model.cpu().eval()
     x = torch.randn(1, 3, image_size, image_size)
@@ -67,6 +69,7 @@ def cpu_ms_per_image(model, image_size, threads, warmup_runs, timed_runs):
         start = time.perf_counter()
         model(x)
         times.append((time.perf_counter() - start) * 1000)
+    torch.set_num_threads(old_threads)
     return statistics.median(times)
 
 
@@ -126,7 +129,7 @@ def main():
     parser.add_argument("--config", required=True)
     args = parser.parse_args()
     eval_cfg = yaml.safe_load(open(args.config, encoding="utf-8"))
-    torch.manual_seed(42)
+    torch.manual_seed(eval_cfg["seed"])  # only sets the random input used for CPU timing
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device for predictions: {device}; CPU timing uses {eval_cfg['cpu_threads']} thread(s)")
 

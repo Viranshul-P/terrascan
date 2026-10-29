@@ -23,6 +23,7 @@ cpu_threads: 1           # fixed, steadiest numbers and closest to a small free-
 warmup_runs: 20
 timed_runs: 200          # we report the median of these
 
+seed: 42                 # random input tensor for CPU timing
 confusion_seed: 42       # confusion matrix PNG is drawn for this seed
 results_dir: results
 figures_dir: reports/figures

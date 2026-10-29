@@ -1,0 +1,6 @@
+VAL accuracy: reloaded vs saved in metrics.json (seed 42, float32)
+small_cnn_v1: reloaded 0.9565 | saved 0.9565 | match
+small_cnn_v2: reloaded 0.9812 | saved 0.9812 | match
+resnet18: reloaded 0.9830 | saved 0.9830 | match
+efficientnet_b0: reloaded 0.9884 | saved 0.9884 | match
+resnet18_sat: reloaded 0.9854 | saved 0.9854 | match
