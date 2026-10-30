@@ -141,7 +141,8 @@ not started
 
 - Workflow change (2026-10-30, user's decision): Claude now does the "You do" parts too, except account/login/
   publishing actions, testing with real people and launch posts. Whoever did each part is recorded honestly
-  (CLAUDE.md, PLAN.md legend, /next skill updated).
+  (CLAUDE.md, PLAN.md legend, /next skill updated). Exception still open: Indian labels (4.2) and the change
+  check (4.8). The user decides then who does them; ask before starting.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->

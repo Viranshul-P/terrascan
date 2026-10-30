@@ -30,9 +30,9 @@ The user drives work with three commands:
   Always say which file it came from.
 - Never claim something works without running it. "Should work" is not done.
 - If a training run, download or test fails, say so plainly. Don't hide it or quietly work around it.
-- Indian patch labels (4.2) and the change check (4.8) may be done by Claude, by looking at each patch blind to the
-  model's predictions. The dataset card, README and blog must then say the labels/judgements came from an AI
-  (Claude), not a person, with the same skip rules.
+- Indian patch labels (4.2) and the change check (4.8): NOT decided yet. When the step comes, ask the user whether
+  they or Claude will do it; don't start either way before they answer. Whoever does it, labelling happens blind to
+  the model's predictions, and the dataset card, README and blog say who labelled (the user by hand, or Claude).
 - Don't make up download URLs, API fields or library functions. If unsure, check the installed
   library (`python -c "import x; help(x.y)"`) or ask.
 
