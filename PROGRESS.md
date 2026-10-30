@@ -3,17 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-3.1
+3.2
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Step 3.1 write-up. Open `reports/figures/confused_pairs.png` (and the table in `results/confused_pairs.md`).
-Create `reports/confusion_notes.md` and write 3–5 sentences in your own words about why the model mixes up these
-class pairs (look at colours, shapes, textures, field patterns). Claude can suggest ideas if you ask, but the words
-must be yours. Next `/next` checks that the file exists and has 3–5 sentences, then ticks 3.1.
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -31,7 +28,7 @@ must be yours. Next `/next` checks that the file exists and has 3–5 sentences,
 - [x] 2.4 EfficientNet-B0
 - [x] 2.4b ResNet-18 (satellite-pretrained)
 - [x] 2.5 Evaluation + comparison table
-- [ ] 3.1 Confusion analysis
+- [x] 3.1 Confusion analysis
 - [ ] 3.2 Grad-CAM
 - [ ] 4.1 Imagery pipeline
 - [ ] 4.2 Patch cutter + labelling tool
@@ -66,6 +63,7 @@ must be yours. Next `/next` checks that the file exists and has 3–5 sentences,
 - 2.4 — EfficientNet-B0 (timm 1.0.30, `efficientnet_b0.ra_in1k`) trained with seeds 42/43/44 in models/efficientnet_b0/; shared recipe now runs all 50 epochs (patience 50)
 - 2.4b — ResNet-18 with torchgeo SENTINEL2_RGB_MOCO weights (torchgeo 0.10.1), input rescaled to SSL4EO-S12 band stats (checked with scripts/check_sat_scaling.py), seeds 42/43/44 in models/resnet18_sat/
 - 2.5 — src/evaluate.py ran once on the TEST split (5 models, 13 runs) → results/<model>.json; scripts/comparison_table.py → results/comparison.md; confusion PNGs in reports/figures/
+- 3.1 — src/confusion.py → results/confused_pairs.md + reports/figures/confused_pairs.png (EfficientNet-B0 seed 42); user's notes + Claude's marked ideas in reports/confusion_notes.md
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -137,6 +135,9 @@ must be yours. Next `/next` checks that the file exists and has 3–5 sentences,
   highest mean VAL accuracy over seeds 42/43/44 (EfficientNet-B0, 0.9897), seed-42 checkpoint. A "pair" counts both
   directions together (A→B plus B→A); the table shows each direction. The script stops if its confusion matrix differs
   from the one saved in results/efficientnet_b0.json (it matched). Grid shows every mistake for each top-5 pair (max 10).
+- 3.1 write-up: user wrote the observations (section 1 of reports/confusion_notes.md, Claude only fixed spelling). User
+  then explicitly waived the "write-up must be yours" rule for this step; Claude's added ideas are in a separate,
+  clearly marked section and are untested hypotheses (to check in 3.2 Grad-CAM and 4.3).
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
