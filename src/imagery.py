@@ -18,7 +18,8 @@ import numpy as np
 import planetary_computer
 import pystac_client
 import rasterio
-from rasterio.warp import transform_bounds
+from rasterio.transform import xy
+from rasterio.warp import transform, transform_bounds
 from rasterio.windows import from_bounds
 from shapely.geometry import box, shape
 
@@ -114,6 +115,24 @@ def read_box(item, bbox):
     dn = np.stack(bands, axis=-1)
     has_data = (dn != 0).all(axis=-1)  # 0 = no data in Sentinel-2 L2A
     return dn, has_data
+
+
+def box_grid(item, bbox):
+    """The map grid of read_box's output: (crs, affine transform from pixel row/col to map x/y).
+
+    Uses the same window as read_box, so pixel (row, col) of its output sits at the same place.
+    """
+    with rasterio.open(item.assets[RGB_BANDS[0]].href) as src:
+        bounds = transform_bounds("EPSG:4326", src.crs, *bbox)
+        window = from_bounds(*bounds, transform=src.transform).round_offsets().round_lengths()
+        return src.crs.to_string(), src.window_transform(window)
+
+
+def patch_centre_lonlat(grid_transform, crs, row, col, size=64):
+    """lon, lat (degrees) of the centre of the size x size patch with top-left pixel (row, col)."""
+    x, y = xy(grid_transform, row + size / 2, col + size / 2, offset="ul")
+    lons, lats = transform(crs, "EPSG:4326", [x], [y])
+    return lons[0], lats[0]
 
 
 def box_to_values(item, bbox):

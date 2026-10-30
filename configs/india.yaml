@@ -1,0 +1,41 @@
+# Step 4.2: Indian patches + labeller.
+#   Cut patches:   python scripts/india_patches.py --config configs/india.yaml
+#   Label them:    python -m src.labeller --config configs/india.yaml
+
+# Same pipeline settings as step 4.1 (configs/imagery.yaml). The colour calibration is loaded
+# from 4.1's file and used unchanged; it was fitted on European areas only.
+scale_max: 2750
+patch_size: 64
+max_cloud: 10                # percent cloud for the whole scene; the clearest scene is used
+calibration_path: results/imagery_calibration.json
+
+# 5 areas in Gujarat, about 10 x 11 km each, boxes don't overlap.
+# bbox = [west, south, east, north] in lon/lat. All in the same dry season as 4.1.
+# Boxes were chosen by Claude from rough place coordinates; checked by eye in the area figure.
+areas:
+  - name: ahmedabad_city
+    bbox: [72.50, 22.98, 72.60, 23.08]     # same box as step 4.1
+    dates: 2026-01-01/2026-02-28
+  - name: vadodara_outskirts
+    bbox: [73.08, 22.28, 73.18, 22.38]     # west edge of Vadodara
+    dates: 2026-01-01/2026-02-28
+  - name: sanand_farmland
+    bbox: [72.25, 22.85, 72.35, 22.95]     # villages and fields south-west of Sanand
+    dates: 2026-01-01/2026-02-28
+  - name: narmada_bharuch
+    bbox: [72.90, 21.65, 73.00, 21.75]     # Narmada river at Bharuch
+    dates: 2026-01-01/2026-02-28
+  - name: ankleshwar_industrial
+    bbox: [72.98, 21.57, 73.08, 21.65]     # Ankleshwar GIDC industrial estate
+    dates: 2026-01-01/2026-02-28
+
+cache_dir: imagery                         # raw reads saved here (git-ignored)
+patches_dir: data/india/patches            # one PNG per patch (git-ignored)
+patches_csv: data/india/patches.csv        # file, area, lat, lon, ... (git-ignored)
+labels_csv: data/india/labels.csv          # written by the labeller (git-ignored)
+areas_figure_path: reports/figures/india_areas.png
+summary_path: results/india_patches.json        # patches per area + scene used
+
+# Labeller: patches are shown in a shuffled order (this seed), so areas are mixed.
+seed: 42
+display_size: 384                          # patch shown 6x bigger, sharp pixels

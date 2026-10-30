@@ -6,11 +6,21 @@ Claude updates this at the end of every step. Keep entries short.
 4.2
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+**Step 4.2: label the Indian patches by hand (about 30-45 min, can be split over several sittings).**
+1. In a terminal in the repo folder: `.venv\Scripts\activate`, then `python -m src.labeller --config configs/india.yaml`
+   (a browser tab opens at http://127.0.0.1:7860; close the terminal to stop).
+2. For each patch, click the EuroSAT class that covers **most** of it. Unsure, or it fits no class (dry riverbed, bare
+   plot, dense informal housing)? Click **Skip / unclear**. Don't guess, and don't force rare classes.
+   Not sure what a class looks like? Open `reports/figures/samples_per_class.png` (EuroSAT examples).
+3. Aim for **150-200 labelled** (skips don't count). The counter under the image shows how many you have per class.
+   Every click is saved at once; start the app again any time and it continues where you stopped.
+4. Misclick? There's no undo button: stop the app, open `data/india/labels.csv` and delete that row, start it again.
+5. The app never shows a model prediction. Please don't look up model predictions for these patches before you're done.
+6. When done, type `/next`. Claude will check `data/india/labels.csv` (rows, labels per class, per area) and finish 4.2.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -164,6 +174,18 @@ not started
   summer scenes (Lyon, Poznan, Utrecht) to 1000 EuroSAT TRAIN images. Munich held out as the check, Ahmedabad never
   used in the fit. Fitted numbers in results/imagery_calibration.json; 4.2+ must load them from there, unchanged.
   Claude wrote the code and judged the figures by eye (no "You do" part in this step).
+- **Indian labels (4.2): the user labels them by hand.** Asked at the start of 4.2; the user said "do as u think", and
+  Claude's recommendation was that the user labels (SPEC: "done by hand by me (not by an AI)"), so the labels are the
+  user's. Claude wrote the patch cutter and the labeller.
+- Indian areas (4.2, configs/india.yaml): 5 non-overlapping boxes in Gujarat, about 10 km wide: Ahmedabad city (same box
+  as 4.1), Vadodara west edge, farmland SW of Sanand, Narmada at Bharuch, Ankleshwar GIDC. Boxes picked by Claude from
+  rough place coordinates, checked by eye in reports/figures/india_areas.png. Dry season, Jan-Feb 2026, clearest scene
+  per area, same pipeline and 4.1 calibration unchanged. `python scripts/india_patches.py --config configs/india.yaml`
+  -> PNGs in data/india/patches/ + data/india/patches.csv (git-ignored) + results/india_patches.json.
+- Labeller: `gradio==6.30.0` added (released 2026-10-08; pulls in fastapi, uvicorn, starlette, rich, typer, orjson and
+  ~13 smaller packages; nothing existing upgraded). Local only, no share link, no account. Patches shown in a fixed
+  shuffled order (seed 42) so areas mix; labels.csv = file, label, area, lat (patch centre), lon; "skip" saved too, so
+  resuming skips it. Image sent as PNG (Gradio's default WebP is lossy), enlarged 6x with sharp pixels.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -205,6 +227,10 @@ not started
 - The orange/red histogram lines in imagery_vs_eurosat.png have a comb pattern: each 0-255 step covers 10 or 11 raw
   values (2750/254), so neighbouring bins alternate in size. Display effect only.
 - planetary-computer 1.0.0 prints a pydantic deprecation warning on import. Harmless.
+- Indian patches (4.2): ahmedabad_city and sanand_farmland come from the same scene, ankleshwar_industrial and
+  narmada_bharuch from the same date (results/india_patches.json). Ankleshwar's box is shorter, so fewer patches.
+  Neighbouring patches look alike: when 4.4 splits labels into fine-tune/test, split by area or by block, not at random,
+  or the test score will be too kind.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
@@ -227,3 +253,5 @@ not started
   Ahmedabad plain 0.516/0.466/0.397 -> calibrated 0.495/0.507/0.538. Calibration gain 0.907/0.905/0.839, shift
   70/234/565 (results/imagery_calibration.json). Calibration changed 17.3% of EfficientNet-B0 seed-42 predictions on
   Munich (same_prediction_share 0.827); mean confidence 0.782 -> 0.802 (results/imagery_check.json). No true labels.
+- Indian patches cut (4.2, results/india_patches.json): 1310 total; ahmedabad_city 272, vadodara_outskirts 270,
+  sanand_farmland 272, narmada_bharuch 272, ankleshwar_industrial 224. All scenes baseline 05.11/05.12 (offset removed).

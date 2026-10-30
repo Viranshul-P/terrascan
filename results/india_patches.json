@@ -1,0 +1,45 @@
+{
+  "total_patches": 1310,
+  "areas": {
+    "ahmedabad_city": {
+      "patches": 272,
+      "scene_id": "S2B_MSIL2A_20260121T054039_R005_T43QBF_20260121T091302",
+      "date": "2026-01-21",
+      "scene_cloud_percent": 1e-05,
+      "processing_baseline": "05.11",
+      "offset_removed": true
+    },
+    "vadodara_outskirts": {
+      "patches": 270,
+      "scene_id": "S2C_MSIL2A_20260215T053921_R005_T43QCE_20260215T085810",
+      "date": "2026-02-15",
+      "scene_cloud_percent": 0.000734,
+      "processing_baseline": "05.12",
+      "offset_removed": true
+    },
+    "sanand_farmland": {
+      "patches": 272,
+      "scene_id": "S2B_MSIL2A_20260121T054039_R005_T43QBF_20260121T091302",
+      "date": "2026-01-21",
+      "scene_cloud_percent": 1e-05,
+      "processing_baseline": "05.11",
+      "offset_removed": true
+    },
+    "narmada_bharuch": {
+      "patches": 272,
+      "scene_id": "S2C_MSIL2A_20260116T054201_R005_T43QBE_20260116T091409",
+      "date": "2026-01-16",
+      "scene_cloud_percent": 0.002936,
+      "processing_baseline": "05.11",
+      "offset_removed": true
+    },
+    "ankleshwar_industrial": {
+      "patches": 224,
+      "scene_id": "S2C_MSIL2A_20260116T054201_R005_T43QBD_20260116T091409",
+      "date": "2026-01-16",
+      "scene_cloud_percent": 0.000335,
+      "processing_baseline": "05.11",
+      "offset_removed": true
+    }
+  }
+}
