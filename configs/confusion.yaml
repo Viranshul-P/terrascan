@@ -1,0 +1,20 @@
+# Step 3.1: which classes does the best model mix up on the TEST split?
+# The best model is picked by mean VAL accuracy over its seeds (never by test numbers).
+candidates:              # same models and run folders as configs/evaluate.yaml
+  - name: small_cnn_v2
+    run_dir: models/small_cnn_v2
+  - name: resnet18
+    run_dir: models/resnet18
+  - name: efficientnet_b0
+    run_dir: models/efficientnet_b0
+  - name: resnet18_sat
+    run_dir: models/resnet18_sat
+val_seeds: [42, 43, 44]  # mean val accuracy over these picks the best model
+seed: 42                 # the checkpoint we analyse (PLAN 3.1: seed 42)
+
+top_k: 5                 # how many confused pairs to list
+max_images_per_pair: 10  # columns in the grid (enough to show every mistake of the top pairs)
+
+results_dir: results     # results/<model>.json from step 2.5 (for the matrix check)
+table_path: results/confused_pairs.md
+figure_path: reports/figures/confused_pairs.png

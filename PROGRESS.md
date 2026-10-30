@@ -6,11 +6,14 @@ Claude updates this at the end of every step. Keep entries short.
 3.1
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+Step 3.1 write-up. Open `reports/figures/confused_pairs.png` (and the table in `results/confused_pairs.md`).
+Create `reports/confusion_notes.md` and write 3–5 sentences in your own words about why the model mixes up these
+class pairs (look at colours, shapes, textures, field patterns). Claude can suggest ideas if you ask, but the words
+must be yours. Next `/next` checks that the file exists and has 3–5 sentences, then ticks 3.1.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -130,6 +133,10 @@ not started
   Reload check on VAL (scripts/val_reload_check.py): seed 42 of all 5 models, reloaded, match their saved
   best_val_acc exactly (results/val_reload_check.txt; first run as a scratch script before the test run, saved after /review-step).
   The test split has now been used once; no model or setting may be changed because of these results.
+- Confusion analysis (3.1): `python -m src.confusion --config configs/confusion.yaml`. Best model picked in code by
+  highest mean VAL accuracy over seeds 42/43/44 (EfficientNet-B0, 0.9897), seed-42 checkpoint. A "pair" counts both
+  directions together (A→B plus B→A); the table shows each direction. The script stops if its confusion matrix differs
+  from the one saved in results/efficientnet_b0.json (it matched). Grid shows every mistake for each top-5 pair (max 10).
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -167,3 +174,5 @@ not started
   Ranges overlap for: SmallCNN v2 vs EfficientNet-B0, and among all three pretrained models (so satellite vs ImageNet
   pretraining: about the same on EuroSAT). SmallCNN v2 vs both ResNet-18s: no overlap, but the gap between the best and
   worst 3-seed means is only 0.22 percentage points (about 9 of 4050 test images).
+- Top 5 confused pairs, EfficientNet-B0 seed 42, TEST (results/confused_pairs.md): HerbaceousVegetation/PermanentCrop 10,
+  AnnualCrop/PermanentCrop 9, HerbaceousVegetation/Pasture 8, AnnualCrop/Pasture 5, Industrial/Residential 4.
