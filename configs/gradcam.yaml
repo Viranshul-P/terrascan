@@ -1,0 +1,22 @@
+# Step 3.2: Grad-CAM heatmaps for the best model on the TEST split.
+# The best model is picked by mean VAL accuracy over its seeds (never by test numbers), same as step 3.1.
+candidates:              # same models and run folders as configs/confusion.yaml
+  - name: small_cnn_v2
+    run_dir: models/small_cnn_v2
+  - name: resnet18
+    run_dir: models/resnet18
+  - name: efficientnet_b0
+    run_dir: models/efficientnet_b0
+  - name: resnet18_sat
+    run_dir: models/resnet18_sat
+val_seeds: [42, 43, 44]  # mean val accuracy over these picks the best model
+seed: 42                 # the checkpoint we look at, and the seed for picking random examples
+
+# Layer Grad-CAM reads. bn2 = EfficientNet-B0's last conv layer output after BatchNorm + activation
+# (timm name). With 128x128 input it is only 4x4, so heatmaps are coarse blobs.
+target_layer: bn2
+
+n_examples: 8            # how many correct and how many wrong examples
+examples_per_row: 4      # 8 examples -> 2 rows each
+
+figure_path: reports/figures/gradcam.png

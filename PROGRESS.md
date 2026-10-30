@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-3.2
+4.1
 
 ## Status
 not started
@@ -29,7 +29,7 @@ not started
 - [x] 2.4b ResNet-18 (satellite-pretrained)
 - [x] 2.5 Evaluation + comparison table
 - [x] 3.1 Confusion analysis
-- [ ] 3.2 Grad-CAM
+- [x] 3.2 Grad-CAM
 - [ ] 4.1 Imagery pipeline
 - [ ] 4.2 Patch cutter + labelling tool
 - [ ] 4.3 Measure the drop
@@ -64,6 +64,7 @@ not started
 - 2.4b — ResNet-18 with torchgeo SENTINEL2_RGB_MOCO weights (torchgeo 0.10.1), input rescaled to SSL4EO-S12 band stats (checked with scripts/check_sat_scaling.py), seeds 42/43/44 in models/resnet18_sat/
 - 2.5 — src/evaluate.py ran once on the TEST split (5 models, 13 runs) → results/<model>.json; scripts/comparison_table.py → results/comparison.md; confusion PNGs in reports/figures/
 - 3.1 — src/confusion.py → results/confused_pairs.md + reports/figures/confused_pairs.png (EfficientNet-B0 seed 42); user's notes + Claude's marked ideas in reports/confusion_notes.md
+- 3.2 — src/gradcam.py → reports/figures/gradcam.png: Grad-CAM for 8 correct + 8 wrong TEST predictions (random, seed 42) of EfficientNet-B0 seed 42; grad-cam==1.5.7 added
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -138,6 +139,11 @@ not started
 - 3.1 write-up: user wrote the observations (section 1 of reports/confusion_notes.md, Claude only fixed spelling). User
   then explicitly waived the "write-up must be yours" rule for this step; Claude's added ideas are in a separate,
   clearly marked section and are untested hypotheses (to check in 3.2 Grad-CAM and 4.3).
+- Grad-CAM (3.2): `python -m src.gradcam --config configs/gradcam.yaml`. Library `grad-cam==1.5.7` (import name
+  `pytorch_grad_cam`; pulls in scikit-learn, scipy, opencv-python-headless and 5 smaller packages; torch/numpy unchanged).
+  Same best-model pick as 3.1 (mean VAL acc). Examples picked at random with seed 42, not by hand. Heatmap is for the
+  model's *predicted* class. Target layer `bn2` (timm name: last conv layer's output after BatchNorm + SiLU).
+  Claude wrote the code and judged the figure (no "You do" part in this step).
 
 - Workflow change (2026-10-30, user's decision): Claude now does the "You do" parts too, except account/login/
   publishing actions, testing with real people and launch posts. Whoever did each part is recorded honestly
@@ -165,6 +171,12 @@ not started
 - PLAN's 2.2c "Expect" (small CNN trails pretrained models, at a fraction of their CPU time) did not hold on test:
   SmallCNN v2 is about the same as EfficientNet-B0 on accuracy and slower on CPU (results/comparison.md).
   Not measured why; a likely reason is that v2 runs wide convs (64 channels, twice) at full 64×64 resolution.
+- Grad-CAM heatmaps are coarse: at 128×128 input the target layer is only 4×4, so each map is a few blurry blobs.
+  Heatmaps do differ between images (Highway and River maps follow the road/river diagonal; water images light up
+  almost everywhere), but many land images get a similar central blob, so the figure says little about fine detail.
+  An earlier layer (8×8) would give sharper maps; not tried. Judged by eye by Claude, not measured.
+- Confidences in the Grad-CAM figure top out around 0.92 even for correct images. Likely because training used
+  label smoothing 0.1, which teaches the model not to say 1.0. Not checked further.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
