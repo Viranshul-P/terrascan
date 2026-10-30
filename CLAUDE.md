@@ -14,8 +14,13 @@ The user drives work with three commands:
 - ONE step per session. Never start the following step on your own, even if there's time left.
 - Before writing code, show a short plan for the step and wait for the user's OK.
 - Keep changes small. If a step turns out bigger than expected, stop and suggest splitting it.
-- If the step has a **You do** part, do your part, then stop and tell the user exactly what to do.
-  Mark the step `waiting on you` in PROGRESS.md. Do not do the user's part for them.
+- **You do** parts: Claude does them too (user's decision, 2026-10-30: the goal is a project to show now; the user
+  will learn the details after their ML course). Only these stay with the user: anything that needs their accounts,
+  logins or signatures (GitHub, W&B, Hugging Face, deploy services, pushing/publishing under their name), testing
+  with real people (5.3), and posting the launch (7.2). For those, stop, mark the step `waiting on you` in
+  PROGRESS.md, and tell the user exactly what to do.
+- Record honestly who did what. When Claude does a "You do" part (labels, judgements, write-ups), say so in
+  PROGRESS.md and in any README, dataset/model card or blog text about it. Never present Claude's work as the user's.
 - If something is unclear or you're guessing, ask. Do not invent an answer.
 - Explain in plain, simple English. The user is learning; short explanations beat long ones.
 
@@ -25,7 +30,9 @@ The user drives work with three commands:
   Always say which file it came from.
 - Never claim something works without running it. "Should work" is not done.
 - If a training run, download or test fails, say so plainly. Don't hide it or quietly work around it.
-- Never label Indian patches or judge the change check. The user labels by hand.
+- Indian patch labels (4.2) and the change check (4.8) may be done by Claude, by looking at each patch blind to the
+  model's predictions. The dataset card, README and blog must then say the labels/judgements came from an AI
+  (Claude), not a person, with the same skip rules.
 - Don't make up download URLs, API fields or library functions. If unsure, check the installed
   library (`python -c "import x; help(x.y)"`) or ask.
 

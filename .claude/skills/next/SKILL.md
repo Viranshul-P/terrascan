@@ -64,12 +64,14 @@ Then STOP and wait for the user to say OK. Don't write code before that.
 - If any check fails, fix it or tell the user. Never mark a failing step done.
 
 ## 6. Hand-off for "You do" parts
-Never do the user's "You do" work for them, even if asked mid-step. The user is a beginner (currently learning ML
-basics, not neural networks yet). When explaining, assume no ML knowledge: short, plain words, one idea at a time,
-small text diagrams.
+Follow CLAUDE.md: Claude does the "You do" parts as well, and records honestly that Claude did them. Only parts
+that need the user's accounts, logins or publishing under their name, testing with real people, or the launch posts
+stay with the user. The user is a beginner (currently learning ML basics, not neural networks yet). When
+explaining, assume no ML knowledge: short, plain words, one idea at a time, small text diagrams.
 
-If the step has a **You do** part: finish your part, commit it, set Status to `waiting on you`, write the exact
-instructions in "Waiting on you" (what to do, where, and what file or result you'll check next time), and STOP.
+If the step has a part that must stay with the user: finish everything else, commit it, set Status to
+`waiting on you`, write the exact instructions in "Waiting on you" (what to do, where, and what file or result
+you'll check next time), and STOP.
 
 ## 7. Record and commit
 Update PROGRESS.md:

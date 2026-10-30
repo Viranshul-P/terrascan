@@ -4,7 +4,8 @@ Each step = one Claude Code session, started with `/next`. Each step has:
 - **Ask:** what Claude builds in this step (`/next` reads this for you)
 - **Done when:** checks that must pass (Claude runs them and shows you the output)
 - **You check:** what you personally look at before moving on
-- **You do:** work only you can do. Claude stops and waits for you.
+- **You do:** originally the user's part. Since 2026-10-30 Claude does these too (see CLAUDE.md), except account,
+  login and publishing actions, testing with people, and the launch posts. Who did it is always recorded.
 - **Effort: high** (only on some steps): `/next` asks you to switch to high effort first. Every other step runs on medium.
 
 The loop: `/next` → approve the plan → Claude builds, checks, updates PROGRESS.md, commits → `/clear` → `/next`.

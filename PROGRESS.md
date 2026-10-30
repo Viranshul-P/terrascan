@@ -139,6 +139,10 @@ not started
   then explicitly waived the "write-up must be yours" rule for this step; Claude's added ideas are in a separate,
   clearly marked section and are untested hypotheses (to check in 3.2 Grad-CAM and 4.3).
 
+- Workflow change (2026-10-30, user's decision): Claude now does the "You do" parts too, except account/login/
+  publishing actions, testing with real people and launch posts. Whoever did each part is recorded honestly
+  (CLAUDE.md, PLAN.md legend, /next skill updated).
+
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
