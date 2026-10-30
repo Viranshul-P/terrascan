@@ -1,0 +1,52 @@
+# Step 4.1: imagery pipeline check. Run: python scripts/imagery_check.py --config configs/imagery.yaml
+
+# EuroSAT stretch: values 0..scale_max -> 1..255, clipped (EuroSAT authors' README, FAQ).
+scale_max: 2750
+patch_size: 64
+max_cloud: 10             # percent cloud for the whole scene; the clearest scene is used
+
+# Colour calibration (Level-2A -> Level-1C look). Fitted ONLY on the "fit" areas below, against
+# EuroSAT train images, by matching these percentiles of each colour with one straight line.
+calibration_percentiles: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
+calibration_path: results/imagery_calibration.json
+
+areas:
+  # role fit: European areas used to fit the calibration (towns, farmland, forest; EuroSAT is from Europe).
+  - name: lyon
+    role: fit
+    bbox: [4.95, 45.70, 5.10, 45.80]       # west, south, east, north (lon/lat), east of Lyon, France
+    dates: 2026-06-01/2026-08-31
+  - name: poznan
+    role: fit
+    bbox: [16.85, 52.35, 17.00, 52.45]     # Poznan outskirts, Poland
+    dates: 2026-06-01/2026-08-31
+  - name: utrecht
+    role: fit
+    bbox: [5.00, 52.05, 5.15, 52.13]       # Utrecht outskirts, Netherlands
+    dates: 2026-06-01/2026-08-31
+  # role check: European area NOT used in the fit. If it matches EuroSAT after calibration, the fix
+  # works on new places. Western outskirts of Munich, Germany.
+  - name: munich
+    role: check
+    bbox: [11.35, 48.10, 11.50, 48.20]
+    dates: 2026-06-01/2026-08-31
+  # role india: dry season, same months as the change study (4.6/4.7). Not used in the fit.
+  - name: ahmedabad
+    role: india
+    bbox: [72.50, 22.98, 72.60, 23.08]     # about 10 x 11 km
+    dates: 2026-01-01/2026-02-28
+
+cache_dir: imagery        # raw reads saved here (git-ignored), so the figure can be redrawn offline
+
+# EuroSAT side: TRAIN split only (never test).
+eurosat_n_show: 16        # random images shown
+eurosat_n_hist: 1000      # random images used for the histograms and the calibration fit
+n_show: 16                # random pipeline patches shown per area
+seed: 42
+
+# Model used to look at predictions on the check area: best by mean val accuracy (step 3.1).
+model_run: models/efficientnet_b0/seed42
+
+figure_path: reports/figures/imagery_vs_eurosat.png
+predictions_figure_path: reports/figures/munich_check_predictions.png
+results_path: results/imagery_check.json

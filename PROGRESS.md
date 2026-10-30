@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.1
+4.2
 
 ## Status
 not started
@@ -30,7 +30,7 @@ not started
 - [x] 2.5 Evaluation + comparison table
 - [x] 3.1 Confusion analysis
 - [x] 3.2 Grad-CAM
-- [ ] 4.1 Imagery pipeline
+- [x] 4.1 Imagery pipeline
 - [ ] 4.2 Patch cutter + labelling tool
 - [ ] 4.3 Measure the drop
 - [ ] 4.4 Fine-tune and re-measure
@@ -65,6 +65,7 @@ not started
 - 2.5 — src/evaluate.py ran once on the TEST split (5 models, 13 runs) → results/<model>.json; scripts/comparison_table.py → results/comparison.md; confusion PNGs in reports/figures/
 - 3.1 — src/confusion.py → results/confused_pairs.md + reports/figures/confused_pairs.png (EfficientNet-B0 seed 42); user's notes + Claude's marked ideas in reports/confusion_notes.md
 - 3.2 — src/gradcam.py → reports/figures/gradcam.png: Grad-CAM for 8 correct + 8 wrong TEST predictions (random, seed 42) of EfficientNet-B0 seed 42; grad-cam==1.5.7 added
+- 4.1 — src/imagery.py (Planetary Computer search, box read, per-scene offset fix, L2A->L1C colour calibration, EuroSAT stretch, patch cutter); scripts/imagery_check.py → reports/figures/imagery_vs_eurosat.png, munich_check_predictions.png, results/imagery_check.json, results/imagery_calibration.json
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -149,6 +150,20 @@ not started
   publishing actions, testing with real people and launch posts. Whoever did each part is recorded honestly
   (CLAUDE.md, PLAN.md legend, /next skill updated). Exception still open: Indian labels (4.2) and the change
   check (4.8). The user decides then who does them; ask before starting.
+- Imagery (4.1): `pystac-client==0.9.1` + `planetary-computer==1.0.0` added (pull in pystac 1.15.2, ~25 small pystac
+  extension packages, python-dotenv, pytz; nothing existing upgraded). Planetary Computer needs no account or key.
+  Only collection is `sentinel-2-l2a` (checked: no L1C there). Scene rule: keep scenes whose footprint fully contains the
+  box (Ahmedabad sits where tiles 43QBF and 42QZL overlap), take the lowest `eo:cloud_cover` (whole-scene cloud).
+  Offset: subtract 1000 when `s2:processing_baseline` >= 04.00, parsed as numbers ("05.12" -> (5, 12)), floor at 0.
+- EuroSAT stretch: values 0-2750 -> 1-255, clipped (EuroSAT authors' README FAQ, github.com/phelber/EuroSAT:
+  `gdal_translate ... -scale 0 2750 1 255 -b 4 -b 3 -b 2`; the README calls it "one option", checked 2026-10-30).
+- **Colour calibration (4.1, user chose it after seeing the first figure).** EuroSAT was made from L1C (has band B10,
+  which only L1C has: haze included); we only have L2A (haze removed). With the plain stretch, a European control
+  (Munich) came out much less blue than EuroSAT, so the domain-shift number would have mixed in a colour bug. Fix:
+  per colour, `gain * L2A value + shift` before the stretch, fitted by matching percentiles 5..95 of three European
+  summer scenes (Lyon, Poznan, Utrecht) to 1000 EuroSAT TRAIN images. Munich held out as the check, Ahmedabad never
+  used in the fit. Fitted numbers in results/imagery_calibration.json; 4.2+ must load them from there, unchanged.
+  Claude wrote the code and judged the figures by eye (no "You do" part in this step).
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -177,6 +192,19 @@ not started
   An earlier layer (8×8) would give sharper maps; not tried. Judged by eye by Claude, not measured.
 - Confidences in the Grad-CAM figure top out around 0.92 even for correct images. Likely because training used
   label smoothing 0.1, which teaches the model not to say 1.0. Not checked further.
+- Calibration (4.1) is fitted on only 3 summer scenes; EuroSAT covers all of Europe and all seasons. Crude but checked
+  on one held-out area. Ahmedabad (January) after calibration is still brighter and bluer than EuroSAT
+  (results/imagery_check.json). Claude reads this as a real difference (bright, dry city) since the held-out European
+  area matches, but it can't be fully separated from "the L2A->L1C line differs in India" (more haze there). Not tested.
+- Every live scene read in 4.1 was baseline 05.xx, so only the offset-ON path ran on real data; the baseline-03 path is
+  covered by the fake-scene test only. 4.6 (2018/2019 scenes) will hit real older baselines.
+- Scene choice uses whole-scene cloud %, not cloud inside the box. Fine for the 4.1 scenes (cloud <= 0.01% per scene,
+  results/imagery_check.json), but a small cloud could still land in a box. 4.2 patches: look out for it.
+- Munich predictions after calibration (results/imagery_check.json): 70 of 289 patches called Highway, which seems a lot
+  for a suburb (judged by eye, no labels). Possible model bias on new imagery; worth watching in 4.3.
+- The orange/red histogram lines in imagery_vs_eurosat.png have a comb pattern: each 0-255 step covers 10 or 11 raw
+  values (2750/254), so neighbouring bins alternate in size. Display effect only.
+- planetary-computer 1.0.0 prints a pydantic deprecation warning on import. Harmless.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
@@ -194,3 +222,8 @@ not started
   worst 3-seed means is only 0.22 percentage points (about 9 of 4050 test images).
 - Top 5 confused pairs, EfficientNet-B0 seed 42, TEST (results/confused_pairs.md): HerbaceousVegetation/PermanentCrop 10,
   AnnualCrop/PermanentCrop 9, HerbaceousVegetation/Pasture 8, AnnualCrop/Pasture 5, Industrial/Residential 4.
+- Imagery check (4.1), mean pixel value per colour R/G/B, 0-1 (results/imagery_check.json): EuroSAT train
+  0.345/0.382/0.409. Munich (held out) plain stretch 0.325/0.308/0.228 -> calibrated 0.321/0.364/0.396.
+  Ahmedabad plain 0.516/0.466/0.397 -> calibrated 0.495/0.507/0.538. Calibration gain 0.907/0.905/0.839, shift
+  70/234/565 (results/imagery_calibration.json). Calibration changed 17.3% of EfficientNet-B0 seed-42 predictions on
+  Munich (same_prediction_share 0.827); mean confidence 0.782 -> 0.802 (results/imagery_check.json). No true labels.

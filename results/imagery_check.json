@@ -1,0 +1,250 @@
+{
+  "scale_max": 2750,
+  "calibration_path": "results/imagery_calibration.json",
+  "sources": {
+    "eurosat_train": {
+      "n_images": 1000,
+      "mean": [
+        0.3449,
+        0.3815,
+        0.4091
+      ],
+      "std": [
+        0.201,
+        0.1369,
+        0.1167
+      ]
+    },
+    "lyon": {
+      "role": "fit",
+      "bbox": [
+        4.95,
+        45.7,
+        5.1,
+        45.8
+      ],
+      "scene_id": "S2B_MSIL2A_20260819T103619_R008_T31TFL_20260819T143522",
+      "date": "2026-08-19T10:36:19.024000Z",
+      "scene_cloud_percent": 0.001987,
+      "processing_baseline": "05.12",
+      "offset_removed": true,
+      "n_patches": 306,
+      "plain": {
+        "mean": [
+          0.4593,
+          0.3765,
+          0.2805
+        ],
+        "std": [
+          0.2322,
+          0.1602,
+          0.1477
+        ]
+      },
+      "calibrated": {
+        "mean": [
+          0.4433,
+          0.426,
+          0.4402
+        ],
+        "std": [
+          0.213,
+          0.1454,
+          0.1222
+        ]
+      }
+    },
+    "poznan": {
+      "role": "fit",
+      "bbox": [
+        16.85,
+        52.35,
+        17.0,
+        52.45
+      ],
+      "scene_id": "S2A_MSIL2A_20260814T100041_R122_T33UXU_20260814T151116",
+      "date": "2026-08-14T10:00:41.024000Z",
+      "scene_cloud_percent": 0.000305,
+      "processing_baseline": "05.12",
+      "offset_removed": true,
+      "n_patches": 272,
+      "plain": {
+        "mean": [
+          0.2584,
+          0.2701,
+          0.2002
+        ],
+        "std": [
+          0.1757,
+          0.1429,
+          0.1412
+        ]
+      },
+      "calibrated": {
+        "mean": [
+          0.2606,
+          0.3296,
+          0.373
+        ],
+        "std": [
+          0.1615,
+          0.1297,
+          0.1171
+        ]
+      }
+    },
+    "utrecht": {
+      "role": "fit",
+      "bbox": [
+        5.0,
+        52.05,
+        5.15,
+        52.13
+      ],
+      "scene_id": "S2C_MSIL2A_20260625T103621_R008_T31UFT_20260625T140409",
+      "date": "2026-06-25T10:36:21.025000Z",
+      "scene_cloud_percent": 0.007873,
+      "processing_baseline": "05.12",
+      "offset_removed": true,
+      "n_patches": 224,
+      "plain": {
+        "mean": [
+          0.3094,
+          0.3342,
+          0.2513
+        ],
+        "std": [
+          0.1634,
+          0.1281,
+          0.1308
+        ]
+      },
+      "calibrated": {
+        "mean": [
+          0.3068,
+          0.3876,
+          0.4159
+        ],
+        "std": [
+          0.1501,
+          0.1162,
+          0.1086
+        ]
+      }
+    },
+    "munich": {
+      "role": "check",
+      "bbox": [
+        11.35,
+        48.1,
+        11.5,
+        48.2
+      ],
+      "scene_id": "S2C_MSIL2A_20260815T101021_R022_T32UPU_20260815T152913",
+      "date": "2026-08-15T10:10:21.025000Z",
+      "scene_cloud_percent": 0.005496,
+      "processing_baseline": "05.12",
+      "offset_removed": true,
+      "n_patches": 289,
+      "plain": {
+        "mean": [
+          0.3254,
+          0.3083,
+          0.2279
+        ],
+        "std": [
+          0.1861,
+          0.1426,
+          0.136
+        ]
+      },
+      "calibrated": {
+        "mean": [
+          0.3214,
+          0.3642,
+          0.3963
+        ],
+        "std": [
+          0.1711,
+          0.1294,
+          0.1132
+        ]
+      }
+    },
+    "ahmedabad": {
+      "role": "india",
+      "bbox": [
+        72.5,
+        22.98,
+        72.6,
+        23.08
+      ],
+      "scene_id": "S2B_MSIL2A_20260121T054039_R005_T43QBF_20260121T091302",
+      "date": "2026-01-21T05:40:39.024000Z",
+      "scene_cloud_percent": 1e-05,
+      "processing_baseline": "05.11",
+      "offset_removed": true,
+      "n_patches": 272,
+      "plain": {
+        "mean": [
+          0.5162,
+          0.4662,
+          0.3969
+        ],
+        "std": [
+          0.2052,
+          0.1707,
+          0.1567
+        ]
+      },
+      "calibrated": {
+        "mean": [
+          0.4953,
+          0.5072,
+          0.5382
+        ],
+        "std": [
+          0.1895,
+          0.1548,
+          0.1309
+        ]
+      }
+    }
+  },
+  "check_predictions": {
+    "area": "munich",
+    "model_run": "models/efficientnet_b0/seed42",
+    "n_patches": 289,
+    "plain": {
+      "counts": {
+        "AnnualCrop": 12,
+        "Forest": 8,
+        "HerbaceousVegetation": 13,
+        "Highway": 54,
+        "Industrial": 44,
+        "Pasture": 25,
+        "PermanentCrop": 22,
+        "Residential": 110,
+        "River": 1,
+        "SeaLake": 0
+      },
+      "mean_confidence": 0.7816
+    },
+    "calibrated": {
+      "counts": {
+        "AnnualCrop": 10,
+        "Forest": 12,
+        "HerbaceousVegetation": 2,
+        "Highway": 70,
+        "Industrial": 44,
+        "Pasture": 11,
+        "PermanentCrop": 21,
+        "Residential": 119,
+        "River": 0,
+        "SeaLake": 0
+      },
+      "mean_confidence": 0.8018
+    },
+    "same_prediction_share": 0.827
+  }
+}

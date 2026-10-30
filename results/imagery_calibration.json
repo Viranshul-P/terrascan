@@ -1,0 +1,42 @@
+{
+  "gain": [
+    0.9073893629612131,
+    0.9051338832553644,
+    0.8391807629371203
+  ],
+  "shift": [
+    69.705536025904,
+    233.94753560294103,
+    564.8164152970617
+  ],
+  "how": "calibrated = gain * L2A value (offset removed) + shift, per colour (red, green, blue), then the EuroSAT 0-scale_max stretch",
+  "fit_areas": {
+    "lyon": "S2B_MSIL2A_20260819T103619_R008_T31TFL_20260819T143522",
+    "poznan": "S2A_MSIL2A_20260814T100041_R122_T33UXU_20260814T151116",
+    "utrecht": "S2C_MSIL2A_20260625T103621_R008_T31UFT_20260625T140409"
+  },
+  "fit_pixels": 3284992,
+  "target": "1000 random EuroSAT train images (seed 42), stretch undone",
+  "percentiles": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85,
+    90,
+    95
+  ],
+  "scale_max": 2750
+}
