@@ -3,19 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.5
+4.6
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Step 4.5, last check (after /review-step): the files are on Hugging Face, but the Dataset Viewer was still
-processing when Claude last checked (2026-11-03: is-valid all false, config-size "pending", nothing "failed").
-1. Open https://huggingface.co/datasets/viranshul/terrascan-india-gujarat and scroll to the Dataset Viewer.
-2. If it shows patches with labels, train 149 rows and test 81 rows: tell Claude "viewer works".
-3. If it shows an error: copy the error text and give it to Claude (it will fix the folder; you re-upload).
-Claude can also re-check it with the datasets-server API before ticking 4.5.
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -39,7 +34,7 @@ Claude can also re-check it with the datasets-server API before ticking 4.5.
 - [x] 4.2 Patch cutter + labelling tool
 - [x] 4.3 Measure the drop
 - [x] 4.4 Fine-tune and re-measure
-- [ ] 4.5 Publish the Indian dataset
+- [x] 4.5 Publish the Indian dataset
 - [ ] 4.6 Check data exists (change study)
 - [ ] 4.7 Build the two maps
 - [ ] 4.8 Sanity-check the change
@@ -315,7 +310,7 @@ Claude can also re-check it with the datasets-server API before ticking 4.5.
   0.9828 ± 0.0006, results/india_after.json): a real but small cost, about 0.4 points.
 - Why the unmixed fine-tune forgot Europe was not tested. Claude's guesses: the Indian class mix (mostly
   Residential/AnnualCrop) and BatchNorm running averages shifting to Indian colours.
-- 4.5 upload checked by Claude via the Hub API (2026-11-03): public dataset viranshul/terrascan-india-gujarat, 149 train + 81 test PNGs, both metadata.csv, README.md, licence cc-by-4.0. The Dataset Viewer (datasets-server) was still processing ("server busier than usual"), so Claude has NOT seen the viewer load it. Moved to "Waiting on you" after /review-step; 4.5 un-ticked until the viewer works.
+- 4.5 upload checked by Claude via the Hub API (2026-11-03): public dataset viranshul/terrascan-india-gujarat, 149 train + 81 test PNGs, both metadata.csv, README.md, licence cc-by-4.0. The Dataset Viewer (datasets-server) was still processing ("server busier than usual"), so Claude has NOT seen the viewer load it. Moved to "Waiting on you" after /review-step; 4.5 un-ticked until the viewer works. Later the same day the user saw the preview, and Claude checked the datasets-server first-rows API: test returns all 81 rows (image + label, split test only), train returns its first 100 rows (preview limit; 149 PNGs on the Hub). Full row count (/size) was still pending, nothing failed. 4.5 ticked.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
