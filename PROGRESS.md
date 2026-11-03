@@ -6,11 +6,20 @@ Claude updates this at the end of every step. Keep entries short.
 4.5
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+Step 4.5: upload the Indian dataset to Hugging Face under YOUR account (Claude built the folder and the card).
+1. Read the card: `data/india/hf_dataset/README.md` (text lives in `src/india_dataset_card.md`). Check especially
+   "How it was labelled" says what really happened. Tell Claude if anything should change (it rebuilds the folder).
+2. If you have no Hugging Face account: sign up free at https://huggingface.co/join (no card needed).
+3. In a terminal in the repo with `.venv` active: `hf auth login` (make a token with "write" access at
+   https://huggingface.co/settings/tokens when it asks).
+4. Upload (pick your own repo name if you like):
+   `hf upload <your-username>/terrascan-india-gujarat data/india/hf_dataset . --repo-type dataset`
+5. Open the dataset page; check the card shows and the Dataset Viewer shows images with labels (train 149, test 81).
+6. Give Claude the dataset URL. Claude will then check the page and finish the step.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -228,6 +237,17 @@ not started
   test sets are never scored after a failed val check; one EuroSAT test loader is built once instead of 6 times.
   Refactored Part 2 re-run on the saved models gave output identical to results/india_after.json (scratch check).
 
+- **Indian dataset (4.5, `python -m src.india_dataset --config configs/india_dataset.yaml`):** builds
+  `data/india/hf_dataset/` (git-ignored) in Hugging Face's "imagefolder" layout: `train/` (fine-tune areas) and
+  `test/` (test areas, same split as 4.3), each with PNGs + `metadata.csv` (file_name, label, split, area, lat, lon,
+  scene_id, date, first_labelled_by). Only labelled patches, skips left out, label = `final_label`. No `datasets`
+  library needed (not installed; so the folder is not loaded-checked locally, the HF Dataset Viewer will show it).
+  Card text in `src/india_dataset_card.md`; every count is filled in by code (also saved to results/india_dataset.json).
+  Licence CC-BY-4.0 (user left the choice to Claude). Credit line "Contains modified Copernicus Sentinel data 2026"
+  as required by the Copernicus legal notice (sentinels.copernicus.eu Sentinel_Data_Legal_Notice, checked 2026-11-03).
+  The card uses the agreed 4.2 labelling wording (Claude first, user reviewed all, final labels the user's), not
+  PLAN's "labelled by hand, by you". Claude wrote the code and the card; the upload is the user's (their account).
+
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
@@ -331,3 +351,5 @@ not started
   EuroSAT TEST acc 0.9869 ± 0.0013 -> 0.9828 ± 0.0006, macro-F1 0.9862 ± 0.0014 -> 0.9822 ± 0.0006.
   EuroSAT VAL acc 0.9897 ± 0.0014 -> 0.9846 ± 0.0021. Seed 42 Indian test acc 0.444 (95% range 0.333-0.556) ->
   0.716 (0.617-0.815). Fine-tuned on 149 Indian patches (+600 EuroSAT train images per epoch).
+- Indian dataset (4.5, results/india_dataset.json): 230 patches, train (fine-tune areas) 149, test 81; per class and
+  per area same as results/india_labels.json; first_labelled_by claude 187, user 43.

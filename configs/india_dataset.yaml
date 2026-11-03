@@ -1,0 +1,18 @@
+# Step 4.5: build the Indian dataset folder for Hugging Face.
+#   python -m src.india_dataset --config configs/india_dataset.yaml
+#
+# Only labelled patches go in (skips are left out). Labels = final_label (the user's decision).
+# Split = the same areas as step 4.3/4.4 (configs/india_eval.yaml):
+#   train/ = fine-tune areas, test/ = test areas.
+test_areas: [vadodara_outskirts, sanand_farmland]
+finetune_areas: [ahmedabad_city, narmada_bharuch, ankleshwar_industrial]
+
+reviewed_csv: data/india/labels_reviewed.csv   # step 4.2 review: file, claude_label, final_label, changed, ...
+patches_csv: data/india/patches.csv            # step 4.2 cutter: scene_id, date, ... per patch
+patches_dir: data/india/patches
+areas_config: configs/india.yaml               # area boxes, copied into the card
+
+out_dir: data/india/hf_dataset                 # git-ignored; this whole folder is what gets uploaded
+counts_path: results/india_dataset.json
+license: cc-by-4.0
+card_template: src/india_dataset_card.md      # card text; the script fills in the counts

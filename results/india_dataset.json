@@ -1,0 +1,54 @@
+{
+  "patches": 230,
+  "per_split": {
+    "train": 149,
+    "test": 81
+  },
+  "per_class": {
+    "AnnualCrop": 75,
+    "Forest": 5,
+    "HerbaceousVegetation": 6,
+    "Highway": 19,
+    "Industrial": 17,
+    "Pasture": 1,
+    "PermanentCrop": 4,
+    "Residential": 95,
+    "River": 8,
+    "SeaLake": 0
+  },
+  "per_class_train": {
+    "AnnualCrop": 50,
+    "Forest": 1,
+    "HerbaceousVegetation": 1,
+    "Highway": 11,
+    "Industrial": 11,
+    "Pasture": 0,
+    "PermanentCrop": 2,
+    "Residential": 65,
+    "River": 8,
+    "SeaLake": 0
+  },
+  "per_class_test": {
+    "AnnualCrop": 25,
+    "Forest": 4,
+    "HerbaceousVegetation": 5,
+    "Highway": 8,
+    "Industrial": 6,
+    "Pasture": 1,
+    "PermanentCrop": 2,
+    "Residential": 30,
+    "River": 0,
+    "SeaLake": 0
+  },
+  "per_area": {
+    "ahmedabad_city": 58,
+    "ankleshwar_industrial": 29,
+    "narmada_bharuch": 62,
+    "sanand_farmland": 22,
+    "vadodara_outskirts": 59
+  },
+  "first_labelled_by": {
+    "claude": 187,
+    "user": 43
+  }
+}
