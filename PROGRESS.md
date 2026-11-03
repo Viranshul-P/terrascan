@@ -3,10 +3,10 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.3
+4.4
 
 ## Status
-in progress
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
@@ -32,7 +32,7 @@ in progress
 - [x] 3.2 Grad-CAM
 - [x] 4.1 Imagery pipeline
 - [x] 4.2 Patch cutter + labelling tool
-- [ ] 4.3 Measure the drop
+- [x] 4.3 Measure the drop
 - [ ] 4.4 Fine-tune and re-measure
 - [ ] 4.5 Publish the Indian dataset
 - [ ] 4.6 Check data exists (change study)
@@ -67,6 +67,7 @@ in progress
 - 3.2 — src/gradcam.py → reports/figures/gradcam.png: Grad-CAM for 8 correct + 8 wrong TEST predictions (random, seed 42) of EfficientNet-B0 seed 42; grad-cam==1.5.7 added
 - 4.1 — src/imagery.py (Planetary Computer search, box read, per-scene offset fix, L2A->L1C colour calibration, EuroSAT stretch, patch cutter); scripts/imagery_check.py → reports/figures/imagery_vs_eurosat.png, munich_check_predictions.png, results/imagery_check.json, results/imagery_calibration.json
 - 4.2 — scripts/india_patches.py cut 1310 patches in 5 Gujarat areas; src/labeller.py (labeller + --review mode); Claude labelled 368 patches, the user reviewed all of them (final labels are the user's); scripts/india_label_counts.py -> results/india_labels.json
+- 4.3 — src/india_eval.py: EfficientNet-B0 and ResNet-18 satellite (seed 42) on Indian labels split by area -> results/india_before.json; EfficientNet-B0 goes on to 4.4
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -193,6 +194,17 @@ in progress
   ~13 smaller packages; nothing existing upgraded). Local only, no share link, no account. Patches shown in a fixed
   shuffled order (seed 42) so areas mix; labels.csv = file, label, area, lat (patch centre), lon; "skip" saved too, so
   resuming skips it. Image sent as PNG (Gradio's default WebP is lossy), enlarged 6x with sharp pixels.
+- **Indian split (4.3, configs/india_eval.yaml; Claude proposed, user OK'd):** TEST areas = vadodara_outskirts +
+  sanand_farmland (81 patches, 8 classes); FINE-TUNE areas = ahmedabad_city + narmada_bharuch + ankleshwar_industrial
+  (149). Split by whole area so look-alike neighbours never sit on both sides. Labels = `final_label`, skips dropped.
+  Note: sanand_farmland (test) shares its scene with ahmedabad_city (fine-tune); the areas don't overlap, so no
+  shared patches, only the same day's light/haze.
+- Indian macro-F1 averages only over classes present in the true labels (absent classes like SeaLake would otherwise
+  count as F1 = 0). Bootstrap 95% range: 2000 redraws of the patches, seed 42, 2.5th-97.5th percentile.
+- ImageNet model for 4.3 picked in code by mean EuroSAT VAL acc (EfficientNet-B0, 0.9897), as in 3.1.
+- **Model for 4.4: EfficientNet-B0.** Rule fixed before seeing numbers (user OK'd): higher accuracy on the FINE-TUNE
+  areas wins (accuracy, not macro-F1, because classes with 1-2 patches make macro-F1 jumpy). Test areas not used.
+  Claude wrote the code; no "You do" part in this step.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -242,6 +254,12 @@ in progress
   PermanentCrop 4, Forest 5, SeaLake 0. Per-class scores in 4.3 will be meaningless for the rare classes; report
   counts next to them. Many patches skipped (138 of 368), often for haze (judged by eye) or mixed land.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
+- 4.3: the big Indian drop is mostly crop fields. On the test areas, 0 of 25 AnnualCrop patches are right for
+  EfficientNet-B0 (9 called Pasture, 7 PermanentCrop) and 1 of 25 for ResNet-18 satellite (17 PermanentCrop)
+  (results/india_before.json). Residential and Highway hold up much better, so the image pipeline itself seems fine.
+  Claude's guess, not tested: dry-season Indian fields (Jan-Feb, bare or stubble) look little like EuroSAT's fields.
+- 4.3 numbers are seed 42 only and the test set is small (81 patches): the 95% ranges are wide and the two models'
+  ranges overlap, so "about the same" on India, not "A beats B".
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
@@ -270,3 +288,7 @@ in progress
   Highway 19, Industrial 17, River 8, HerbaceousVegetation 6, Forest 5, PermanentCrop 4, Pasture 1, SeaLake 0.
   Per area (labelled): ahmedabad_city 58, ankleshwar_industrial 29, narmada_bharuch 62, sanand_farmland 22,
   vadodara_outskirts 59.
+- **Indian drop (4.3, results/india_before.json), seed 42, TEST areas (81 patches):** EfficientNet-B0 acc 0.444
+  (95% range 0.333-0.556), macro-F1 0.371 (0.265-0.522); ResNet-18 satellite acc 0.407 (0.309-0.519), macro-F1 0.293
+  (0.209-0.409). Ranges overlap: about the same. Fine-tune areas (149, used for the 4.4 pick): EfficientNet-B0 acc
+  0.483, ResNet-18 satellite 0.443. Compare EuroSAT test acc ~0.985-0.987 (results/comparison.md).
