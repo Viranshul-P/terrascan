@@ -1,0 +1,32 @@
+# Step 4.3: how much worse are our EuroSAT models on Indian patches?
+#   python -m src.india_eval --config configs/india_eval.yaml
+#
+# Labels are split BY AREA, so neighbouring (look-alike) patches never sit on both sides.
+# Split chosen by Claude, OK'd by the user (2026-11-03): the test areas have the widest class mix,
+# the fine-tune areas keep 11 Industrial patches for step 4.4.
+test_areas: [vadodara_outskirts, sanand_farmland]
+finetune_areas: [ahmedabad_city, narmada_bharuch, ankleshwar_industrial]
+
+reviewed_csv: data/india/labels_reviewed.csv   # step 4.2; we use final_label (the user's), skips dropped
+patches_dir: data/india/patches
+
+# Candidates for "the ImageNet model": the one with the higher mean EuroSAT VAL accuracy is used
+# (picked in code, same rule as step 3.1). The satellite model is always evaluated too.
+imagenet_candidates:
+  - name: resnet18
+    run_dir: models/resnet18
+  - name: efficientnet_b0
+    run_dir: models/efficientnet_b0
+satellite_model:
+  name: resnet18_sat
+  run_dir: models/resnet18_sat
+pick_seeds: [42, 43, 44]   # for the mean VAL accuracy
+seed: 42                   # checkpoint evaluated (models/<run>/seed42/)
+
+# Bootstrap 95% range: resample the test patches with replacement this many times.
+bootstrap_samples: 2000
+bootstrap_seed: 42
+
+# Rule for 4.4 (fixed before seeing any numbers): the model with the higher ACCURACY on the
+# FINE-TUNE areas goes on. Test areas are never used for this choice.
+output_path: results/india_before.json

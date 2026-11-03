@@ -1,0 +1,774 @@
+{
+  "test_areas": [
+    "vadodara_outskirts",
+    "sanand_farmland"
+  ],
+  "finetune_areas": [
+    "ahmedabad_city",
+    "narmada_bharuch",
+    "ankleshwar_industrial"
+  ],
+  "seed": 42,
+  "imagenet_pick": {
+    "name": "efficientnet_b0",
+    "mean_eurosat_val_acc": 0.9897119341563786
+  },
+  "models": {
+    "efficientnet_b0": {
+      "test": {
+        "n_patches": 81,
+        "accuracy": 0.4444444444444444,
+        "accuracy_95_range": [
+          0.3333333333333333,
+          0.5555555555555556
+        ],
+        "macro_f1": 0.3710894590056632,
+        "macro_f1_95_range": [
+          0.2646253562613857,
+          0.5216751990568952
+        ],
+        "per_class": {
+          "AnnualCrop": {
+            "true_count": 25,
+            "predicted_count": 0,
+            "f1": 0.0
+          },
+          "Forest": {
+            "true_count": 4,
+            "predicted_count": 1,
+            "f1": 0.4
+          },
+          "HerbaceousVegetation": {
+            "true_count": 5,
+            "predicted_count": 8,
+            "f1": 0.46153846153846156
+          },
+          "Highway": {
+            "true_count": 8,
+            "predicted_count": 9,
+            "f1": 0.8235294117647058
+          },
+          "Industrial": {
+            "true_count": 6,
+            "predicted_count": 19,
+            "f1": 0.4
+          },
+          "Pasture": {
+            "true_count": 1,
+            "predicted_count": 11,
+            "f1": 0.0
+          },
+          "PermanentCrop": {
+            "true_count": 2,
+            "predicted_count": 10,
+            "f1": 0.16666666666666666
+          },
+          "Residential": {
+            "true_count": 30,
+            "predicted_count": 23,
+            "f1": 0.7169811320754716
+          },
+          "River": {
+            "true_count": 0,
+            "predicted_count": 0,
+            "f1": null
+          },
+          "SeaLake": {
+            "true_count": 0,
+            "predicted_count": 0,
+            "f1": null
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            2,
+            2,
+            2,
+            9,
+            7,
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            3,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            7,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            5,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            11,
+            0,
+            0,
+            19,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "finetune": {
+        "n_patches": 149,
+        "accuracy": 0.48322147651006714,
+        "accuracy_95_range": [
+          0.40268456375838924,
+          0.5704697986577181
+        ],
+        "macro_f1": 0.42125892230170303,
+        "macro_f1_95_range": [
+          0.287515210923596,
+          0.5413123643414078
+        ],
+        "per_class": {
+          "AnnualCrop": {
+            "true_count": 50,
+            "predicted_count": 0,
+            "f1": 0.0
+          },
+          "Forest": {
+            "true_count": 1,
+            "predicted_count": 1,
+            "f1": 0.0
+          },
+          "HerbaceousVegetation": {
+            "true_count": 1,
+            "predicted_count": 1,
+            "f1": 1.0
+          },
+          "Highway": {
+            "true_count": 11,
+            "predicted_count": 14,
+            "f1": 0.72
+          },
+          "Industrial": {
+            "true_count": 11,
+            "predicted_count": 23,
+            "f1": 0.47058823529411764
+          },
+          "Pasture": {
+            "true_count": 0,
+            "predicted_count": 16,
+            "f1": null
+          },
+          "PermanentCrop": {
+            "true_count": 2,
+            "predicted_count": 33,
+            "f1": 0.11428571428571428
+          },
+          "Residential": {
+            "true_count": 65,
+            "predicted_count": 56,
+            "f1": 0.8429752066115702
+          },
+          "River": {
+            "true_count": 8,
+            "predicted_count": 1,
+            "f1": 0.2222222222222222
+          },
+          "SeaLake": {
+            "true_count": 0,
+            "predicted_count": 4,
+            "f1": null
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            0,
+            5,
+            0,
+            15,
+            29,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            9,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            8,
+            0,
+            0,
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            14,
+            0,
+            0,
+            51,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            4
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "resnet18_sat": {
+      "test": {
+        "n_patches": 81,
+        "accuracy": 0.4074074074074074,
+        "accuracy_95_range": [
+          0.30864197530864196,
+          0.5185185185185185
+        ],
+        "macro_f1": 0.29345926977505926,
+        "macro_f1_95_range": [
+          0.20858731617647058,
+          0.40934266146650056
+        ],
+        "per_class": {
+          "AnnualCrop": {
+            "true_count": 25,
+            "predicted_count": 2,
+            "f1": 0.07407407407407407
+          },
+          "Forest": {
+            "true_count": 4,
+            "predicted_count": 0,
+            "f1": 0.0
+          },
+          "HerbaceousVegetation": {
+            "true_count": 5,
+            "predicted_count": 5,
+            "f1": 0.4
+          },
+          "Highway": {
+            "true_count": 8,
+            "predicted_count": 6,
+            "f1": 0.5714285714285714
+          },
+          "Industrial": {
+            "true_count": 6,
+            "predicted_count": 13,
+            "f1": 0.42105263157894735
+          },
+          "Pasture": {
+            "true_count": 1,
+            "predicted_count": 3,
+            "f1": 0.0
+          },
+          "PermanentCrop": {
+            "true_count": 2,
+            "predicted_count": 24,
+            "f1": 0.15384615384615385
+          },
+          "Residential": {
+            "true_count": 30,
+            "predicted_count": 25,
+            "f1": 0.7272727272727273
+          },
+          "River": {
+            "true_count": 0,
+            "predicted_count": 3,
+            "f1": null
+          },
+          "SeaLake": {
+            "true_count": 0,
+            "predicted_count": 0,
+            "f1": null
+          }
+        },
+        "confusion_matrix": [
+          [
+            1,
+            0,
+            0,
+            1,
+            0,
+            3,
+            17,
+            3,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            4,
+            0,
+            0,
+            1,
+            0,
+            3,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            4,
+            0,
+            0,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            9,
+            0,
+            0,
+            20,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "finetune": {
+        "n_patches": 149,
+        "accuracy": 0.4429530201342282,
+        "accuracy_95_range": [
+          0.362248322147651,
+          0.5234899328859061
+        ],
+        "macro_f1": 0.2680804702543833,
+        "macro_f1_95_range": [
+          0.21426551215178263,
+          0.408647174743666
+        ],
+        "per_class": {
+          "AnnualCrop": {
+            "true_count": 50,
+            "predicted_count": 2,
+            "f1": 0.07692307692307693
+          },
+          "Forest": {
+            "true_count": 1,
+            "predicted_count": 1,
+            "f1": 0.0
+          },
+          "HerbaceousVegetation": {
+            "true_count": 1,
+            "predicted_count": 1,
+            "f1": 0.0
+          },
+          "Highway": {
+            "true_count": 11,
+            "predicted_count": 12,
+            "f1": 0.5217391304347826
+          },
+          "Industrial": {
+            "true_count": 11,
+            "predicted_count": 22,
+            "f1": 0.42424242424242425
+          },
+          "Pasture": {
+            "true_count": 0,
+            "predicted_count": 11,
+            "f1": null
+          },
+          "PermanentCrop": {
+            "true_count": 2,
+            "predicted_count": 44,
+            "f1": 0.08695652173913043
+          },
+          "Residential": {
+            "true_count": 65,
+            "predicted_count": 50,
+            "f1": 0.8347826086956521
+          },
+          "River": {
+            "true_count": 8,
+            "predicted_count": 2,
+            "f1": 0.2
+          },
+          "SeaLake": {
+            "true_count": 0,
+            "predicted_count": 4,
+            "f1": null
+          }
+        },
+        "confusion_matrix": [
+          [
+            2,
+            0,
+            0,
+            2,
+            0,
+            11,
+            35,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            6,
+            0,
+            0,
+            4,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            7,
+            0,
+            2,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            2,
+            15,
+            0,
+            0,
+            48,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "model_for_4_4": {
+    "name": "efficientnet_b0",
+    "rule": "higher accuracy on the fine-tune areas"
+  }
+}
