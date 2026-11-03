@@ -3,23 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.5
+4.6
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Step 4.5: upload the Indian dataset to Hugging Face under YOUR account (Claude built the folder and the card).
-1. Read the card: `data/india/hf_dataset/README.md` (text lives in `src/india_dataset_card.md`). Check especially
-   "How it was labelled" says what really happened. Tell Claude if anything should change (it rebuilds the folder).
-2. If you have no Hugging Face account: sign up free at https://huggingface.co/join (no card needed).
-3. In a terminal in the repo with `.venv` active: `hf auth login` (make a token with "write" access at
-   https://huggingface.co/settings/tokens when it asks).
-4. Upload (pick your own repo name if you like):
-   `hf upload <your-username>/terrascan-india-gujarat data/india/hf_dataset . --repo-type dataset`
-5. Open the dataset page; check the card shows and the Dataset Viewer shows images with labels (train 149, test 81).
-6. Give Claude the dataset URL. Claude will then check the page and finish the step.
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -43,7 +34,7 @@ Step 4.5: upload the Indian dataset to Hugging Face under YOUR account (Claude b
 - [x] 4.2 Patch cutter + labelling tool
 - [x] 4.3 Measure the drop
 - [x] 4.4 Fine-tune and re-measure
-- [ ] 4.5 Publish the Indian dataset
+- [x] 4.5 Publish the Indian dataset
 - [ ] 4.6 Check data exists (change study)
 - [ ] 4.7 Build the two maps
 - [ ] 4.8 Sanity-check the change
@@ -78,6 +69,7 @@ Step 4.5: upload the Indian dataset to Hugging Face under YOUR account (Claude b
 - 4.2 — scripts/india_patches.py cut 1310 patches in 5 Gujarat areas; src/labeller.py (labeller + --review mode); Claude labelled 368 patches, the user reviewed all of them (final labels are the user's); scripts/india_label_counts.py -> results/india_labels.json
 - 4.3 — src/india_eval.py: EfficientNet-B0 and ResNet-18 satellite (seed 42) on Indian labels split by area -> results/india_before.json; EfficientNet-B0 goes on to 4.4
 - 4.4 — src/india_finetune.py: EfficientNet-B0 seeds 42/43/44 fine-tuned on the Indian fine-tune areas mixed with EuroSAT train images (models/efficientnet_b0_india/); first try without mixing forgot Europe (kept in models/efficientnet_b0_india_nomix/); before/after on Indian test + EuroSAT test -> results/india_after.json
+- 4.5 — src/india_dataset.py builds data/india/hf_dataset/ (train = fine-tune areas, test = test areas, metadata.csv, card from src/india_dataset_card.md); user uploaded it to https://huggingface.co/datasets/viranshul/terrascan-india-gujarat
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -314,6 +306,7 @@ Step 4.5: upload the Indian dataset to Hugging Face under YOUR account (Claude b
   0.9828 ± 0.0006, results/india_after.json): a real but small cost, about 0.4 points.
 - Why the unmixed fine-tune forgot Europe was not tested. Claude's guesses: the Indian class mix (mostly
   Residential/AnnualCrop) and BatchNorm running averages shifting to Indian colours.
+- 4.5 upload checked by Claude via the Hub API (2026-11-03): public dataset viranshul/terrascan-india-gujarat, 149 train + 81 test PNGs, both metadata.csv, README.md, licence cc-by-4.0. The Dataset Viewer (datasets-server) was still processing ("server busier than usual"), so Claude has NOT seen the viewer load it. Check the viewer on the page; if it shows an error, fix the folder layout.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
