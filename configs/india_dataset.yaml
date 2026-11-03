@@ -2,10 +2,9 @@
 #   python -m src.india_dataset --config configs/india_dataset.yaml
 #
 # Only labelled patches go in (skips are left out). Labels = final_label (the user's decision).
-# Split = the same areas as step 4.3/4.4 (configs/india_eval.yaml):
+# Split = the same areas as step 4.3/4.4, read from split_config (test_areas, finetune_areas):
 #   train/ = fine-tune areas, test/ = test areas.
-test_areas: [vadodara_outskirts, sanand_farmland]
-finetune_areas: [ahmedabad_city, narmada_bharuch, ankleshwar_industrial]
+split_config: configs/india_eval.yaml
 
 reviewed_csv: data/india/labels_reviewed.csv   # step 4.2 review: file, claude_label, final_label, changed, ...
 patches_csv: data/india/patches.csv            # step 4.2 cutter: scene_id, date, ... per patch
@@ -16,3 +15,6 @@ out_dir: data/india/hf_dataset                 # git-ignored; this whole folder 
 counts_path: results/india_dataset.json
 license: cc-by-4.0
 card_template: src/india_dataset_card.md      # card text; the script fills in the counts
+# Written by hand in the card (not filled in by code), checked against data/india/patches.csv on 2026-11-03:
+# "5 areas", "January-February", "Two areas share one scene, and two others share one date".
+# Update them by hand if the areas or dates ever change.

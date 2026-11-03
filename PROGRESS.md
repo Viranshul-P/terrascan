@@ -3,14 +3,19 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.6
+4.5
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+Step 4.5, last check (after /review-step): the files are on Hugging Face, but the Dataset Viewer was still
+processing when Claude last checked (2026-11-03: is-valid all false, config-size "pending", nothing "failed").
+1. Open https://huggingface.co/datasets/viranshul/terrascan-india-gujarat and scroll to the Dataset Viewer.
+2. If it shows patches with labels, train 149 rows and test 81 rows: tell Claude "viewer works".
+3. If it shows an error: copy the error text and give it to Claude (it will fix the folder; you re-upload).
+Claude can also re-check it with the datasets-server API before ticking 4.5.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -34,7 +39,7 @@ not started
 - [x] 4.2 Patch cutter + labelling tool
 - [x] 4.3 Measure the drop
 - [x] 4.4 Fine-tune and re-measure
-- [x] 4.5 Publish the Indian dataset
+- [ ] 4.5 Publish the Indian dataset
 - [ ] 4.6 Check data exists (change study)
 - [ ] 4.7 Build the two maps
 - [ ] 4.8 Sanity-check the change
@@ -239,6 +244,10 @@ not started
   as required by the Copernicus legal notice (sentinels.copernicus.eu Sentinel_Data_Legal_Notice, checked 2026-11-03).
   The card uses the agreed 4.2 labelling wording (Claude first, user reviewed all, final labels the user's), not
   PLAN's "labelled by hand, by you". Claude wrote the code and the card; the upload is the user's (their account).
+  After /review-step: build_table stops if any Claude label was changed by the user (the card says the user agreed
+  with every Claude label); the area split is read from configs/india_eval.yaml (one copy only); the card's
+  hand-written facts ("5 areas", "January-February", shared scene/date) are listed in configs/india_dataset.yaml.
+  Rebuilt folder and counts are identical to the uploaded ones (diff -r), so no re-upload needed.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -306,7 +315,7 @@ not started
   0.9828 ± 0.0006, results/india_after.json): a real but small cost, about 0.4 points.
 - Why the unmixed fine-tune forgot Europe was not tested. Claude's guesses: the Indian class mix (mostly
   Residential/AnnualCrop) and BatchNorm running averages shifting to Indian colours.
-- 4.5 upload checked by Claude via the Hub API (2026-11-03): public dataset viranshul/terrascan-india-gujarat, 149 train + 81 test PNGs, both metadata.csv, README.md, licence cc-by-4.0. The Dataset Viewer (datasets-server) was still processing ("server busier than usual"), so Claude has NOT seen the viewer load it. Check the viewer on the page; if it shows an error, fix the folder layout.
+- 4.5 upload checked by Claude via the Hub API (2026-11-03): public dataset viranshul/terrascan-india-gujarat, 149 train + 81 test PNGs, both metadata.csv, README.md, licence cc-by-4.0. The Dataset Viewer (datasets-server) was still processing ("server busier than usual"), so Claude has NOT seen the viewer load it. Moved to "Waiting on you" after /review-step; 4.5 un-ticked until the viewer works.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->

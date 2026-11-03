@@ -28,6 +28,16 @@ COLUMNS = [
 
 def build_table(reviewed, patches, test_areas, finetune_areas):
     """One row per labelled patch. Skips are dropped; label = final_label (the user's decision)."""
+    # The card says the user agreed with every label Claude gave. Stop if that is no longer true
+    # (a Claude label changed to another class or to skip), so the card can't quietly become false.
+    overridden = (reviewed["claude_label"] != "skip") & (
+        reviewed["claude_label"] != reviewed["final_label"]
+    )
+    if overridden.any():
+        raise ValueError(
+            f"{int(overridden.sum())} Claude labels were changed by the user: "
+            "update the 'How it was labelled' text in the card first"
+        )
     labelled = reviewed[reviewed["final_label"] != "skip"].copy()
     unknown = set(labelled["final_label"]) - set(CLASSES)
     if unknown:
@@ -123,12 +133,14 @@ def main():
     args = parser.parse_args()
     cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
     areas = yaml.safe_load(Path(cfg["areas_config"]).read_text(encoding="utf-8"))["areas"]
+    # The area split is read from step 4.3's config, so there is only one copy of it.
+    split = yaml.safe_load(Path(cfg["split_config"]).read_text(encoding="utf-8"))
 
     table = build_table(
         pd.read_csv(cfg["reviewed_csv"]),
         pd.read_csv(cfg["patches_csv"]),
-        cfg["test_areas"],
-        cfg["finetune_areas"],
+        split["test_areas"],
+        split["finetune_areas"],
     )
     counts = count_table(table)
     template = Path(cfg["card_template"]).read_text(encoding="utf-8")

@@ -49,6 +49,13 @@ def test_build_table_rejects_area_in_no_split():
         build_table(reviewed, patches, test_areas=["area_b"], finetune_areas=[])
 
 
+def test_build_table_stops_if_a_claude_label_was_overridden():
+    reviewed, patches = fake_inputs()
+    reviewed.loc[0, "final_label"] = "Industrial"  # Claude said Residential
+    with pytest.raises(ValueError):
+        build_table(reviewed, patches, test_areas=["area_b"], finetune_areas=["area_a"])
+
+
 def test_counts_card_and_folder(tmp_path):
     reviewed, patches = fake_inputs()
     table = build_table(reviewed, patches, test_areas=["area_b"], finetune_areas=["area_a"])
