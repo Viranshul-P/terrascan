@@ -2,7 +2,14 @@ import pandas as pd
 import pytest
 import torch
 
-from src.india_eval import accuracy, bootstrap_range, present_macro_f1, split_by_area
+from src.india_eval import (
+    accuracy,
+    bootstrap_range,
+    load_labels,
+    present_macro_f1,
+    score,
+    split_by_area,
+)
 
 
 def test_present_macro_f1_ignores_absent_classes():
@@ -47,3 +54,22 @@ def test_split_by_area_rejects_overlap_and_unassigned():
         split_by_area(df, ["a"], ["a", "b"])
     with pytest.raises(AssertionError):
         split_by_area(df, ["a"], [])
+
+
+def test_load_labels_drops_skips(tmp_path):
+    csv = tmp_path / "reviewed.csv"
+    pd.DataFrame(
+        {"file": ["a.png", "b.png", "c.png"], "final_label": ["Forest", "skip", "River"]}
+    ).to_csv(csv, index=False)
+    df = load_labels(csv)
+    assert list(df["file"]) == ["a.png", "c.png"]
+
+
+def test_score_absent_class_f1_is_none():
+    labels = torch.tensor([0, 0, 1, 1])
+    preds = torch.tensor([0, 0, 1, 9])
+    cfg = {"bootstrap_samples": 50, "bootstrap_seed": 42}
+    result = score(preds, labels, cfg)
+    assert result["per_class"]["SeaLake"] == {"true_count": 0, "predicted_count": 1, "f1": None}
+    assert result["per_class"]["AnnualCrop"]["f1"] == 1.0
+    assert result["n_patches"] == 4 and result["accuracy"] == 0.75

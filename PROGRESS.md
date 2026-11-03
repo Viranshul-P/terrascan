@@ -201,9 +201,13 @@ not started
   shared patches, only the same day's light/haze.
 - Indian macro-F1 averages only over classes present in the true labels (absent classes like SeaLake would otherwise
   count as F1 = 0). Bootstrap 95% range: 2000 redraws of the patches, seed 42, 2.5th-97.5th percentile.
+  The class set is worked out again in every redraw: rare classes (Pasture 1, PermanentCrop 2, Forest 4 test
+  patches) often drop out, so the range mixes 7- and 8-class averages. The macro-F1 range is rougher than accuracy's.
 - ImageNet model for 4.3 picked in code by mean EuroSAT VAL acc (EfficientNet-B0, 0.9897), as in 3.1.
 - **Model for 4.4: EfficientNet-B0.** Rule fixed before seeing numbers (user OK'd): higher accuracy on the FINE-TUNE
   areas wins (accuracy, not macro-F1, because classes with 1-2 patches make macro-F1 jumpy). Test areas not used.
+  "Fixed before seeing numbers" rests on the session record and the config comment only: the config and results came
+  in the same commit (59dd5fc), so git can't prove the order. Don't state it more strongly in public text.
   Claude wrote the code; no "You do" part in this step.
 
 ## Known issues / things to revisit
@@ -260,6 +264,8 @@ not started
   Claude's guess, not tested: dry-season Indian fields (Jan-Feb, bare or stubble) look little like EuroSAT's fields.
 - 4.3 numbers are seed 42 only and the test set is small (81 patches): the 95% ranges are wide and the two models'
   ranges overlap, so "about the same" on India, not "A beats B".
+- 4.3 drop is not pure "domain shift": models trained on EuroSAT JPEGs (lossy), Indian patches are lossless PNGs. Probably
+  a small effect, not measured. Mention it next to any domain-shift claim in README/blog.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
