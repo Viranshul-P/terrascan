@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.7
+4.8
 
 ## Status
 not started
@@ -36,7 +36,7 @@ not started
 - [x] 4.4 Fine-tune and re-measure
 - [x] 4.5 Publish the Indian dataset
 - [x] 4.6 Check data exists (change study)
-- [ ] 4.7 Build the two maps
+- [x] 4.7 Build the two maps
 - [ ] 4.8 Sanity-check the change
 - [ ] 5.1 ONNX export
 - [ ] 5.2 Backend API + Docker
@@ -71,6 +71,7 @@ not started
 - 4.4 — src/india_finetune.py: EfficientNet-B0 seeds 42/43/44 fine-tuned on the Indian fine-tune areas mixed with EuroSAT train images (models/efficientnet_b0_india/); first try without mixing forgot Europe (kept in models/efficientnet_b0_india_nomix/); before/after on Indian test + EuroSAT test -> results/india_after.json
 - 4.5 — src/india_dataset.py builds data/india/hf_dataset/ (train = fine-tune areas, test = test areas, metadata.csv, card from src/india_dataset_card.md); user uploaded it to https://huggingface.co/datasets/viranshul/terrascan-india-gujarat
 - 4.6 — scripts/change_scenes.py + src/imagery.month_summary list Sentinel-2 L2A scenes per month for the Ahmedabad change box (Dec 2017–Dec 2019, Dec 2025–Oct 2026) with tile, cloud and processing baseline -> results/change_scenes.json/.md; years and months picked in configs/change.yaml
+- 4.7 — src/change.py: median composites of tile 43QBF for Dec 2017–Feb 2018 (13 scenes) and Dec 2025–Feb 2026 (16 scenes), offset removed per scene before the median, one pixel grid checked for all 29 scenes; 2112 patches run through the fine-tuned EfficientNet-B0 (seeds 42/43/44) -> results/change_2018_2026.json + _patches.csv, reports/figures/change_map_2018.png, change_map_2026.png, change_composites.png
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -249,6 +250,10 @@ not started
   Compare 2018 vs 2026 using the same dry-season months, Dec–Feb (2017-12-01/2018-02-28 vs 2025-12-01/2026-02-28).
   2018 had enough clear scenes, so no fallback to 2019 was needed. Use only tile 43QBF (EPSG:32643) for one grid.
   Settings in configs/change.yaml.
+- 4.7 (user OK'd, 2026-11-03): composite = per-pixel median of ALL clear tile-43QBF scenes in each window,
+  keeping the newest processing when a date has two copies. All 3 fine-tuned seeds are run; maps are drawn from
+  seed 42; areas and changed km2 are mean +- sample std over seeds. Bias check: a second change matrix leaves out
+  patches touching the 4.4 fine-tune areas (only ahmedabad_city lies inside the box). Map colours in configs/change.yaml.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -321,6 +326,16 @@ not started
   (same picture, different grid). Some 2019 dates also have an older and a re-processed copy of the same tile
   with different baselines (e.g. 2019-03-09: 02.12 and 05.00; 2019-02-12: 02.12 and 03.00), so 4.7 must keep one
   copy per date and still decide the offset per scene. Cloud % is for the whole scene, not the box.
+- 4.7: the raw "change" is far too high to be all real: 780 of 2112 patches change class for seed 42 (753-815
+  across seeds), results/change_2018_2026.json. By eye (reports/figures/change_map_*.png) the city core is stable,
+  but in the farmland ring many patches flip between look-alike classes (top seed-42 moves: AnnualCrop->PermanentCrop
+  112, AnnualCrop->Industrial 98, AnnualCrop->Highway 59, Industrial->Residential 58). Crop-to-crop flips are probably
+  model error and different crops/stubble in the two winters, not land-use change. Step 4.8 must measure how many
+  reported changes are real before any km2 "finding" is written. Claude's by-eye impression (not measured): new suburbs often come out as Industrial.
+- 4.7: only 35 of the 306 patches touching the fine-tune area changed (seed 42; 780 total vs 745 outside,
+  results/change_2018_2026.json), so the fine-tune overlap is not what drives the change count.
+- 4.7: the two composites differ a little in colour: median RGB 104/104/111 (2018) vs 101/102/108 (2026)
+  (median_rgb_0_255 in results/change_2018_2026.json). 2018 scenes are baseline 02.12, 2026 are 05.11/05.12.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
@@ -363,3 +378,7 @@ not started
 - Change-study scenes (4.6, results/change_scenes.json, tile 43QBF, whole-scene cloud < 10%): Dec 2017–Feb 2018
   13 clear days, all baseline 02.12 (no offset); Dec 2025–Feb 2026 16 clear days, all baseline 05.11/05.12 (offset).
   Monsoon months (Jul–Aug every year, Sep 2019) have 0 clear scenes.
+- Ahmedabad change maps (4.7, results/change_2018_2026.json; RAW model output, not yet checked in 4.8): 2112 patches
+  (0.4096 km2 each), mean +- std over seeds 42/43/44. AnnualCrop 245.5 +- 22.4 km2 (2018) -> 140.2 +- 11.9 (2026);
+  Residential 226.5 +- 4.7 -> 261.3 +- 15.2; Industrial 138.4 +- 15.4 -> 192.6 +- 28.1; Highway 76.2 +- 3.8 -> 100.6
+  +- 3.4. Patches that changed class: 320.6 +- 12.7 km2 (304.6 +- 11.5 km2 outside the fine-tune area).

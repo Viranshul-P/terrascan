@@ -25,3 +25,41 @@ tile: 43QBF
 years:
   "2018": 2017-12-01/2018-02-28
   "2026": 2025-12-01/2026-02-28
+
+# Step 4.7: build the two maps. Run: python -m src.change --config configs/change.yaml
+# Same pipeline settings as steps 4.1/4.2 (calibration fitted on Europe only, used unchanged).
+scale_max: 2750
+patch_size: 64
+calibration_path: results/imagery_calibration.json
+cache_dir: imagery/change          # one file per scene read + the composites (git-ignored)
+
+# Fine-tuned model from step 4.4. All 3 seeds are run; maps are drawn from map_seed.
+# Areas and changes are reported per seed and as mean +- sample std (user OK'd, 2026-11-03).
+model_dir: models/efficientnet_b0_india
+seeds: [42, 43, 44]
+map_seed: 42
+batch_size: 256
+
+# Bias check (user OK'd, 2026-11-03): the model was fine-tuned on 2026 patches from these areas
+# (configs/india_eval.yaml finetune_areas, boxes in configs/india.yaml). Patches touching them are
+# also left out in a second change matrix, to see how much of the change comes from there.
+india_eval_config: configs/india_eval.yaml
+india_config: configs/india.yaml
+
+# Map colours, one per class (same order as src/data.py CLASSES).
+class_colours:
+  AnnualCrop: "#e6c84a"
+  Forest: "#1b7837"
+  HerbaceousVegetation: "#a6d96a"
+  Highway: "#7f7f7f"
+  Industrial: "#762a83"
+  Pasture: "#d9f0a3"
+  PermanentCrop: "#f4a582"
+  Residential: "#d73027"
+  River: "#4393c3"
+  SeaLake: "#08306b"
+
+output_path: results/change_2018_2026.json
+patches_csv: results/change_2018_2026_patches.csv
+map_figure: reports/figures/change_map_{year}.png      # {year} is filled in
+composites_figure: reports/figures/change_composites.png

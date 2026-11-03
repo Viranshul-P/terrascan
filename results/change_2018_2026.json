@@ -1,0 +1,1311 @@
+{
+  "bbox": [
+    72.4,
+    22.9,
+    72.7,
+    23.15
+  ],
+  "tile": "43QBF",
+  "years": {
+    "2018": {
+      "window": "2017-12-01/2018-02-28",
+      "n_scenes": 13,
+      "scenes": [
+        {
+          "id": "S2A_MSIL2A_20171209T054221_R005_T43QBF_20201014T125439",
+          "date": "2017-12-09",
+          "cloud": 4.88,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20171214T054219_R005_T43QBF_20201014T140533",
+          "date": "2017-12-14",
+          "cloud": 0.17,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20171224T054229_R005_T43QBF_20201014T160510",
+          "date": "2017-12-24",
+          "cloud": 0.17,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2A_MSIL2A_20171229T054231_R005_T43QBF_20201014T171006",
+          "date": "2017-12-29",
+          "cloud": 0.16,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20180103T054219_R005_T43QBF_20201014T030509",
+          "date": "2018-01-03",
+          "cloud": 0.1,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2A_MSIL2A_20180118T054141_R005_T43QBF_20201025T205833",
+          "date": "2018-01-18",
+          "cloud": 0.25,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20180123T054119_R005_T43QBF_20201014T080810",
+          "date": "2018-01-23",
+          "cloud": 0.15,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20180202T054029_R005_T43QBF_20201013T181739",
+          "date": "2018-02-02",
+          "cloud": 0.09,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2A_MSIL2A_20180207T054011_R005_T43QBF_20201013T194526",
+          "date": "2018-02-07",
+          "cloud": 9.79,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20180212T053939_R005_T43QBF_20201013T203328",
+          "date": "2018-02-12",
+          "cloud": 0.77,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2A_MSIL2A_20180217T053911_R005_T43QBF_20201013T221244",
+          "date": "2018-02-17",
+          "cloud": 0.12,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20180222T053829_R005_T43QBF_20201014T001702",
+          "date": "2018-02-22",
+          "cloud": 0.11,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2A_MSIL2A_20180227T053801_R005_T43QBF_20201014T013507",
+          "date": "2018-02-27",
+          "cloud": 0.06,
+          "baseline": "02.12",
+          "offset_removed": false,
+          "no_data_pixels": 0
+        }
+      ],
+      "median_offset_free_values_rgb": [
+        1152.0,
+        972.0,
+        747.0
+      ],
+      "median_rgb_0_255": [
+        104.0,
+        104.0,
+        111.0
+      ]
+    },
+    "2026": {
+      "window": "2025-12-01/2026-02-28",
+      "n_scenes": 16,
+      "scenes": [
+        {
+          "id": "S2B_MSIL2A_20251202T054109_R005_T43QBF_20251202T073232",
+          "date": "2025-12-02",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2C_MSIL2A_20251207T054231_R005_T43QBF_20251207T092711",
+          "date": "2025-12-07",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20251212T054139_R005_T43QBF_20251212T073145",
+          "date": "2025-12-12",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2C_MSIL2A_20251217T054241_R005_T43QBF_20251217T091609",
+          "date": "2025-12-17",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2A_MSIL2A_20251219T054301_R005_T43QBF_20251219T083315",
+          "date": "2025-12-19",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2C_MSIL2A_20251227T054241_R005_T43QBF_20251227T092116",
+          "date": "2025-12-27",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2C_MSIL2A_20260106T054231_R005_T43QBF_20260106T091412",
+          "date": "2026-01-06",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 2
+        },
+        {
+          "id": "S2A_MSIL2A_20260108T054251_R005_T43QBF_20260108T091312",
+          "date": "2026-01-08",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 1
+        },
+        {
+          "id": "S2B_MSIL2A_20260111T054109_R005_T43QBF_20260111T074202",
+          "date": "2026-01-11",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 1
+        },
+        {
+          "id": "S2C_MSIL2A_20260116T054201_R005_T43QBF_20260116T091409",
+          "date": "2026-01-16",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20260121T054039_R005_T43QBF_20260121T091302",
+          "date": "2026-01-21",
+          "cloud": 0.0,
+          "baseline": "05.11",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2C_MSIL2A_20260205T054021_R005_T43QBF_20260205T082412",
+          "date": "2026-02-05",
+          "cloud": 3.0,
+          "baseline": "05.12",
+          "offset_removed": true,
+          "no_data_pixels": 239
+        },
+        {
+          "id": "S2B_MSIL2A_20260210T053849_R005_T43QBF_20260210T092154",
+          "date": "2026-02-10",
+          "cloud": 0.0,
+          "baseline": "05.12",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2C_MSIL2A_20260215T053921_R005_T43QBF_20260215T085810",
+          "date": "2026-02-15",
+          "cloud": 0.0,
+          "baseline": "05.12",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2B_MSIL2A_20260220T053749_R005_T43QBF_20260220T092634",
+          "date": "2026-02-20",
+          "cloud": 7.26,
+          "baseline": "05.12",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        },
+        {
+          "id": "S2C_MSIL2A_20260225T053811_R005_T43QBF_20260225T103810",
+          "date": "2026-02-25",
+          "cloud": 0.13,
+          "baseline": "05.12",
+          "offset_removed": true,
+          "no_data_pixels": 0
+        }
+      ],
+      "median_offset_free_values_rgb": [
+        1111.0,
+        947.0,
+        702.0
+      ],
+      "median_rgb_0_255": [
+        101.0,
+        102.0,
+        108.0
+      ]
+    }
+  },
+  "grid": {
+    "crs": "EPSG:32643",
+    "transform": [
+      10.0,
+      0.0,
+      233280.0,
+      0.0,
+      -10.0,
+      2562500.0
+    ],
+    "height": 2821,
+    "width": 3122
+  },
+  "patch_size": 64,
+  "km2_per_patch": 0.4096,
+  "n_patches": 2112,
+  "n_patches_outside_finetune": 1806,
+  "classes": [
+    "AnnualCrop",
+    "Forest",
+    "HerbaceousVegetation",
+    "Highway",
+    "Industrial",
+    "Pasture",
+    "PermanentCrop",
+    "Residential",
+    "River",
+    "SeaLake"
+  ],
+  "change_matrix_note": "rows = class in 2018, columns = class in 2026",
+  "model_dir": "models/efficientnet_b0_india",
+  "map_seed": 42,
+  "per_seed": {
+    "42": {
+      "patch_counts": {
+        "2018": {
+          "AnnualCrop": 542,
+          "Forest": 1,
+          "HerbaceousVegetation": 170,
+          "Highway": 196,
+          "Industrial": 375,
+          "Pasture": 22,
+          "PermanentCrop": 197,
+          "Residential": 540,
+          "River": 65,
+          "SeaLake": 4
+        },
+        "2026": {
+          "AnnualCrop": 313,
+          "Forest": 4,
+          "HerbaceousVegetation": 56,
+          "Highway": 255,
+          "Industrial": 533,
+          "Pasture": 42,
+          "PermanentCrop": 228,
+          "Residential": 605,
+          "River": 74,
+          "SeaLake": 2
+        }
+      },
+      "areas_km2": {
+        "2018": {
+          "AnnualCrop": 222.0032,
+          "Forest": 0.4096,
+          "HerbaceousVegetation": 69.632,
+          "Highway": 80.2816,
+          "Industrial": 153.6,
+          "Pasture": 9.0112,
+          "PermanentCrop": 80.6912,
+          "Residential": 221.184,
+          "River": 26.624,
+          "SeaLake": 1.6384
+        },
+        "2026": {
+          "AnnualCrop": 128.2048,
+          "Forest": 1.6384,
+          "HerbaceousVegetation": 22.9376,
+          "Highway": 104.448,
+          "Industrial": 218.3168,
+          "Pasture": 17.2032,
+          "PermanentCrop": 93.3888,
+          "Residential": 247.808,
+          "River": 30.3104,
+          "SeaLake": 0.8192
+        }
+      },
+      "change_matrix": [
+        [
+          229,
+          0,
+          4,
+          59,
+          98,
+          19,
+          112,
+          15,
+          4,
+          2
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          24,
+          2,
+          47,
+          25,
+          14,
+          8,
+          30,
+          11,
+          9,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          127,
+          54,
+          0,
+          5,
+          3,
+          3,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          12,
+          298,
+          0,
+          5,
+          58,
+          0,
+          0
+        ],
+        [
+          6,
+          1,
+          1,
+          0,
+          1,
+          8,
+          3,
+          0,
+          2,
+          0
+        ],
+        [
+          44,
+          0,
+          1,
+          21,
+          38,
+          5,
+          69,
+          17,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          8,
+          27,
+          0,
+          3,
+          500,
+          1,
+          0
+        ],
+        [
+          2,
+          0,
+          2,
+          3,
+          3,
+          0,
+          1,
+          1,
+          53,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "changed_patches": 780,
+      "changed_km2": 319.488,
+      "change_matrix_outside_finetune": [
+        [
+          228,
+          0,
+          4,
+          59,
+          98,
+          19,
+          112,
+          15,
+          4,
+          2
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          24,
+          2,
+          45,
+          25,
+          12,
+          8,
+          30,
+          9,
+          7,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          123,
+          52,
+          0,
+          5,
+          3,
+          3,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          11,
+          266,
+          0,
+          5,
+          44,
+          0,
+          0
+        ],
+        [
+          6,
+          1,
+          1,
+          0,
+          1,
+          8,
+          3,
+          0,
+          2,
+          0
+        ],
+        [
+          44,
+          0,
+          0,
+          21,
+          36,
+          5,
+          69,
+          16,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          7,
+          22,
+          0,
+          3,
+          289,
+          1,
+          0
+        ],
+        [
+          2,
+          0,
+          2,
+          3,
+          3,
+          0,
+          1,
+          0,
+          32,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "changed_patches_outside_finetune": 745,
+      "changed_km2_outside_finetune": 305.152
+    },
+    "43": {
+      "patch_counts": {
+        "2018": {
+          "AnnualCrop": 651,
+          "Forest": 1,
+          "HerbaceousVegetation": 74,
+          "Highway": 178,
+          "Industrial": 339,
+          "Pasture": 6,
+          "PermanentCrop": 233,
+          "Residential": 558,
+          "River": 68,
+          "SeaLake": 4
+        },
+        "2026": {
+          "AnnualCrop": 343,
+          "Forest": 5,
+          "HerbaceousVegetation": 30,
+          "Highway": 239,
+          "Industrial": 481,
+          "Pasture": 20,
+          "PermanentCrop": 271,
+          "Residential": 631,
+          "River": 90,
+          "SeaLake": 2
+        }
+      },
+      "areas_km2": {
+        "2018": {
+          "AnnualCrop": 266.6496,
+          "Forest": 0.4096,
+          "HerbaceousVegetation": 30.3104,
+          "Highway": 72.9088,
+          "Industrial": 138.8544,
+          "Pasture": 2.4576,
+          "PermanentCrop": 95.4368,
+          "Residential": 228.5568,
+          "River": 27.8528,
+          "SeaLake": 1.6384
+        },
+        "2026": {
+          "AnnualCrop": 140.4928,
+          "Forest": 2.048,
+          "HerbaceousVegetation": 12.288,
+          "Highway": 97.8944,
+          "Industrial": 197.0176,
+          "Pasture": 8.192,
+          "PermanentCrop": 111.0016,
+          "Residential": 258.4576,
+          "River": 36.864,
+          "SeaLake": 0.8192
+        }
+      },
+      "change_matrix": [
+        [
+          279,
+          0,
+          2,
+          71,
+          84,
+          13,
+          150,
+          39,
+          12,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          16,
+          4,
+          22,
+          5,
+          8,
+          1,
+          9,
+          3,
+          6,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          118,
+          43,
+          0,
+          6,
+          5,
+          3,
+          0
+        ],
+        [
+          4,
+          0,
+          1,
+          16,
+          263,
+          0,
+          1,
+          51,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          34,
+          0,
+          2,
+          22,
+          49,
+          1,
+          102,
+          21,
+          2,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          3,
+          34,
+          0,
+          2,
+          512,
+          2,
+          0
+        ],
+        [
+          2,
+          0,
+          2,
+          4,
+          0,
+          0,
+          1,
+          0,
+          58,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          2,
+          0
+        ]
+      ],
+      "changed_patches": 753,
+      "changed_km2": 308.4288,
+      "change_matrix_outside_finetune": [
+        [
+          279,
+          0,
+          2,
+          71,
+          83,
+          13,
+          150,
+          36,
+          12,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          16,
+          4,
+          22,
+          5,
+          5,
+          1,
+          9,
+          3,
+          6,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          113,
+          41,
+          0,
+          6,
+          2,
+          3,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          13,
+          232,
+          0,
+          1,
+          43,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          34,
+          0,
+          1,
+          22,
+          48,
+          1,
+          102,
+          20,
+          1,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          2,
+          28,
+          0,
+          2,
+          301,
+          2,
+          0
+        ],
+        [
+          2,
+          0,
+          2,
+          3,
+          0,
+          0,
+          1,
+          0,
+          37,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          2,
+          0
+        ]
+      ],
+      "changed_patches_outside_finetune": 715,
+      "changed_km2_outside_finetune": 292.864
+    },
+    "44": {
+      "patch_counts": {
+        "2018": {
+          "AnnualCrop": 605,
+          "Forest": 4,
+          "HerbaceousVegetation": 174,
+          "Highway": 184,
+          "Industrial": 300,
+          "Pasture": 10,
+          "PermanentCrop": 192,
+          "Residential": 561,
+          "River": 79,
+          "SeaLake": 3
+        },
+        "2026": {
+          "AnnualCrop": 371,
+          "Forest": 5,
+          "HerbaceousVegetation": 54,
+          "Highway": 243,
+          "Industrial": 397,
+          "Pasture": 30,
+          "PermanentCrop": 242,
+          "Residential": 678,
+          "River": 91,
+          "SeaLake": 1
+        }
+      },
+      "areas_km2": {
+        "2018": {
+          "AnnualCrop": 247.808,
+          "Forest": 1.6384,
+          "HerbaceousVegetation": 71.2704,
+          "Highway": 75.3664,
+          "Industrial": 122.88,
+          "Pasture": 4.096,
+          "PermanentCrop": 78.6432,
+          "Residential": 229.7856,
+          "River": 32.3584,
+          "SeaLake": 1.2288
+        },
+        "2026": {
+          "AnnualCrop": 151.9616,
+          "Forest": 2.048,
+          "HerbaceousVegetation": 22.1184,
+          "Highway": 99.5328,
+          "Industrial": 162.6112,
+          "Pasture": 12.288,
+          "PermanentCrop": 99.1232,
+          "Residential": 277.7088,
+          "River": 37.2736,
+          "SeaLake": 0.4096
+        }
+      },
+      "change_matrix": [
+        [
+          270,
+          0,
+          5,
+          51,
+          80,
+          20,
+          140,
+          31,
+          8,
+          0
+        ],
+        [
+          0,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          45,
+          1,
+          43,
+          27,
+          15,
+          4,
+          19,
+          9,
+          11,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          124,
+          37,
+          0,
+          8,
+          3,
+          4,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          13,
+          197,
+          0,
+          3,
+          81,
+          2,
+          0
+        ],
+        [
+          3,
+          1,
+          0,
+          0,
+          0,
+          4,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          36,
+          0,
+          3,
+          16,
+          42,
+          0,
+          67,
+          24,
+          4,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          4,
+          24,
+          1,
+          2,
+          529,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          1,
+          8,
+          2,
+          0,
+          2,
+          1,
+          60,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ]
+      ],
+      "changed_patches": 815,
+      "changed_km2": 333.824,
+      "change_matrix_outside_finetune": [
+        [
+          270,
+          0,
+          5,
+          51,
+          78,
+          20,
+          140,
+          30,
+          8,
+          0
+        ],
+        [
+          0,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          44,
+          1,
+          43,
+          27,
+          13,
+          4,
+          19,
+          9,
+          10,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          116,
+          35,
+          0,
+          7,
+          1,
+          4,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          12,
+          182,
+          0,
+          3,
+          65,
+          2,
+          0
+        ],
+        [
+          3,
+          1,
+          0,
+          0,
+          0,
+          4,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          36,
+          0,
+          2,
+          16,
+          40,
+          0,
+          67,
+          23,
+          3,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          3,
+          19,
+          1,
+          2,
+          310,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          1,
+          8,
+          1,
+          0,
+          2,
+          0,
+          40,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ]
+      ],
+      "changed_patches_outside_finetune": 771,
+      "changed_km2_outside_finetune": 315.8016
+    }
+  },
+  "mean_std_over_seeds": {
+    "areas_km2": {
+      "2018": {
+        "AnnualCrop": [
+          245.4869,
+          22.4135
+        ],
+        "Forest": [
+          0.8192,
+          0.7094
+        ],
+        "HerbaceousVegetation": [
+          57.0709,
+          23.1898
+        ],
+        "Highway": [
+          76.1856,
+          3.754
+        ],
+        "Industrial": [
+          138.4448,
+          15.3641
+        ],
+        "Pasture": [
+          5.1883,
+          3.4106
+        ],
+        "PermanentCrop": [
+          84.9237,
+          9.162
+        ],
+        "Residential": [
+          226.5088,
+          4.6522
+        ],
+        "River": [
+          28.9451,
+          3.0192
+        ],
+        "SeaLake": [
+          1.5019,
+          0.2365
+        ]
+      },
+      "2026": {
+        "AnnualCrop": [
+          140.2197,
+          11.8808
+        ],
+        "Forest": [
+          1.9115,
+          0.2365
+        ],
+        "HerbaceousVegetation": [
+          19.1147,
+          5.9262
+        ],
+        "Highway": [
+          100.6251,
+          3.4106
+        ],
+        "Industrial": [
+          192.6485,
+          28.1086
+        ],
+        "Pasture": [
+          12.5611,
+          4.5118
+        ],
+        "PermanentCrop": [
+          101.1712,
+          8.9832
+        ],
+        "Residential": [
+          261.3248,
+          15.1552
+        ],
+        "River": [
+          34.816,
+          3.9073
+        ],
+        "SeaLake": [
+          0.6827,
+          0.2365
+        ]
+      }
+    },
+    "changed_km2": [
+      320.5803,
+      12.7328
+    ],
+    "changed_km2_outside_finetune": [
+      304.6059,
+      11.4785
+    ]
+  }
+}
