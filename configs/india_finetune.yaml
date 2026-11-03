@@ -1,0 +1,31 @@
+# Step 4.4: fine-tune the EuroSAT model on the Indian fine-tune areas, then re-measure.
+#   python -m src.india_finetune --config configs/india_finetune.yaml
+#   python -m src.india_finetune --config configs/india_finetune.yaml --fast-dev-run
+#
+# Model: EfficientNet-B0, picked in step 4.3 (results/india_before.json, model_for_4_4).
+# Areas, labels, patch folder and bootstrap settings come from the 4.3 config, so the split is exactly the same.
+india_eval_config: configs/india_eval.yaml
+base_run_dir: models/efficientnet_b0     # EuroSAT models from step 2.4; each seed is fine-tuned separately
+seeds: [42, 43, 44]
+run_name: efficientnet_b0_india          # saved to models/<run_name>/seed<N>/
+
+# Recipe fixed BEFORE any run (user OK'd, 2026-11-03). There is no Indian val set and the Indian test areas
+# may not be used for choices, so nothing here is tuned: we keep the weights after the LAST epoch.
+epochs: 10
+lr: 0.0001             # 10x lower than EuroSAT training (0.001): small nudges, so Europe is not forgotten
+weight_decay: 0.05     # same as EuroSAT training
+label_smoothing: 0.1   # same as EuroSAT training
+batch_size: 32
+# Same augmentations as EuroSAT training (flips, 90-degree turns, light colour jitter); all layers are trained.
+
+# Mix in EuroSAT (added after the first try failed the forgetting check below; user OK'd, 2026-11-03).
+# First try, Indian patches only: EuroSAT val acc fell from ~0.99 to 0.64-0.77 (models/efficientnet_b0_india_nomix/).
+# Now every epoch = all 149 Indian patches + this many EuroSAT TRAIN images, drawn fresh each epoch
+# (seeded), shuffled together. Fixed before the second run; decided on EuroSAT val only.
+eurosat_images_per_epoch: 600
+
+# "Did it forget Europe?" check, on EuroSAT VAL (never test): if val accuracy drops by more than this for any
+# seed, the script stops before scoring any test set, and we change the recipe (lower LR or mix in EuroSAT).
+max_eurosat_val_drop: 0.02
+
+output_path: results/india_after.json

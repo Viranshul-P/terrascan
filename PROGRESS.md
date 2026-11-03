@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.4
+4.5
 
 ## Status
 not started
@@ -33,7 +33,7 @@ not started
 - [x] 4.1 Imagery pipeline
 - [x] 4.2 Patch cutter + labelling tool
 - [x] 4.3 Measure the drop
-- [ ] 4.4 Fine-tune and re-measure
+- [x] 4.4 Fine-tune and re-measure
 - [ ] 4.5 Publish the Indian dataset
 - [ ] 4.6 Check data exists (change study)
 - [ ] 4.7 Build the two maps
@@ -68,6 +68,7 @@ not started
 - 4.1 — src/imagery.py (Planetary Computer search, box read, per-scene offset fix, L2A->L1C colour calibration, EuroSAT stretch, patch cutter); scripts/imagery_check.py → reports/figures/imagery_vs_eurosat.png, munich_check_predictions.png, results/imagery_check.json, results/imagery_calibration.json
 - 4.2 — scripts/india_patches.py cut 1310 patches in 5 Gujarat areas; src/labeller.py (labeller + --review mode); Claude labelled 368 patches, the user reviewed all of them (final labels are the user's); scripts/india_label_counts.py -> results/india_labels.json
 - 4.3 — src/india_eval.py: EfficientNet-B0 and ResNet-18 satellite (seed 42) on Indian labels split by area -> results/india_before.json; EfficientNet-B0 goes on to 4.4
+- 4.4 — src/india_finetune.py: EfficientNet-B0 seeds 42/43/44 fine-tuned on the Indian fine-tune areas mixed with EuroSAT train images (models/efficientnet_b0_india/); first try without mixing forgot Europe (kept in models/efficientnet_b0_india_nomix/); before/after on Indian test + EuroSAT test -> results/india_after.json
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -209,6 +210,16 @@ not started
   "Fixed before seeing numbers" rests on the session record and the config comment only: the config and results came
   in the same commit (59dd5fc), so git can't prove the order. Don't state it more strongly in public text.
   Claude wrote the code; no "You do" part in this step.
+- **Fine-tune recipe (4.4, configs/india_finetune.yaml; Claude proposed, user OK'd):** start from each EuroSAT
+  EfficientNet-B0 checkpoint (seeds 42/43/44, each fine-tuned with its own seed), all layers, AdamW lr 0.0001,
+  weight decay 0.05, label smoothing 0.1, cosine LR, 10 epochs, batch 32, same augmentations as EuroSAT training.
+  No Indian val set, so nothing tuned and the LAST epoch is kept. No W&B (history.csv per run instead).
+  Forgetting check fixed in advance: EuroSAT VAL accuracy may drop at most 0.02 per seed, else the script stops
+  before scoring any test set.
+- **First try failed that check, so EuroSAT is mixed in (user's choice after seeing it):** Indian patches only ->
+  EuroSAT val acc 0.9884/0.9896/0.9911 -> 0.7701/0.6427/0.7748 (models/efficientnet_b0_india_nomix/seed*/metrics.json,
+  log in run_log.txt there). No test set was scored for it. Second try: every epoch = all 149 Indian patches + 600
+  EuroSAT TRAIN images drawn fresh (seeded). Decided on val only; test sets scored once, after it passed.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -266,6 +277,16 @@ not started
   ranges overlap, so "about the same" on India, not "A beats B".
 - 4.3 drop is not pure "domain shift": models trained on EuroSAT JPEGs (lossy), Indian patches are lossless PNGs. Probably
   a small effect, not measured. Mention it next to any domain-shift claim in README/blog.
+- 4.4: the 3 seeds share the same 81 Indian test patches, so the ± over seeds shows training noise only, not
+  which patches happened to be picked. Per-seed bootstrap ranges (results/india_after.json) are the better
+  guide: for seed 44 the before and after ranges still touch (0.346-0.568 vs 0.543-0.753).
+- 4.4: most of the Indian gain is AnnualCrop (seed 42: F1 0.0 -> 0.68, 25 test patches; Residential 0.72 -> 0.91).
+  Rare classes stay bad (Pasture 1 patch, PermanentCrop 2: F1 0 after). sanand_farmland (test) shares its scene
+  with ahmedabad_city (fine-tune), so part of the gain may be learning that day's light/haze, not India in general.
+- 4.4: EuroSAT test drops slightly after fine-tuning and the 3-seed ranges don't overlap (0.9869 ± 0.0013 ->
+  0.9828 ± 0.0006, results/india_after.json): a real but small cost, about 0.4 points.
+- Why the unmixed fine-tune forgot Europe was not tested. Claude's guesses: the Indian class mix (mostly
+  Residential/AnnualCrop) and BatchNorm running averages shifting to Indian colours.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
@@ -298,3 +319,8 @@ not started
   (95% range 0.333-0.556), macro-F1 0.371 (0.265-0.522); ResNet-18 satellite acc 0.407 (0.309-0.519), macro-F1 0.293
   (0.209-0.409). Ranges overlap: about the same. Fine-tune areas (149, used for the 4.4 pick): EfficientNet-B0 acc
   0.483, ResNet-18 satellite 0.443. Compare EuroSAT test acc ~0.985-0.987 (results/comparison.md).
+- **India fine-tune (4.4, results/india_after.json), EfficientNet-B0, seeds 42/43/44, mean ± std:** Indian TEST
+  areas (81 patches) acc 0.4486 ± 0.0071 -> 0.6831 ± 0.0311, macro-F1 0.3729 ± 0.0028 -> 0.4749 ± 0.0126.
+  EuroSAT TEST acc 0.9869 ± 0.0013 -> 0.9828 ± 0.0006, macro-F1 0.9862 ± 0.0014 -> 0.9822 ± 0.0006.
+  EuroSAT VAL acc 0.9897 ± 0.0014 -> 0.9846 ± 0.0021. Seed 42 Indian test acc 0.444 (95% range 0.333-0.556) ->
+  0.716 (0.617-0.815). Fine-tuned on 149 Indian patches (+600 EuroSAT train images per epoch).

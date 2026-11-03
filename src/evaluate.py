@@ -41,11 +41,16 @@ def load_run(run_dir):
 
 
 @torch.no_grad()
-def predict(model, loader, device):
-    """Return (predicted labels, true labels) for every image in the loader. float32, no AMP."""
+def predict(model, loader, device, max_batches=None):
+    """Return (predicted labels, true labels) for every image in the loader. float32, no AMP.
+
+    max_batches: stop after this many batches (only for --fast-dev-run checks).
+    """
     model.to(device).eval()
     all_preds, all_labels = [], []
-    for images, labels in loader:
+    for i, (images, labels) in enumerate(loader):
+        if max_batches is not None and i >= max_batches:
+            break
         all_preds.append(model(images.to(device)).argmax(dim=1).cpu())
         all_labels.append(labels)
     return torch.cat(all_preds), torch.cat(all_labels)
