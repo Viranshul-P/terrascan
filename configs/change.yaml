@@ -1,0 +1,27 @@
+# Phase 4.5: Ahmedabad change study.
+#   Step 4.6 (which scenes exist): python scripts/change_scenes.py --config configs/change.yaml
+
+# Bigger box than steps 4.1/4.2: the city plus the farmland around it, where most
+# farmland -> housing change happens. About 30 x 28 km. bbox = [west, south, east, north] lon/lat.
+# Chosen by Claude (user agreed, 2026-11-03).
+bbox: [72.40, 22.90, 72.70, 23.15]
+max_cloud: 10            # percent cloud for the whole scene, same as steps 4.1/4.2
+
+# Months to check, "YYYY-MM" from/to (both included). Dec of the year before is listed too,
+# because the dry season (Dec-Feb) crosses the new year. 2026 stops at Oct (last full month).
+month_ranges:
+  - [2017-12, 2019-12]
+  - [2025-12, 2026-10]
+
+scenes_json: results/change_scenes.json
+scenes_md: results/change_scenes.md
+
+# Step 4.6 decision (user agreed, 2026-11-03), from results/change_scenes.md / .json:
+# compare the same dry-season months, Dec-Feb, in both years. Use only tile 43QBF (UTM zone 43N,
+# EPSG:32643); every date also exists in tile 42QZL, and using one tile keeps one grid.
+# In tile 43QBF: 13 clear days in the 2018 window (all baseline 02.12, no offset) and 16 in the
+# 2026 window (all baseline 05.11/05.12, offset fix needed). The offset is still decided per scene.
+tile: 43QBF
+years:
+  "2018": 2017-12-01/2018-02-28
+  "2026": 2025-12-01/2026-02-28

@@ -47,6 +47,31 @@ def search_scenes(bbox, date_range, max_cloud):
     return sorted(items, key=lambda item: item.properties["eo:cloud_cover"])
 
 
+def month_summary(items, bbox, max_cloud):
+    """Step 4.6: count one month's scenes for bbox, and list the clear ones that cover all of it.
+
+    items: every scene that touches bbox in that month (any cloud). A scene is "clear" if it covers
+    the whole box and its whole-scene cloud cover is below max_cloud. A missing processing baseline
+    is reported as None, so nobody guesses the offset for that scene.
+    """
+    area = box(*bbox)
+    covering = [item for item in items if shape(item.geometry).contains(area)]
+    clear = [item for item in covering if item.properties["eo:cloud_cover"] < max_cloud]
+    scenes = []
+    for item in sorted(clear, key=lambda item: item.properties["datetime"]):
+        baseline = item.properties.get("s2:processing_baseline")
+        scenes.append({
+            "id": item.id,
+            "date": item.properties["datetime"][:10],
+            "tile": item.properties.get("s2:mgrs_tile"),
+            "cloud": round(item.properties["eo:cloud_cover"], 2),
+            "baseline": baseline,
+            "needs_offset_fix": None if baseline is None else needs_offset_fix(item),
+        })
+    counts = {"touching": len(items), "covering": len(covering), "clear": len(clear)}
+    return {**counts, "scenes": scenes}
+
+
 def parse_baseline(baseline):
     """'05.12' -> (5, 12), so baselines compare as numbers, not as text."""
     major, minor = baseline.split(".")

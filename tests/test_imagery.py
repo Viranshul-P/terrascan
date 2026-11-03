@@ -7,6 +7,7 @@ from src.imagery import (
     cut_patches,
     eurosat_to_dn,
     fit_calibration,
+    month_summary,
     needs_offset_fix,
     parse_baseline,
     remove_offset,
@@ -86,3 +87,31 @@ def test_apply_calibration_never_negative():
     calibration = {"gain": [1.0, 1.0, 2.0], "shift": [-50.0, 0.0, 10.0]}
     out = apply_calibration(np.array([[10, 10, 10]]), calibration)
     assert out.tolist() == [[0.0, 10.0, 30.0]]
+
+
+def fake_item(item_id, date, cloud, baseline, bbox):
+    """A STAC item with a footprint (bbox), a date, cloud cover and (maybe) a baseline."""
+    w, s, e, n = bbox
+    props = {"datetime": date + "T05:00:00Z", "eo:cloud_cover": cloud, "s2:mgrs_tile": "43QBF"}
+    if baseline is not None:
+        props["s2:processing_baseline"] = baseline
+    footprint = {"type": "Polygon", "coordinates": [[[w, s], [e, s], [e, n], [w, n], [w, s]]]}
+    return SimpleNamespace(id=item_id, properties=props, geometry=footprint)
+
+
+def test_month_summary_counts_and_flags_offset():
+    target = [72.4, 22.9, 72.7, 23.15]
+    big = [72.0, 22.5, 73.0, 23.5]
+    half = [72.0, 22.5, 72.5, 23.5]  # touches the box but does not cover it
+    items = [
+        fake_item("b", "2019-01-20", 2.0, "02.07", big),
+        fake_item("a", "2019-01-05", 0.5, "04.00", big),
+        fake_item("cloudy", "2019-01-10", 40.0, "02.07", big),
+        fake_item("edge", "2019-01-15", 0.0, "02.07", half),
+        fake_item("nobase", "2019-01-25", 1.0, None, big),
+    ]
+    summary = month_summary(items, target, max_cloud=10)
+    assert (summary["touching"], summary["covering"], summary["clear"]) == (5, 4, 3)
+    assert [s["id"] for s in summary["scenes"]] == ["a", "b", "nobase"]  # sorted by date
+    assert [s["needs_offset_fix"] for s in summary["scenes"]] == [True, False, None]
+    assert summary["scenes"][0]["tile"] == "43QBF"

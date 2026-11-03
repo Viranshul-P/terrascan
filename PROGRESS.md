@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.6
+4.7
 
 ## Status
 not started
@@ -35,7 +35,7 @@ not started
 - [x] 4.3 Measure the drop
 - [x] 4.4 Fine-tune and re-measure
 - [x] 4.5 Publish the Indian dataset
-- [ ] 4.6 Check data exists (change study)
+- [x] 4.6 Check data exists (change study)
 - [ ] 4.7 Build the two maps
 - [ ] 4.8 Sanity-check the change
 - [ ] 5.1 ONNX export
@@ -70,6 +70,7 @@ not started
 - 4.3 — src/india_eval.py: EfficientNet-B0 and ResNet-18 satellite (seed 42) on Indian labels split by area -> results/india_before.json; EfficientNet-B0 goes on to 4.4
 - 4.4 — src/india_finetune.py: EfficientNet-B0 seeds 42/43/44 fine-tuned on the Indian fine-tune areas mixed with EuroSAT train images (models/efficientnet_b0_india/); first try without mixing forgot Europe (kept in models/efficientnet_b0_india_nomix/); before/after on Indian test + EuroSAT test -> results/india_after.json
 - 4.5 — src/india_dataset.py builds data/india/hf_dataset/ (train = fine-tune areas, test = test areas, metadata.csv, card from src/india_dataset_card.md); user uploaded it to https://huggingface.co/datasets/viranshul/terrascan-india-gujarat
+- 4.6 — scripts/change_scenes.py + src/imagery.month_summary list Sentinel-2 L2A scenes per month for the Ahmedabad change box (Dec 2017–Dec 2019, Dec 2025–Oct 2026) with tile, cloud and processing baseline -> results/change_scenes.json/.md; years and months picked in configs/change.yaml
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -243,6 +244,11 @@ not started
   with every Claude label); the area split is read from configs/india_eval.yaml (one copy only); the card's
   hand-written facts ("5 areas", "January-February", shared scene/date) are listed in configs/india_dataset.yaml.
   Rebuilt folder and counts are identical to the uploaded ones (diff -r), so no re-upload needed.
+- 4.6 change study (user agreed, 2026-11-03): box [72.40, 22.90, 72.70, 23.15] (about 30 x 28 km, city plus
+  surrounding farmland; chosen by Claude, bigger than the 4.1/4.2 city box because most change is on the edges).
+  Compare 2018 vs 2026 using the same dry-season months, Dec–Feb (2017-12-01/2018-02-28 vs 2025-12-01/2026-02-28).
+  2018 had enough clear scenes, so no fallback to 2019 was needed. Use only tile 43QBF (EPSG:32643) for one grid.
+  Settings in configs/change.yaml.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -311,6 +317,10 @@ not started
 - Why the unmixed fine-tune forgot Europe was not tested. Claude's guesses: the Indian class mix (mostly
   Residential/AnnualCrop) and BatchNorm running averages shifting to Indian colours.
 - 4.5 upload checked by Claude via the Hub API (2026-11-03): public dataset viranshul/terrascan-india-gujarat, 149 train + 81 test PNGs, both metadata.csv, README.md, licence cc-by-4.0. The Dataset Viewer (datasets-server) was still processing ("server busier than usual"), so Claude has NOT seen the viewer load it. Moved to "Waiting on you" after /review-step; 4.5 un-ticked until the viewer works. Later the same day the user saw the preview, and Claude checked the datasets-server first-rows API: test returns all 81 rows (image + label, split test only), train returns its first 100 rows (preview limit; 149 PNGs on the Hub). Full row count (/size) was still pending, nothing failed. 4.5 ticked.
+- 4.6: every date for the change box exists twice on Planetary Computer, in overlapping tiles 43QBF and 42QZL
+  (same picture, different grid). Some 2019 dates also have an older and a re-processed copy of the same tile
+  with different baselines (e.g. 2019-03-09: 02.12 and 05.00; 2019-02-12: 02.12 and 03.00), so 4.7 must keep one
+  copy per date and still decide the offset per scene. Cloud % is for the whole scene, not the box.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
@@ -350,3 +360,6 @@ not started
   0.716 (0.617-0.815). Fine-tuned on 149 Indian patches (+600 EuroSAT train images per epoch).
 - Indian dataset (4.5, results/india_dataset.json): 230 patches, train (fine-tune areas) 149, test 81; per class and
   per area same as results/india_labels.json; first_labelled_by claude 187, user 43.
+- Change-study scenes (4.6, results/change_scenes.json, tile 43QBF, whole-scene cloud < 10%): Dec 2017–Feb 2018
+  13 clear days, all baseline 02.12 (no offset); Dec 2025–Feb 2026 16 clear days, all baseline 05.11/05.12 (offset).
+  Monsoon months (Jul–Aug every year, Sep 2019) have 0 clear scenes.
