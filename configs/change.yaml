@@ -62,4 +62,4 @@ class_colours:
 output_path: results/change_2018_2026.json
 patches_csv: results/change_2018_2026_patches.csv
 map_figure: reports/figures/change_map_{year}.png      # {year} is filled in
-composites_figure: reports/figures/change_composites.png
+composites_figure: reports/figures/change_composites.jpg   # JPEG keeps the repo light (preview only)

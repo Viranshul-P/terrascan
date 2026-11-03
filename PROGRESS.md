@@ -71,7 +71,7 @@ not started
 - 4.4 — src/india_finetune.py: EfficientNet-B0 seeds 42/43/44 fine-tuned on the Indian fine-tune areas mixed with EuroSAT train images (models/efficientnet_b0_india/); first try without mixing forgot Europe (kept in models/efficientnet_b0_india_nomix/); before/after on Indian test + EuroSAT test -> results/india_after.json
 - 4.5 — src/india_dataset.py builds data/india/hf_dataset/ (train = fine-tune areas, test = test areas, metadata.csv, card from src/india_dataset_card.md); user uploaded it to https://huggingface.co/datasets/viranshul/terrascan-india-gujarat
 - 4.6 — scripts/change_scenes.py + src/imagery.month_summary list Sentinel-2 L2A scenes per month for the Ahmedabad change box (Dec 2017–Dec 2019, Dec 2025–Oct 2026) with tile, cloud and processing baseline -> results/change_scenes.json/.md; years and months picked in configs/change.yaml
-- 4.7 — src/change.py: median composites of tile 43QBF for Dec 2017–Feb 2018 (13 scenes) and Dec 2025–Feb 2026 (16 scenes), offset removed per scene before the median, one pixel grid checked for all 29 scenes; 2112 patches run through the fine-tuned EfficientNet-B0 (seeds 42/43/44) -> results/change_2018_2026.json + _patches.csv, reports/figures/change_map_2018.png, change_map_2026.png, change_composites.png
+- 4.7 — src/change.py: median composites of tile 43QBF for Dec 2017–Feb 2018 (13 scenes) and Dec 2025–Feb 2026 (16 scenes), offset removed per scene before the median, one pixel grid checked for all 29 scenes; 2112 patches run through the fine-tuned EfficientNet-B0 (seeds 42/43/44) -> results/change_2018_2026.json + _patches.csv, reports/figures/change_map_2018.png, change_map_2026.png, change_composites.jpg
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -334,6 +334,15 @@ not started
   reported changes are real before any km2 "finding" is written. Claude's by-eye impression (not measured): new suburbs often come out as Industrial.
 - 4.7: only 35 of the 306 patches touching the fine-tune area changed (seed 42; 780 total vs 745 outside,
   results/change_2018_2026.json), so the fine-tune overlap is not what drives the change count.
+- 4.7 (from /review-step): the model was fine-tuned (4.4) on SINGLE-scene patches from Jan–Feb 2026, but here it
+  runs on MEDIAN composites, which look smoother. The 2026 window also covers the same weeks as the fine-tune
+  images, so 2026 patches near ahmedabad_city are close to training data. The bias check covers the overlap, not
+  the composite-vs-single-scene difference. List both in 4.8's honest limits.
+- 4.7: re-running src.change needs the network for the scene search (STAC), even when every scene read is
+  already cached in imagery/change/. A re-run from the cache took about 1 minute and gave byte-identical
+  results/change_2018_2026.json, _patches.csv and class maps.
+- 4.7: the class maps (reports/figures/change_map_*.png) have no coordinates, scale bar or north arrow.
+  Add them before 5.x or the README reuses these maps.
 - 4.7: the two composites differ a little in colour: median RGB 104/104/111 (2018) vs 101/102/108 (2026)
   (median_rgb_0_255 in results/change_2018_2026.json). 2018 scenes are baseline 02.12, 2026 are 05.11/05.12.
 
