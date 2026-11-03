@@ -80,6 +80,27 @@ def save_review(reviewed_csv, labelled, final_label):
     row.to_csv(reviewed_csv, mode="a", header=not Path(reviewed_csv).exists(), index=False)
 
 
+def label_counts(reviewed):
+    """Summary of the reviewed labels (labels_reviewed.csv) as a plain dict for results/."""
+    final = reviewed[reviewed["final_label"] != SKIP]
+    changed = reviewed[reviewed["changed"].astype(bool)]
+    per_area = final.groupby("area")["final_label"].value_counts()
+    return {
+        "patches_reviewed": len(reviewed),
+        "labelled": len(final),
+        "skipped": int((reviewed["final_label"] == SKIP).sum()),
+        "claude_labelled": int((reviewed["claude_label"] != SKIP).sum()),
+        "user_agreed_with_claude_label": int(((reviewed["claude_label"] != SKIP)
+                                              & ~reviewed["changed"].astype(bool)).sum()),
+        "user_changed": len(changed),
+        "changes": {f"{a} -> {b}": int(n) for (a, b), n
+                    in changed.groupby(["claude_label", "final_label"]).size().items()},
+        "per_class": {name: int((final["final_label"] == name).sum()) for name in CLASSES},
+        "per_area": {area: {label: int(n) for label, n in per_area[area].items()}
+                     for area in sorted(final["area"].unique())},
+    }
+
+
 def progress_text(labels, total):
     """One-line summary: how many done, skipped, and per class."""
     counts = labels["label"].value_counts()

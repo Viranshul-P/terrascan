@@ -6,6 +6,7 @@ from src.imagery import patch_centre_lonlat
 from src.labeller import (
     REVIEW_COLUMNS,
     SKIP,
+    label_counts,
     next_file,
     read_labels,
     save_label,
@@ -85,6 +86,24 @@ def test_review_refuses_unknown_label(tmp_path):
     save_label(labels_csv, fake_patches().iloc[0], "Forest", labelled_by="claude")
     with pytest.raises(ValueError):
         save_review(tmp_path / "reviewed.csv", read_labels(labels_csv).iloc[0], "Desert")
+
+
+def test_label_counts(tmp_path):
+    reviewed = pd.DataFrame({
+        "file": ["a", "b", "c", "d"],
+        "claude_label": ["Forest", "River", SKIP, SKIP],
+        "final_label": ["Forest", "River", "Residential", SKIP],
+        "changed": [False, False, True, False],
+        "area": ["x", "y", "x", "y"],
+    })
+    counts = label_counts(reviewed)
+    assert counts["patches_reviewed"] == 4
+    assert counts["labelled"] == 3 and counts["skipped"] == 1
+    assert counts["claude_labelled"] == 2 and counts["user_agreed_with_claude_label"] == 2
+    assert counts["user_changed"] == 1
+    assert counts["changes"] == {"skip -> Residential": 1}
+    assert counts["per_class"]["Forest"] == 1 and counts["per_class"]["Pasture"] == 0
+    assert counts["per_area"] == {"x": {"Forest": 1, "Residential": 1}, "y": {"River": 1}}
 
 
 def test_patch_centre_lonlat():

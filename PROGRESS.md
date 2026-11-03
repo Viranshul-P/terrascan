@@ -3,27 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.2
+4.3
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-**Step 4.2: review Claude's labels (about 20-25 min, can be split over several sittings).**
-Claude has labelled the first 368 patches (in the labeller's shuffled order). Now you check every one, skips included.
-1. In a terminal in the repo folder: `.venv\Scripts\activate`, then
-   `python -m src.labeller --config configs/india.yaml --review`
-   (a browser tab opens at http://127.0.0.1:7860; close the terminal to stop).
-2. Each patch shows **Claude's label** under it. If it fits (the class covering **most** of the patch), click
-   **Agree**. If not, click the correct class, or **Skip / unclear** if it's unclear or fits no class.
-   If Claude skipped a patch but you can clearly label it, click that class.
-   Not sure what a class looks like? Open `reports/figures/samples_per_class.png` (EuroSAT examples).
-3. Every click is saved at once to `data/india/labels_reviewed.csv`; start again any time and it continues.
-   Misclick? Stop the app, delete that row from `data/india/labels_reviewed.csv`, start again.
-4. Don't look up model predictions for these patches (labels must stay blind to the model).
-5. When all are reviewed, type `/next`. Claude will check the file (all reviewed, how many you changed, counts per
-   class and per area), save the counts to `results/`, and finish 4.2.
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -44,7 +31,7 @@ Claude has labelled the first 368 patches (in the labeller's shuffled order). No
 - [x] 3.1 Confusion analysis
 - [x] 3.2 Grad-CAM
 - [x] 4.1 Imagery pipeline
-- [ ] 4.2 Patch cutter + labelling tool
+- [x] 4.2 Patch cutter + labelling tool
 - [ ] 4.3 Measure the drop
 - [ ] 4.4 Fine-tune and re-measure
 - [ ] 4.5 Publish the Indian dataset
@@ -79,6 +66,7 @@ Claude has labelled the first 368 patches (in the labeller's shuffled order). No
 - 3.1 — src/confusion.py → results/confused_pairs.md + reports/figures/confused_pairs.png (EfficientNet-B0 seed 42); user's notes + Claude's marked ideas in reports/confusion_notes.md
 - 3.2 — src/gradcam.py → reports/figures/gradcam.png: Grad-CAM for 8 correct + 8 wrong TEST predictions (random, seed 42) of EfficientNet-B0 seed 42; grad-cam==1.5.7 added
 - 4.1 — src/imagery.py (Planetary Computer search, box read, per-scene offset fix, L2A->L1C colour calibration, EuroSAT stretch, patch cutter); scripts/imagery_check.py → reports/figures/imagery_vs_eurosat.png, munich_check_predictions.png, results/imagery_check.json, results/imagery_calibration.json
+- 4.2 — scripts/india_patches.py cut 1310 patches in 5 Gujarat areas; src/labeller.py (labeller + --review mode); Claude labelled 368 patches, the user reviewed all of them (final labels are the user's); scripts/india_label_counts.py -> results/india_labels.json
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -180,8 +168,12 @@ Claude has labelled the first 368 patches (in the labeller's shuffled order). No
 - **Indian labels (4.2): Claude labels, the user reviews and corrects** (user's decision, 2026-11-03, changed from
   "the user labels by hand"). Claude recommended the user label by hand (SPEC: "by hand by me (not by an AI)") and
   offered this middle option; the user chose it. Claude labels blind to model predictions; every label is then shown to
-  the user, who agrees or corrects it. README, dataset card and blog must say "labelled by Claude (an AI), reviewed and
-  corrected by the user", with how many labels the user changed. Claude wrote the patch cutter and the labeller.
+  the user, who agrees or corrects it. Claude wrote the patch cutter and the labeller.
+  **Agreed wording for README, dataset card and blog (user OK'd, 2026-11-03):** Claude (an AI) labelled the patches
+  first, blind to the model. The user then reviewed all of them: per the user, they judged each patch against the
+  EuroSAT examples and decided before looking at Claude's label. The user agreed with every label Claude gave and
+  labelled patches Claude had skipped; every final label is the user's decision. Counts from results/india_labels.json.
+  Don't write that the user labelled them alone. (The review app shows Claude's label on screen with the patch.)
 - Indian areas (4.2, configs/india.yaml): 5 non-overlapping boxes in Gujarat, about 10 km wide: Ahmedabad city (same box
   as 4.1), Vadodara west edge, farmland SW of Sanand, Narmada at Bharuch, Ankleshwar GIDC. Boxes picked by Claude from
   rough place coordinates, checked by eye in reports/figures/india_areas.png. Dry season, Jan-Feb 2026, clearest scene
@@ -246,10 +238,9 @@ Claude has labelled the first 368 patches (in the labeller's shuffled order). No
   narmada_bharuch from the same date (results/india_patches.json). Ankleshwar's box is shorter, so fewer patches.
   Neighbouring patches look alike: when 4.4 splits labels into fine-tune/test, split by area or by block, not at random,
   or the test score will be too kind.
-- Claude's labels (4.2) use only 5 classes: AnnualCrop, Highway, Industrial, Residential, River. No Forest, Pasture,
-  PermanentCrop, HerbaceousVegetation or SeaLake were labelled (as PLAN expected). Many patches were skipped, a lot of
-  them for haze (many patches look hazy, judged by eye) — sanand_farmland got very few labels. Exact counts
-  get saved to results/ when 4.2 finishes.
+- Indian labels are very unbalanced (results/india_labels.json): Residential 95 and AnnualCrop 75 of 230; Pasture 1,
+  PermanentCrop 4, Forest 5, SeaLake 0. Per-class scores in 4.3 will be meaningless for the rare classes; report
+  counts next to them. Many patches skipped (138 of 368), often for haze (judged by eye) or mixed land.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)
@@ -274,3 +265,8 @@ Claude has labelled the first 368 patches (in the labeller's shuffled order). No
   Munich (same_prediction_share 0.827); mean confidence 0.782 -> 0.802 (results/imagery_check.json). No true labels.
 - Indian patches cut (4.2, results/india_patches.json): 1310 total; ahmedabad_city 272, vadodara_outskirts 270,
   sanand_farmland 272, narmada_bharuch 272, ankleshwar_industrial 224. All scenes baseline 05.11/05.12 (offset removed).
+- Indian labels (4.2, results/india_labels.json): 368 patches reviewed, 230 labelled, 138 skipped. Claude labelled 187;
+  the user agreed with all 187 and labelled 43 that Claude had skipped. Per class: Residential 95, AnnualCrop 75,
+  Highway 19, Industrial 17, River 8, HerbaceousVegetation 6, Forest 5, PermanentCrop 4, Pasture 1, SeaLake 0.
+  Per area (labelled): ahmedabad_city 58, ankleshwar_industrial 29, narmada_bharuch 62, sanand_farmland 22,
+  vadodara_outskirts 59.

@@ -35,6 +35,7 @@ patches_dir: data/india/patches            # one PNG per patch (git-ignored)
 patches_csv: data/india/patches.csv        # file, area, lat, lon, ... (git-ignored)
 labels_csv: data/india/labels.csv          # written by the labeller (git-ignored)
 reviewed_csv: data/india/labels_reviewed.csv  # written by --review (git-ignored)
+label_counts_path: results/india_labels.json  # scripts/india_label_counts.py
 areas_figure_path: reports/figures/india_areas.png
 summary_path: results/india_patches.json        # patches per area + scene used
 

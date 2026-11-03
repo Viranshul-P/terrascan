@@ -1,0 +1,68 @@
+{
+  "patches_reviewed": 368,
+  "labelled": 230,
+  "skipped": 138,
+  "claude_labelled": 187,
+  "user_agreed_with_claude_label": 187,
+  "user_changed": 43,
+  "changes": {
+    "skip -> AnnualCrop": 6,
+    "skip -> Forest": 5,
+    "skip -> HerbaceousVegetation": 6,
+    "skip -> Industrial": 6,
+    "skip -> Pasture": 1,
+    "skip -> PermanentCrop": 4,
+    "skip -> Residential": 12,
+    "skip -> River": 3
+  },
+  "per_class": {
+    "AnnualCrop": 75,
+    "Forest": 5,
+    "HerbaceousVegetation": 6,
+    "Highway": 19,
+    "Industrial": 17,
+    "Pasture": 1,
+    "PermanentCrop": 4,
+    "Residential": 95,
+    "River": 8,
+    "SeaLake": 0
+  },
+  "per_area": {
+    "ahmedabad_city": {
+      "Residential": 53,
+      "River": 2,
+      "Industrial": 2,
+      "Highway": 1
+    },
+    "ankleshwar_industrial": {
+      "AnnualCrop": 11,
+      "Industrial": 9,
+      "Residential": 7,
+      "PermanentCrop": 2
+    },
+    "narmada_bharuch": {
+      "AnnualCrop": 39,
+      "Highway": 10,
+      "River": 6,
+      "Residential": 5,
+      "Forest": 1,
+      "HerbaceousVegetation": 1
+    },
+    "sanand_farmland": {
+      "AnnualCrop": 8,
+      "Forest": 4,
+      "HerbaceousVegetation": 4,
+      "Industrial": 2,
+      "PermanentCrop": 2,
+      "Residential": 1,
+      "Pasture": 1
+    },
+    "vadodara_outskirts": {
+      "Residential": 29,
+      "AnnualCrop": 17,
+      "Highway": 8,
+      "Industrial": 4,
+      "HerbaceousVegetation": 1
+    }
+  }
+}
