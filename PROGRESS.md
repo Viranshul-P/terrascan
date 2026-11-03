@@ -6,11 +6,18 @@ Claude updates this at the end of every step. Keep entries short.
 4.8
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+Step 4.8: check Claude's 50 change answers (about 10-15 minutes).
+1. In the repo folder run: `.venv\Scripts\python -m src.change_check --config configs/change.yaml review`
+   A browser page opens: each pair is 2018 (left) and 2026 (right), the yellow box is the 640 m patch.
+2. For each pair, press **Agree** if Claude's answer is right, otherwise press yes / no / unclear.
+   "Real change" = new buildings, roads, cleared land, water etc. Different crop colours alone is NOT a change.
+   Every click is saved at once, so you can close it and continue later.
+3. When the page says **All done**, type `/next`. Claude then checks results/change_check_reviewed.csv has 50 rows,
+   computes the real-change rate and writes up the finding with its limits.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -250,6 +257,11 @@ not started
   Compare 2018 vs 2026 using the same dry-season months, Dec–Feb (2017-12-01/2018-02-28 vs 2025-12-01/2026-02-28).
   2018 had enough clear scenes, so no fallback to 2019 was needed. Use only tile 43QBF (EPSG:32643) for one grid.
   Settings in configs/change.yaml.
+- 4.8 (user's decision, 2026-11-04): Claude judges the change pairs first, the user reviews them (like 4.2).
+  Sample = 50 random patches the map seed (42) says changed class, sample seed 42. The judge sees only the
+  2018/2026 crops (patch outlined, 32 px of surroundings), never the model's classes, and answers "did the land
+  really change?" yes / no / unclear. Real-change rate = yes / (yes + no), 95% Wilson range; unclear reported
+  separately. Optional ESA WorldCover cross-check left out. Settings in configs/change.yaml (check_*).
 - 4.7 (user OK'd, 2026-11-03): composite = per-pixel median of ALL clear tile-43QBF scenes in each window,
   keeping the newest processing when a date has two copies. All 3 fine-tuned seeds are run; maps are drawn from
   seed 42; areas and changed km2 are mean +- sample std over seeds. Bias check: a second change matrix leaves out

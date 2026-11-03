@@ -63,3 +63,17 @@ output_path: results/change_2018_2026.json
 patches_csv: results/change_2018_2026_patches.csv
 map_figure: reports/figures/change_map_{year}.png      # {year} is filled in
 composites_figure: reports/figures/change_composites.jpg   # JPEG keeps the repo light (preview only)
+
+# Step 4.8: sanity-check the change. Run: python -m src.change_check --config configs/change.yaml sample
+# A random sample of patches the map seed says changed class. Each pair (2018 left, 2026 right) is
+# shown WITHOUT the model's classes; the judge answers "did the land really change?" yes/no/unclear.
+# Claude judges first (check_claude_csv), the user reviews in Gradio (check_reviewed_csv).
+check_n: 50
+check_seed: 42
+check_context: 32          # pixels of surroundings shown on each side of the 64x64 patch (outlined)
+check_scale: 4             # enlarge each crop 4x (nearest pixel, no smoothing)
+check_dir: data/change_check                    # pair images (git-ignored)
+check_sample_csv: results/change_check_sample.csv
+check_claude_csv: results/change_check_claude.csv
+check_reviewed_csv: results/change_check_reviewed.csv
+check_output: results/change_check.json
