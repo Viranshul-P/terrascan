@@ -107,27 +107,12 @@ def forgetting_check(val_before, val_after, max_drop):
     return [s for s in val_before if val_before[s] - val_after[s] > max_drop]
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", required=True)
-    parser.add_argument("--fast-dev-run", action="store_true", help="2 batches, 1 epoch, 1 seed")
-    args = parser.parse_args()
-    ft_cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
-    eval_cfg = yaml.safe_load(Path(ft_cfg["india_eval_config"]).read_text(encoding="utf-8"))
+def finetune_seeds(ft_cfg, eval_cfg, seeds, run_name, finetune_df, device, max_batches, fast):
+    """Part 1: fine-tune each seed, save it, and measure EuroSAT VAL accuracy before/after.
 
-    seeds, run_name, max_batches = ft_cfg["seeds"], ft_cfg["run_name"], None
-    if args.fast_dev_run:
-        ft_cfg["epochs"], seeds, max_batches = 1, seeds[:1], 2
-        run_name += "-fast-dev-run"
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Device: {device}")
-
-    df = load_labels(eval_cfg["reviewed_csv"])
-    finetune_df, test_df = split_by_area(df, eval_cfg["test_areas"], eval_cfg["finetune_areas"])
-    print(f"{len(finetune_df)} fine-tune patches, {len(test_df)} test patches")
-
-    # Part 1: fine-tune each seed, and check EuroSAT VAL before/after. No test set is touched here.
-    val_before, val_after, histories = {}, {}, {}
+    No test set is touched here. Returns (val_before, val_after): {seed: accuracy}.
+    """
+    val_before, val_after = {}, {}
     for seed in seeds:
         print(f"Seed {seed}: fine-tuning {ft_cfg['base_run_dir']}/seed{seed}")
         seed_everything(seed)
@@ -148,7 +133,7 @@ def main():
         )
         val_before[seed] = eurosat_scores(model, eurosat_val, device, max_batches)["accuracy"]
         start = time.time()
-        histories[seed] = finetune(
+        history = finetune(
             model, india, eurosat_train, {**ft_cfg, "seed": seed}, device, max_batches
         )
         seconds = time.time() - start
@@ -165,29 +150,27 @@ def main():
             "n_finetune_patches": len(finetune_df),
             "eurosat_images_per_epoch": ft_cfg["eurosat_images_per_epoch"],
         }
-        run_cfg = {
-            **cfg,
-            "run_name": run_name,
-            "finetune": ft_cfg,
-            "fast_dev_run": args.fast_dev_run,
-        }
+        run_cfg = {**cfg, "run_name": run_name, "finetune": ft_cfg, "fast_dev_run": fast}
         out_dir = Path("models") / run_name / f"seed{seed}"
-        save_run(out_dir, model.state_dict(), run_cfg, metrics, histories[seed])
+        save_run(out_dir, model.state_dict(), run_cfg, metrics, history)
         print(f"  Saved to {out_dir}")
+    return val_before, val_after
 
-    failed = forgetting_check(val_before, val_after, ft_cfg["max_eurosat_val_drop"])
-    if args.fast_dev_run:
-        print("Fast dev run: stopping before the test sets.")
-        return
-    if failed:
-        print(
-            f"STOP: EuroSAT val accuracy fell more than {ft_cfg['max_eurosat_val_drop']} for "
-            f"seeds {failed}. Change the recipe (lower LR or mix in EuroSAT). No test set scored."
-        )
-        return
-    print("Forgetting check passed on EuroSAT val. Scoring the test sets once.")
 
-    # Part 2: score the test sets, before (EuroSAT model) and after (fine-tuned model).
+def score_test_sets(ft_cfg, eval_cfg, seeds, run_name, finetune_df, test_df, val_scores, device):
+    """Part 2: score the Indian test areas and the EuroSAT test set, before (EuroSAT model)
+    and after (fine-tuned model), for every seed. Writes results/india_after.json."""
+    val_before, val_after = val_scores
+    # All seeds and both models share the same data settings (the fine-tuned runs copy the base
+    # run's config), so one EuroSAT test loader is enough. Built once: each build starts worker
+    # processes, and this laptop has run low on RAM before.
+    _, base_cfg = load_run(Path(ft_cfg["base_run_dir"]) / f"seed{seeds[0]}")
+    _, _, eurosat_test = build_dataloaders(
+        base_cfg["data"],
+        base_cfg.get("image_size", 64),
+        base_cfg.get("norm_stats"),
+        base_cfg.get("target_stats"),
+    )
     per_seed = {}
     for seed in seeds:
         result = {
@@ -201,12 +184,6 @@ def main():
             model, cfg = load_run(run_dir / f"seed{seed}")
             preds, labels = predict_patches(model, cfg, test_df, eval_cfg["patches_dir"], device)
             result[f"india_test_{when}"] = score(preds, labels, eval_cfg)
-            _, _, eurosat_test = build_dataloaders(
-                cfg["data"],
-                cfg.get("image_size", 64),
-                cfg.get("norm_stats"),
-                cfg.get("target_stats"),
-            )
             result[f"eurosat_test_{when}"] = eurosat_scores(model, eurosat_test, device)
         per_seed[str(seed)] = result
         print(
@@ -231,6 +208,14 @@ def main():
             [per_seed[str(s)][f"eurosat_val_acc_{when}"] for s in seeds]
         )
 
+    recipe_keys = [
+        "epochs",
+        "lr",
+        "weight_decay",
+        "label_smoothing",
+        "batch_size",
+        "eurosat_images_per_epoch",
+    ]
     out = {
         "base_run_dir": ft_cfg["base_run_dir"],
         "finetuned_run_dir": f"models/{run_name}",
@@ -239,24 +224,53 @@ def main():
         "test_areas": eval_cfg["test_areas"],
         "n_finetune_patches": len(finetune_df),
         "n_india_test_patches": len(test_df),
-        "recipe": {
-            k: ft_cfg[k]
-            for k in [
-                "epochs",
-                "lr",
-                "weight_decay",
-                "label_smoothing",
-                "batch_size",
-                "eurosat_images_per_epoch",
-            ]
-        }
-        | {"kept_epoch": "last"},
+        "recipe": {k: ft_cfg[k] for k in recipe_keys} | {"kept_epoch": "last"},
         "max_eurosat_val_drop": ft_cfg["max_eurosat_val_drop"],
         "summary_mean_std_over_seeds": summary,
         "per_seed": per_seed,
     }
     Path(ft_cfg["output_path"]).write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {ft_cfg['output_path']}")
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", required=True)
+    parser.add_argument("--fast-dev-run", action="store_true", help="2 batches, 1 epoch, 1 seed")
+    args = parser.parse_args(argv)
+    ft_cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
+    eval_cfg = yaml.safe_load(Path(ft_cfg["india_eval_config"]).read_text(encoding="utf-8"))
+
+    seeds, run_name, max_batches = ft_cfg["seeds"], ft_cfg["run_name"], None
+    if args.fast_dev_run:
+        ft_cfg["epochs"], seeds, max_batches = 1, seeds[:1], 2
+        run_name += "-fast-dev-run"
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Device: {device}")
+
+    df = load_labels(eval_cfg["reviewed_csv"])
+    finetune_df, test_df = split_by_area(df, eval_cfg["test_areas"], eval_cfg["finetune_areas"])
+    print(f"{len(finetune_df)} fine-tune patches, {len(test_df)} test patches")
+
+    val_before, val_after = finetune_seeds(
+        ft_cfg, eval_cfg, seeds, run_name, finetune_df, device, max_batches, args.fast_dev_run
+    )
+
+    # The gate: no test set is scored unless every seed passed the EuroSAT VAL check.
+    failed = forgetting_check(val_before, val_after, ft_cfg["max_eurosat_val_drop"])
+    if args.fast_dev_run:
+        print("Fast dev run: stopping before the test sets.")
+        return
+    if failed:
+        print(
+            f"STOP: EuroSAT val accuracy fell more than {ft_cfg['max_eurosat_val_drop']} for "
+            f"seeds {failed}. Change the recipe (lower LR or mix in EuroSAT). No test set scored."
+        )
+        return
+    print("Forgetting check passed on EuroSAT val. Scoring the test sets once.")
+    score_test_sets(
+        ft_cfg, eval_cfg, seeds, run_name, finetune_df, test_df, (val_before, val_after), device
+    )
 
 
 if __name__ == "__main__":

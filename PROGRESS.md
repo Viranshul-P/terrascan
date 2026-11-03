@@ -220,6 +220,13 @@ not started
   EuroSAT val acc 0.9884/0.9896/0.9911 -> 0.7701/0.6427/0.7748 (models/efficientnet_b0_india_nomix/seed*/metrics.json,
   log in run_log.txt there). No test set was scored for it. Second try: every epoch = all 149 Indian patches + 600
   EuroSAT TRAIN images drawn fresh (seeded). Decided on val only; test sets scored once, after it passed.
+  The no-mix folder was made by the earlier, uncommitted no-mix version of src/india_finetune.py and renamed
+  by hand afterwards (its config.yaml and run_log.txt still say efficientnet_b0_india); git can't rebuild that run.
+  "Decided on val only, test scored once after" rests on the session record only: code, config and results came
+  in one commit (5a409af), so git can't prove the order. Don't state it more strongly in public text.
+  After /review-step: main() split into finetune_seeds (Part 1) and score_test_sets (Part 2); a test checks the
+  test sets are never scored after a failed val check; one EuroSAT test loader is built once instead of 6 times.
+  Refactored Part 2 re-run on the saved models gave output identical to results/india_after.json (scratch check).
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->

@@ -71,3 +71,42 @@ def test_mean_std_uses_sample_std():
     result = mean_std([1.0, 2.0, 3.0])
     assert result["mean"] == 2.0
     assert result["std"] == pytest.approx(1.0)
+
+
+def run_main_with_val_drop(tmp_path, monkeypatch, drop):
+    """Run main() on fake config + labels, with fine-tuning stubbed out to give `drop`.
+    Returns True if the test sets would have been scored."""
+    import yaml
+
+    from src import india_finetune
+
+    reviewed = tmp_path / "reviewed.csv"
+    pd.DataFrame(
+        {"file": ["a.png", "b.png"], "final_label": ["Forest", "River"], "area": ["ft", "te"]}
+    ).to_csv(reviewed, index=False)
+    eval_cfg = {"reviewed_csv": str(reviewed), "test_areas": ["te"], "finetune_areas": ["ft"]}
+    (tmp_path / "eval.yaml").write_text(yaml.safe_dump(eval_cfg), encoding="utf-8")
+    ft_cfg = {
+        "india_eval_config": str(tmp_path / "eval.yaml"),
+        "seeds": [42, 43],
+        "run_name": "fake",
+        "max_eurosat_val_drop": 0.02,
+    }
+    (tmp_path / "ft.yaml").write_text(yaml.safe_dump(ft_cfg), encoding="utf-8")
+
+    def fake_finetune_seeds(*args):
+        return {42: 0.99, 43: 0.99}, {42: 0.99, 43: 0.99 - drop}
+
+    scored = []
+    monkeypatch.setattr(india_finetune, "finetune_seeds", fake_finetune_seeds)
+    monkeypatch.setattr(india_finetune, "score_test_sets", lambda *args: scored.append(True))
+    india_finetune.main(["--config", str(tmp_path / "ft.yaml")])
+    return bool(scored)
+
+
+def test_main_never_scores_test_sets_after_a_big_val_drop(tmp_path, monkeypatch):
+    assert not run_main_with_val_drop(tmp_path, monkeypatch, drop=0.05)
+
+
+def test_main_scores_test_sets_when_val_check_passes(tmp_path, monkeypatch):
+    assert run_main_with_val_drop(tmp_path, monkeypatch, drop=0.01)
