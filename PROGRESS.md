@@ -10,17 +10,20 @@ waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-**Step 4.2: label the Indian patches by hand (about 30-45 min, can be split over several sittings).**
-1. In a terminal in the repo folder: `.venv\Scripts\activate`, then `python -m src.labeller --config configs/india.yaml`
+**Step 4.2: review Claude's labels (about 20-25 min, can be split over several sittings).**
+Claude has labelled the first 368 patches (in the labeller's shuffled order). Now you check every one, skips included.
+1. In a terminal in the repo folder: `.venv\Scripts\activate`, then
+   `python -m src.labeller --config configs/india.yaml --review`
    (a browser tab opens at http://127.0.0.1:7860; close the terminal to stop).
-2. For each patch, click the EuroSAT class that covers **most** of it. Unsure, or it fits no class (dry riverbed, bare
-   plot, dense informal housing)? Click **Skip / unclear**. Don't guess, and don't force rare classes.
+2. Each patch shows **Claude's label** under it. If it fits (the class covering **most** of the patch), click
+   **Agree**. If not, click the correct class, or **Skip / unclear** if it's unclear or fits no class.
+   If Claude skipped a patch but you can clearly label it, click that class.
    Not sure what a class looks like? Open `reports/figures/samples_per_class.png` (EuroSAT examples).
-3. Aim for **150-200 labelled** (skips don't count). The counter under the image shows how many you have per class.
-   Every click is saved at once; start the app again any time and it continues where you stopped.
-4. Misclick? There's no undo button: stop the app, open `data/india/labels.csv` and delete that row, start it again.
-5. The app never shows a model prediction. Please don't look up model predictions for these patches before you're done.
-6. When done, type `/next`. Claude will check `data/india/labels.csv` (rows, labels per class, per area) and finish 4.2.
+3. Every click is saved at once to `data/india/labels_reviewed.csv`; start again any time and it continues.
+   Misclick? Stop the app, delete that row from `data/india/labels_reviewed.csv`, start again.
+4. Don't look up model predictions for these patches (labels must stay blind to the model).
+5. When all are reviewed, type `/next`. Claude will check the file (all reviewed, how many you changed, counts per
+   class and per area), save the counts to `results/`, and finish 4.2.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -174,14 +177,26 @@ waiting on you
   summer scenes (Lyon, Poznan, Utrecht) to 1000 EuroSAT TRAIN images. Munich held out as the check, Ahmedabad never
   used in the fit. Fitted numbers in results/imagery_calibration.json; 4.2+ must load them from there, unchanged.
   Claude wrote the code and judged the figures by eye (no "You do" part in this step).
-- **Indian labels (4.2): the user labels them by hand.** Asked at the start of 4.2; the user said "do as u think", and
-  Claude's recommendation was that the user labels (SPEC: "done by hand by me (not by an AI)"), so the labels are the
-  user's. Claude wrote the patch cutter and the labeller.
+- **Indian labels (4.2): Claude labels, the user reviews and corrects** (user's decision, 2026-11-03, changed from
+  "the user labels by hand"). Claude recommended the user label by hand (SPEC: "by hand by me (not by an AI)") and
+  offered this middle option; the user chose it. Claude labels blind to model predictions; every label is then shown to
+  the user, who agrees or corrects it. README, dataset card and blog must say "labelled by Claude (an AI), reviewed and
+  corrected by the user", with how many labels the user changed. Claude wrote the patch cutter and the labeller.
 - Indian areas (4.2, configs/india.yaml): 5 non-overlapping boxes in Gujarat, about 10 km wide: Ahmedabad city (same box
   as 4.1), Vadodara west edge, farmland SW of Sanand, Narmada at Bharuch, Ankleshwar GIDC. Boxes picked by Claude from
   rough place coordinates, checked by eye in reports/figures/india_areas.png. Dry season, Jan-Feb 2026, clearest scene
   per area, same pipeline and 4.1 calibration unchanged. `python scripts/india_patches.py --config configs/india.yaml`
   -> PNGs in data/india/patches/ + data/india/patches.csv (git-ignored) + results/india_patches.json.
+- **How Claude labelled (4.2):** looked at the first 368 patches of the labeller's shuffled order (seed 42) as
+  numbered 4x4 sheets enlarged with sharp pixels (scratch script, not kept), next to the EuroSAT examples figure; never
+  saw any model prediction for Indian patches. Rules used: class covering most of the patch; hazy patches, mixed
+  patches (no class clearly over half) and land that fits no class (bare plots, construction, mudflats, scrub) =
+  skip; Highway = a wide road or flyover clearly crossing the patch (as in EuroSAT's Highway examples); tree-covered
+  campuses and orchards skipped rather than called Forest/PermanentCrop. Stopped once the labelled count reached the
+  150-200 target. `labels.csv` has a `labelled_by` column (`claude` for all of these, `user` for app clicks).
+- Review mode (`--review` in src/labeller.py): shows each of Claude's labels, the user agrees or corrects;
+  `data/india/labels_reviewed.csv` = file, claude_label, final_label, changed, area, lat, lon. The final label is
+  the user's. Steps 4.3+ use `final_label`.
 - Labeller: `gradio==6.30.0` added (released 2026-10-08; pulls in fastapi, uvicorn, starlette, rich, typer, orjson and
   ~13 smaller packages; nothing existing upgraded). Local only, no share link, no account. Patches shown in a fixed
   shuffled order (seed 42) so areas mix; labels.csv = file, label, area, lat (patch centre), lon; "skip" saved too, so
@@ -231,6 +246,10 @@ waiting on you
   narmada_bharuch from the same date (results/india_patches.json). Ankleshwar's box is shorter, so fewer patches.
   Neighbouring patches look alike: when 4.4 splits labels into fine-tune/test, split by area or by block, not at random,
   or the test score will be too kind.
+- Claude's labels (4.2) use only 5 classes: AnnualCrop, Highway, Industrial, Residential, River. No Forest, Pasture,
+  PermanentCrop, HerbaceousVegetation or SeaLake were labelled (as PLAN expected). Many patches were skipped, a lot of
+  them for haze (many patches look hazy, judged by eye) — sanand_farmland got very few labels. Exact counts
+  get saved to results/ when 4.2 finishes.
 - When running training in the background, use `python -u` so epoch lines show up live in the log (stdout is buffered when redirected to a file).
 
 ## Results so far (copied from results/ files only, with the file name)

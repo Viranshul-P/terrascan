@@ -3,7 +3,15 @@ import pytest
 from affine import Affine
 
 from src.imagery import patch_centre_lonlat
-from src.labeller import SKIP, next_file, read_labels, save_label, shuffled_order
+from src.labeller import (
+    REVIEW_COLUMNS,
+    SKIP,
+    next_file,
+    read_labels,
+    save_label,
+    save_review,
+    shuffled_order,
+)
 
 
 def fake_patches():
@@ -31,7 +39,8 @@ def test_labels_are_saved_and_resume_skips_them(tmp_path):
     save_label(labels_csv, patches.iloc[0], "Forest")
     save_label(labels_csv, patches.iloc[1], SKIP)
     saved = read_labels(labels_csv)  # read back from disk, like a restart
-    assert saved.columns.tolist() == ["file", "label", "area", "lat", "lon"]
+    assert saved.columns.tolist() == ["file", "label", "area", "lat", "lon", "labelled_by"]
+    assert saved["labelled_by"].tolist() == ["user", "user"]
     assert saved["label"].tolist() == ["Forest", SKIP]
     assert saved["lat"].tolist() == [23.0, 23.01]
 
@@ -51,6 +60,31 @@ def test_same_patch_is_not_saved_twice(tmp_path):
 def test_unknown_label_is_refused(tmp_path):
     with pytest.raises(ValueError):
         save_label(tmp_path / "labels.csv", fake_patches().iloc[0], "Desert")
+
+
+def test_review_records_claude_label_final_label_and_change(tmp_path):
+    labels_csv, reviewed_csv = tmp_path / "labels.csv", tmp_path / "reviewed.csv"
+    patches = fake_patches()
+    save_label(labels_csv, patches.iloc[0], "Forest", labelled_by="claude")
+    save_label(labels_csv, patches.iloc[1], SKIP, labelled_by="claude")
+    labelled = read_labels(labels_csv)
+    assert labelled["labelled_by"].tolist() == ["claude", "claude"]
+
+    save_review(reviewed_csv, labelled.iloc[0], "Forest")      # user agrees
+    save_review(reviewed_csv, labelled.iloc[1], "River")       # user labels a skipped patch
+    save_review(reviewed_csv, labelled.iloc[0], "Pasture")     # second click on same patch: ignored
+    reviewed = read_labels(reviewed_csv, REVIEW_COLUMNS)
+    assert reviewed.columns.tolist() == REVIEW_COLUMNS
+    assert reviewed["claude_label"].tolist() == ["Forest", SKIP]
+    assert reviewed["final_label"].tolist() == ["Forest", "River"]
+    assert reviewed["changed"].tolist() == [False, True]
+
+
+def test_review_refuses_unknown_label(tmp_path):
+    labels_csv = tmp_path / "labels.csv"
+    save_label(labels_csv, fake_patches().iloc[0], "Forest", labelled_by="claude")
+    with pytest.raises(ValueError):
+        save_review(tmp_path / "reviewed.csv", read_labels(labels_csv).iloc[0], "Desert")
 
 
 def test_patch_centre_lonlat():
