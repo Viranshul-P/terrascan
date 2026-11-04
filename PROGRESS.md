@@ -3,21 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-4.8
+5.1
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Step 4.8: check Claude's 50 change answers (about 10-15 minutes).
-1. In the repo folder run: `.venv\Scripts\python -m src.change_check --config configs/change.yaml review`
-   A browser page opens: each pair is 2018 (left) and 2026 (right), the yellow box is the 640 m patch.
-2. For each pair, press **Agree** if Claude's answer is right, otherwise press yes / no / unclear.
-   "Real change" = new buildings, roads, cleared land, water etc. Different crop colours alone is NOT a change.
-   Every click is saved at once, so you can close it and continue later.
-3. When the page says **All done**, type `/next`. Claude then checks results/change_check_reviewed.csv has 50 rows,
-   computes the real-change rate and writes up the finding with its limits.
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -44,7 +37,7 @@ Step 4.8: check Claude's 50 change answers (about 10-15 minutes).
 - [x] 4.5 Publish the Indian dataset
 - [x] 4.6 Check data exists (change study)
 - [x] 4.7 Build the two maps
-- [ ] 4.8 Sanity-check the change
+- [x] 4.8 Sanity-check the change
 - [ ] 5.1 ONNX export
 - [ ] 5.2 Backend API + Docker
 - [ ] 5.3 Website
@@ -79,6 +72,7 @@ Step 4.8: check Claude's 50 change answers (about 10-15 minutes).
 - 4.5 — src/india_dataset.py builds data/india/hf_dataset/ (train = fine-tune areas, test = test areas, metadata.csv, card from src/india_dataset_card.md); user uploaded it to https://huggingface.co/datasets/viranshul/terrascan-india-gujarat
 - 4.6 — scripts/change_scenes.py + src/imagery.month_summary list Sentinel-2 L2A scenes per month for the Ahmedabad change box (Dec 2017–Dec 2019, Dec 2025–Oct 2026) with tile, cloud and processing baseline -> results/change_scenes.json/.md; years and months picked in configs/change.yaml
 - 4.7 — src/change.py: median composites of tile 43QBF for Dec 2017–Feb 2018 (13 scenes) and Dec 2025–Feb 2026 (16 scenes), offset removed per scene before the median, one pixel grid checked for all 29 scenes; 2112 patches run through the fine-tuned EfficientNet-B0 (seeds 42/43/44) -> results/change_2018_2026.json + _patches.csv, reports/figures/change_map_2018.png, change_map_2026.png, change_composites.jpg
+- 4.8 — src/change_check.py: 50 random 'changed' patches (seed 42) shown as blind 2018/2026 pairs; Claude judged all 50, the user reviewed them (6 answers changed); rate + honest limits in results/change_check.json/.md
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -357,6 +351,9 @@ Step 4.8: check Claude's 50 change answers (about 10-15 minutes).
   Add them before 5.x or the README reuses these maps.
 - 4.7: the two composites differ a little in colour: median RGB 104/104/111 (2018) vs 101/102/108 (2026)
   (median_rgb_0_255 in results/change_2018_2026.json). 2018 scenes are baseline 02.12, 2026 are 05.11/05.12.
+- 4.8: the change check only measures whether reported changes are visibly real, not whether the new class is
+  right, and not missed changes. Sample is 50 pairs from seed 42 only (wide range). The user reviewed Claude's
+  answers instead of judging from scratch, so final answers may lean towards Claude's (results/change_check.md).
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
@@ -403,3 +400,6 @@ Step 4.8: check Claude's 50 change answers (about 10-15 minutes).
   (0.4096 km2 each), mean +- std over seeds 42/43/44. AnnualCrop 245.5 +- 22.4 km2 (2018) -> 140.2 +- 11.9 (2026);
   Residential 226.5 +- 4.7 -> 261.3 +- 15.2; Industrial 138.4 +- 15.4 -> 192.6 +- 28.1; Highway 76.2 +- 3.8 -> 100.6
   +- 3.4. Patches that changed class: 320.6 +- 12.7 km2 (304.6 +- 11.5 km2 outside the fine-tune area).
+- 4.8 change check (results/change_check.json): of 50 sampled reported changes (seed 42), final answers 24 yes /
+  23 no / 3 unclear; real rate 0.5106 (95% Wilson 0.3724-0.6472). Rough scale-up: about 163.1 km2 real
+  (119.0-206.8) of the 319.488 km2 reported. Claude alone before review: 21/22/7. User changed 6 answers.

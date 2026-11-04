@@ -1,0 +1,38 @@
+{
+  "n_pairs": 50,
+  "map_seed": 42,
+  "sample_seed": 42,
+  "judged_by": "Claude first (blind to the model's classes), then reviewed by the user",
+  "final": {
+    "counts": {
+      "yes": 24,
+      "no": 23,
+      "unclear": 3
+    },
+    "real_rate": 0.5106,
+    "real_rate_95": [
+      0.3724,
+      0.6472
+    ]
+  },
+  "claude_before_review": {
+    "counts": {
+      "yes": 21,
+      "no": 22,
+      "unclear": 7
+    },
+    "real_rate": 0.4884,
+    "real_rate_95": [
+      0.3462,
+      0.6325
+    ]
+  },
+  "n_changed_by_user": 6,
+  "reported_changed_patches": 780,
+  "reported_changed_km2": 319.488,
+  "estimated_real_changed_km2": 163.1,
+  "estimated_real_changed_km2_95": [
+    119.0,
+    206.8
+  ]
+}

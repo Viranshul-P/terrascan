@@ -174,6 +174,18 @@ def summarise(cfg):
         "claude_before_review": real_change_rate(claude["answer"]),
         "n_changed_by_user": int(reviewed["changed"].astype(bool).sum()),
     }
+    # Rough scale-up: the real share of the map seed's reported change (unclear pairs left out).
+    change = json.loads(Path(cfg["output_path"]).read_text(encoding="utf-8"))
+    seed_result = change["per_seed"][str(cfg["map_seed"])]
+    final = result["final"]
+    result["reported_changed_patches"] = seed_result["changed_patches"]
+    result["reported_changed_km2"] = seed_result["changed_km2"]
+    if final["real_rate"] is not None:
+        result["estimated_real_changed_km2"] = round(seed_result["changed_km2"]
+                                                     * final["real_rate"], 1)
+        result["estimated_real_changed_km2_95"] = [
+            round(seed_result["changed_km2"] * r, 1) for r in final["real_rate_95"]
+        ]
     Path(cfg["check_output"]).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
 
