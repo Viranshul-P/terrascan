@@ -27,3 +27,14 @@ venv/
 
 # Secrets
 .env
+
+# Impeccable design skill (5.3): downloaded engine binary and runtime caches stay local
+.claude/skills/impeccable/scripts/bin/
+**/.impeccable/hook.cache.json
+**/.impeccable/hook.pending.json
+**/skills/impeccable/scripts/config.json
+.impeccable/live/
+.impeccable/history/
+.impeccable/config.local.json
+.impeccable/critique/*
+!.impeccable/critique/ignore.md

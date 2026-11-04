@@ -269,6 +269,12 @@ not started
   seed 42; areas and changed km2 are mean +- sample std over seeds. Bias check: a second change matrix leaves out
   patches touching the 4.4 fine-tune areas (only ahmedabad_city lies inside the box). Map colours in configs/change.yaml.
 
+- Impeccable design skill (2026-11-04, user asked): copied from the official repo github.com/pbakaus/impeccable
+  (Apache-2.0, commit 695cea5, skill 4.8.0) into .claude/skills/impeccable and .claude/agents/impeccable-*.md, project
+  only; our next/progress/review-step skills unchanged (checksums). Its hooks (.claude/settings.json) were NOT
+  installed: they run a downloaded engine on every edit without approval. `/teach-impeccable` is now `/impeccable init`.
+  Telemetry: the skill fetches design directions from impeccable.style when a design starts.
+
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.

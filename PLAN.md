@@ -279,6 +279,11 @@ reusable components (button, card, stat, toggle, slider, legend).
 Design goals: Apple-like restraint. Clean, calm, lots of whitespace, large confident type for key numbers, nothing
 cluttered or "funky". Visual first: every section is one strong visual plus one or two short sentences, never walls
 of text.
+**Impeccable first:** run `/impeccable init` (this version's name for the old `/teach-impeccable`; it writes
+PRODUCT.md) and give it our design brief from PLAN.md as the design context. Before building anything, show me the 2
+design directions as screenshots, each with a short note on how it meets every point of our brief (clean Apple-like
+restraint, visual first, few words, the globe-to-Ahmedabad 3D moment, purposeful motion, fast). I'll also share
+reference screenshots of sites I like; match their feel. **Don't move on until I say I genuinely like a direction.**
 
 ### 5.3b The map experience
 **Ask:** Build the main map with MapLibre GL:
@@ -302,11 +307,18 @@ of text.
 Every number is read from the data files, never hard-coded. Numbers count up when they scroll into view.
 
 ### 5.3d Polish, performance and real users
-**Ask:** A full performance and accessibility pass, then fix the top 3 problems from my friends test.
+**Ask:** A full performance and accessibility pass, including `/impeccable critique`, `/impeccable audit` and
+`/impeccable polish` before the friends test. Then fix the top 3 problems from my friends test.
 **You do:** show the site to 3 friends without explaining. Ask each to (1) find what changed in Ahmedabad, (2) map
 their own area. Note where they get stuck.
 
 ### Rules for all of 5.3a–5.3d
+- Our design brief in PLAN.md is the goal; Impeccable is a tool to reach it. If Impeccable's advice conflicts with the
+  brief, the brief wins, except on fonts, where Impeccable's typography guidance replaces "Inter or the system font".
+  If you're unsure, ask me.
+- End-of-step gate (every 5.3 step, before committing): take desktop and phone screenshots, check them against each
+  point of the design brief and the performance budget, and give me a short pass/fail list. Fix any fails first. I'll
+  also open it in my own browser and phone to check.
 - Motion: smooth and purposeful, never decorative. 200–400 ms transitions, gentle easing or spring feel,
   scroll-triggered reveals, smooth camera moves on the map. Everything respects prefers-reduced-motion.
 - 3D: only the globe and terrain tilt from MapLibre. No Three.js or other heavy 3D library unless you show me why
