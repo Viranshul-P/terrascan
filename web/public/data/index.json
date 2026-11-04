@@ -1,0 +1,95 @@
+{
+  "years": [
+    "2018",
+    "2026"
+  ],
+  "classes": [
+    {
+      "name": "AnnualCrop",
+      "colour": "#e6c84a"
+    },
+    {
+      "name": "Forest",
+      "colour": "#1b7837"
+    },
+    {
+      "name": "HerbaceousVegetation",
+      "colour": "#a6d96a"
+    },
+    {
+      "name": "Highway",
+      "colour": "#7f7f7f"
+    },
+    {
+      "name": "Industrial",
+      "colour": "#762a83"
+    },
+    {
+      "name": "Pasture",
+      "colour": "#d9f0a3"
+    },
+    {
+      "name": "PermanentCrop",
+      "colour": "#f4a582"
+    },
+    {
+      "name": "Residential",
+      "colour": "#d73027"
+    },
+    {
+      "name": "River",
+      "colour": "#4393c3"
+    },
+    {
+      "name": "SeaLake",
+      "colour": "#08306b"
+    }
+  ],
+  "cities": [
+    {
+      "id": "ahmedabad",
+      "name": "Ahmedabad",
+      "bbox": [
+        72.4,
+        22.9,
+        72.7,
+        23.15
+      ],
+      "summary": "ahmedabad/summary.json"
+    },
+    {
+      "id": "vadodara",
+      "name": "Vadodara",
+      "bbox": [
+        73.08,
+        22.22,
+        73.28,
+        22.4
+      ],
+      "summary": "vadodara/summary.json"
+    },
+    {
+      "id": "surat",
+      "name": "Surat",
+      "bbox": [
+        72.73,
+        21.08,
+        72.93,
+        21.26
+      ],
+      "summary": "surat/summary.json"
+    },
+    {
+      "id": "rajkot",
+      "name": "Rajkot",
+      "bbox": [
+        70.7,
+        22.21,
+        70.9,
+        22.39
+      ],
+      "summary": "rajkot/summary.json"
+    }
+  ],
+  "model": "TerraScan fine-tuned EfficientNet-B0, seed 42 (ONNX)"
+}

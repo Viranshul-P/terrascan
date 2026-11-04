@@ -1,0 +1,370 @@
+{
+  "id": "vadodara",
+  "name": "Vadodara",
+  "bbox": [
+    73.08,
+    22.22,
+    73.28,
+    22.4
+  ],
+  "tile": "43QCE",
+  "years": {
+    "2018": {
+      "window": "2017-12-01/2018-02-28",
+      "n_scenes": 12,
+      "first_date": "2017-12-09",
+      "last_date": "2018-02-27",
+      "scenes": [
+        "S2A_MSIL2A_20171209T054221_R005_T43QCE_20201014T125439",
+        "S2B_MSIL2A_20171214T054219_R005_T43QCE_20201014T140534",
+        "S2B_MSIL2A_20171224T054229_R005_T43QCE_20201014T160509",
+        "S2A_MSIL2A_20171229T054231_R005_T43QCE_20201014T171011",
+        "S2B_MSIL2A_20180103T054219_R005_T43QCE_20201014T030512",
+        "S2A_MSIL2A_20180118T054141_R005_T43QCE_20201014T063718",
+        "S2B_MSIL2A_20180123T054119_R005_T43QCE_20201014T080811",
+        "S2B_MSIL2A_20180202T054029_R005_T43QCE_20201013T181744",
+        "S2B_MSIL2A_20180212T053939_R005_T43QCE_20201013T203326",
+        "S2A_MSIL2A_20180217T053911_R005_T43QCE_20201013T221246",
+        "S2B_MSIL2A_20180222T053829_R005_T43QCE_20201014T001705",
+        "S2A_MSIL2A_20180227T053801_R005_T43QCE_20201014T013349"
+      ]
+    },
+    "2026": {
+      "window": "2025-12-01/2026-02-28",
+      "n_scenes": 16,
+      "first_date": "2025-12-02",
+      "last_date": "2026-02-25",
+      "scenes": [
+        "S2B_MSIL2A_20251202T054109_R005_T43QCE_20251202T073232",
+        "S2C_MSIL2A_20251207T054231_R005_T43QCE_20251207T092711",
+        "S2B_MSIL2A_20251212T054139_R005_T43QCE_20251212T073145",
+        "S2C_MSIL2A_20251217T054241_R005_T43QCE_20251217T091609",
+        "S2A_MSIL2A_20251219T054301_R005_T43QCE_20251219T083315",
+        "S2C_MSIL2A_20251227T054241_R005_T43QCE_20251227T092116",
+        "S2B_MSIL2A_20260101T054139_R005_T43QCE_20260101T074000",
+        "S2C_MSIL2A_20260106T054231_R005_T43QCE_20260106T091412",
+        "S2A_MSIL2A_20260108T054251_R005_T43QCE_20260108T091312",
+        "S2B_MSIL2A_20260111T054109_R005_T43QCE_20260111T074202",
+        "S2C_MSIL2A_20260116T054201_R005_T43QCE_20260116T091409",
+        "S2B_MSIL2A_20260121T054039_R005_T43QCE_20260121T091302",
+        "S2C_MSIL2A_20260205T054021_R005_T43QCE_20260205T082412",
+        "S2B_MSIL2A_20260210T053849_R005_T43QCE_20260210T092154",
+        "S2C_MSIL2A_20260215T053921_R005_T43QCE_20260215T085810",
+        "S2C_MSIL2A_20260225T053811_R005_T43QCE_20260225T103810"
+      ]
+    }
+  },
+  "overlay_corners": [
+    [
+      73.077473,
+      22.400018
+    ],
+    [
+      73.276346,
+      22.402261
+    ],
+    [
+      73.278545,
+      22.223103
+    ],
+    [
+      73.079925,
+      22.22088
+    ]
+  ],
+  "grid_rows": 31,
+  "grid_cols": 32,
+  "km2_per_patch": 0.4096,
+  "n_patches": 992,
+  "n_patches_touching_finetune_area": 0,
+  "patch_counts": {
+    "2018": {
+      "AnnualCrop": 370,
+      "Forest": 0,
+      "HerbaceousVegetation": 49,
+      "Highway": 76,
+      "Industrial": 158,
+      "Pasture": 19,
+      "PermanentCrop": 80,
+      "Residential": 234,
+      "River": 6,
+      "SeaLake": 0
+    },
+    "2026": {
+      "AnnualCrop": 197,
+      "Forest": 0,
+      "HerbaceousVegetation": 18,
+      "Highway": 162,
+      "Industrial": 234,
+      "Pasture": 67,
+      "PermanentCrop": 62,
+      "Residential": 248,
+      "River": 4,
+      "SeaLake": 0
+    }
+  },
+  "areas_km2": {
+    "2018": {
+      "AnnualCrop": 151.552,
+      "Forest": 0.0,
+      "HerbaceousVegetation": 20.0704,
+      "Highway": 31.1296,
+      "Industrial": 64.7168,
+      "Pasture": 7.7824,
+      "PermanentCrop": 32.768,
+      "Residential": 95.8464,
+      "River": 2.4576,
+      "SeaLake": 0.0
+    },
+    "2026": {
+      "AnnualCrop": 80.6912,
+      "Forest": 0.0,
+      "HerbaceousVegetation": 7.3728,
+      "Highway": 66.3552,
+      "Industrial": 95.8464,
+      "Pasture": 27.4432,
+      "PermanentCrop": 25.3952,
+      "Residential": 101.5808,
+      "River": 1.6384,
+      "SeaLake": 0.0
+    }
+  },
+  "mean_confidence": {
+    "2018": 0.7452,
+    "2026": 0.7177
+  },
+  "changed_patches": 390,
+  "changed_km2": 159.744,
+  "changes": [
+    {
+      "from": "AnnualCrop",
+      "to": "Industrial",
+      "patches": 58,
+      "km2": 23.7568
+    },
+    {
+      "from": "AnnualCrop",
+      "to": "Highway",
+      "patches": 54,
+      "km2": 22.1184
+    },
+    {
+      "from": "AnnualCrop",
+      "to": "Pasture",
+      "patches": 51,
+      "km2": 20.8896
+    },
+    {
+      "from": "AnnualCrop",
+      "to": "PermanentCrop",
+      "patches": 40,
+      "km2": 16.384
+    },
+    {
+      "from": "PermanentCrop",
+      "to": "AnnualCrop",
+      "patches": 22,
+      "km2": 9.0112
+    },
+    {
+      "from": "PermanentCrop",
+      "to": "Highway",
+      "patches": 19,
+      "km2": 7.7824
+    },
+    {
+      "from": "HerbaceousVegetation",
+      "to": "AnnualCrop",
+      "patches": 16,
+      "km2": 6.5536
+    },
+    {
+      "from": "Industrial",
+      "to": "Residential",
+      "patches": 14,
+      "km2": 5.7344
+    },
+    {
+      "from": "PermanentCrop",
+      "to": "Industrial",
+      "patches": 14,
+      "km2": 5.7344
+    },
+    {
+      "from": "HerbaceousVegetation",
+      "to": "Highway",
+      "patches": 12,
+      "km2": 4.9152
+    },
+    {
+      "from": "Residential",
+      "to": "Industrial",
+      "patches": 12,
+      "km2": 4.9152
+    },
+    {
+      "from": "Highway",
+      "to": "Industrial",
+      "patches": 8,
+      "km2": 3.2768
+    },
+    {
+      "from": "AnnualCrop",
+      "to": "Residential",
+      "patches": 7,
+      "km2": 2.8672
+    },
+    {
+      "from": "AnnualCrop",
+      "to": "HerbaceousVegetation",
+      "patches": 6,
+      "km2": 2.4576
+    },
+    {
+      "from": "Industrial",
+      "to": "Highway",
+      "patches": 6,
+      "km2": 2.4576
+    },
+    {
+      "from": "HerbaceousVegetation",
+      "to": "Pasture",
+      "patches": 5,
+      "km2": 2.048
+    },
+    {
+      "from": "Pasture",
+      "to": "PermanentCrop",
+      "patches": 5,
+      "km2": 2.048
+    },
+    {
+      "from": "PermanentCrop",
+      "to": "Pasture",
+      "patches": 5,
+      "km2": 2.048
+    },
+    {
+      "from": "HerbaceousVegetation",
+      "to": "Industrial",
+      "patches": 4,
+      "km2": 1.6384
+    },
+    {
+      "from": "Highway",
+      "to": "Residential",
+      "patches": 4,
+      "km2": 1.6384
+    },
+    {
+      "from": "Pasture",
+      "to": "AnnualCrop",
+      "patches": 4,
+      "km2": 1.6384
+    },
+    {
+      "from": "Pasture",
+      "to": "Highway",
+      "patches": 4,
+      "km2": 1.6384
+    },
+    {
+      "from": "PermanentCrop",
+      "to": "Residential",
+      "patches": 3,
+      "km2": 1.2288
+    },
+    {
+      "from": "Residential",
+      "to": "Highway",
+      "patches": 3,
+      "km2": 1.2288
+    },
+    {
+      "from": "AnnualCrop",
+      "to": "River",
+      "patches": 2,
+      "km2": 0.8192
+    },
+    {
+      "from": "River",
+      "to": "Highway",
+      "patches": 2,
+      "km2": 0.8192
+    },
+    {
+      "from": "River",
+      "to": "Residential",
+      "patches": 2,
+      "km2": 0.8192
+    },
+    {
+      "from": "HerbaceousVegetation",
+      "to": "River",
+      "patches": 1,
+      "km2": 0.4096
+    },
+    {
+      "from": "Highway",
+      "to": "AnnualCrop",
+      "patches": 1,
+      "km2": 0.4096
+    },
+    {
+      "from": "Highway",
+      "to": "Pasture",
+      "patches": 1,
+      "km2": 0.4096
+    },
+    {
+      "from": "Industrial",
+      "to": "River",
+      "patches": 1,
+      "km2": 0.4096
+    },
+    {
+      "from": "Pasture",
+      "to": "Industrial",
+      "patches": 1,
+      "km2": 0.4096
+    },
+    {
+      "from": "Residential",
+      "to": "AnnualCrop",
+      "patches": 1,
+      "km2": 0.4096
+    },
+    {
+      "from": "River",
+      "to": "AnnualCrop",
+      "patches": 1,
+      "km2": 0.4096
+    },
+    {
+      "from": "River",
+      "to": "HerbaceousVegetation",
+      "patches": 1,
+      "km2": 0.4096
+    }
+  ],
+  "files": {
+    "overlay": {
+      "2018": "overlay_2018.png",
+      "2026": "overlay_2026.png"
+    },
+    "rgb": {
+      "2018": "rgb_2018.webp",
+      "2026": "rgb_2026.webp"
+    },
+    "geotiff": {
+      "2018": "classes_2018.tif",
+      "2026": "classes_2026.tif"
+    },
+    "map_png": {
+      "2018": "map_2018.png",
+      "2026": "map_2026.png"
+    },
+    "patches_geojson": "patches.geojson",
+    "patches_csv": "patches.csv"
+  }
+}

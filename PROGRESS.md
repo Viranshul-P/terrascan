@@ -3,14 +3,18 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-5.2
+5.2b
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+Install Docker Desktop before 5.2b (about 20 min, one restart):
+1. On docker.com, download Docker Desktop for Windows. 2. Install it, keep "Use WSL 2" ticked. 3. Restart.
+4. Open Docker Desktop, accept the terms (free for personal use; signing in can be skipped).
+5. In a terminal: `docker --version`, then `docker run hello-world` (should print "Hello from Docker!").
+Then type /next. Claude will check `docker --version` and `docker run hello-world`.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -39,7 +43,8 @@ not started
 - [x] 4.7 Build the two maps
 - [x] 4.8 Sanity-check the change
 - [x] 5.1 ONNX export
-- [ ] 5.2 Backend API + Docker
+- [x] 5.2a Showcase static files
+- [ ] 5.2b API + Docker
 - [ ] 5.3a Design system and two design directions
 - [ ] 5.3b The map experience
 - [ ] 5.3c The story sections
@@ -77,6 +82,7 @@ not started
 - 4.7 — src/change.py: median composites of tile 43QBF for Dec 2017–Feb 2018 (13 scenes) and Dec 2025–Feb 2026 (16 scenes), offset removed per scene before the median, one pixel grid checked for all 29 scenes; 2112 patches run through the fine-tuned EfficientNet-B0 (seeds 42/43/44) -> results/change_2018_2026.json + _patches.csv, reports/figures/change_map_2018.png, change_map_2026.png, change_composites.jpg
 - 4.8 — src/change_check.py: 50 random 'changed' patches (seed 42) shown as blind 2018/2026 pairs; Claude judged all 50, the user reviewed them (6 answers changed); rate + honest limits in results/change_check.json/.md
 - 5.1 — src/export_onnx.py: India fine-tuned EfficientNet-B0 seed 42 -> model.onnx + onnx_info.json; ONNX matches PyTorch on 20 Indian test patches (results/onnx_check.json)
+- 5.2a — src/showcase.py + src/onnx_predict.py: static map files for Ahmedabad, Vadodara, Surat, Rajkot (2018 vs 2026, ONNX seed 42) in web/public/data/; Ahmedabad identical to 4.7 (results/showcase.json)
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -268,6 +274,18 @@ not started
   keeping the newest processing when a date has two copies. All 3 fine-tuned seeds are run; maps are drawn from
   seed 42; areas and changed km2 are mean +- sample std over seeds. Bias check: a second change matrix leaves out
   patches touching the 4.4 fine-tune areas (only ahmedabad_city lies inside the box). Map colours in configs/change.yaml.
+- 5.2 split into 5.2a (static showcase files) and 5.2b (API + Docker), user agreed 2026-11-04. 5.2a cities (user OK'd):
+  Ahmedabad (exactly the 4.7 box, tile and cached scenes), Vadodara, Surat, Rajkot, all in Gujarat; new boxes about
+  20 x 20 km, picked by Claude from rough coordinates and checked by eye. One tile per city that fully covers the box
+  (43QCE, 43QBD, 42QXK). Same years/windows and pipeline as 4.7; model = ONNX seed 42 only (no 3-seed spread on the site).
+  configs/showcase.yaml. Run: python -m src.showcase --config configs/showcase.yaml [--city id].
+- src/onnx_predict.py runs the ONNX model with numpy + onnxruntime only (no torch), so the 5.2b container can skip
+  PyTorch. Its bilinear 64->128 resize is written by hand; a test checks it matches build_transforms within 1e-5.
+- web/public/data/ (about 5 MB: overlays, 20 m RGB WebP, GeoTIFF, GeoJSON, CSV, map PNG, summary.json per city, and
+  index.json) IS committed: the static website reads it directly. The full-resolution scenes stay git-ignored in imagery/.
+  GeoTIFFs: one pixel per 640 m patch, class number (255 = none), UTM projection of the tile, colour table included.
+- tests/fixtures/ahmedabad_tile.npz: a real 192 x 192 px crop of two 4.7 Ahmedabad scenes (3 x 3 patches, 346 KB), so
+  the showcase tests (and later the API tests) run without network.
 
 - Impeccable design skill (2026-11-04, user asked): copied from the official repo github.com/pbakaus/impeccable
   (Apache-2.0, commit 695cea5, skill 4.8.0) into .claude/skills/impeccable and .claude/agents/impeccable-*.md, project
@@ -374,6 +392,15 @@ not started
 - 5.1: torch.onnx.export with dynamo=False prints a DeprecationWarning (legacy exporter). Works on torch 2.14.1; if a
   future torch drops it, switch to dynamo=True and add onnxscript. The real-model ONNX test needs git-ignored weights
   and patches, so it skips in CI; only the tiny-model export test runs there.
+- 5.2a: the change check (4.8, about half of reported changes real) was done for Ahmedabad only. Vadodara, Surat and
+  Rajkot show the same top flips (AnnualCrop -> Industrial / Highway; web/public/data/<city>/summary.json), so their
+  change numbers are likely just as inflated. Not checked. The site must say this next to any city's change number.
+- 5.2a: the background run was stopped once by Claude Code (laptop low on memory) during Rajkot; Rajkot was re-run on
+  its own and finished. Ahmedabad's showcase also overlaps the fine-tune area ahmedabad_city (306 patches touch it,
+  as in 4.7); the other three cities touch no fine-tune area (results/showcase.json). Vadodara's box contains the
+  4.3 TEST area vadodara_outskirts (test data, not training data, so no bias, but worth knowing).
+- 5.2a: Rajkot 2018 has only 9 clear scenes (others 12-13). patches.geojson is 0.7 MB for Ahmedabad: 5.3b should
+  load it after the map, not up front.
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)
@@ -424,3 +451,7 @@ not started
   (119.0-206.8) of the 319.488 km2 reported. Claude alone before review: 21/22/7. User changed 6 answers.
 - ONNX export (5.1, results/onnx_check.json): largest PyTorch-vs-ONNX logit difference on 20 Indian test patches
   7.15e-06 (limit 1e-4), passed.
+- Showcase (5.2a, results/showcase.json; ONNX seed 42, RAW model output, change only checked for Ahmedabad in 4.8):
+  Ahmedabad 2112 patches, 780 changed class (319.488 km2), ONNX classes identical to 4.7 PyTorch seed 42 for all 2112
+  patches in both years. Vadodara 992 patches, 390 changed (159.744 km2); Surat 992, 353 (144.5888 km2); Rajkot 992,
+  322 (131.8912 km2). Clear scenes 2018/2026: Ahmedabad 13/16, Vadodara 12/16, Surat 12/17, Rajkot 9/18.

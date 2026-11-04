@@ -254,6 +254,8 @@ Python backend serves the model; a small web front end shows the map.
 **Done when:** test passes.
 
 ### 5.2 Backend API + Docker
+*Split (user agreed, 2026-11-04): **5.2a** = part 1 (static showcase files, no Docker needed);
+**5.2b** = part 2 (FastAPI + Dockerfile + endpoint tests; needs Docker Desktop installed by the user).*
 **Ask:** Two parts.
 1. **Pre-computed showcase as static files.** A script that runs the model on 4–6 Indian cities (Ahmedabad, Vadodara
    + others), two years each, and writes everything the website needs into `web/public/data/`: overlay images + map

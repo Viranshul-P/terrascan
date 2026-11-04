@@ -1,0 +1,67 @@
+# Step 5.2a: pre-computed showcase for the website (static files, no API needed).
+#   python -m src.showcase --config configs/showcase.yaml
+#   (one city only: add --city surat)
+#
+# Cities agreed with the user (2026-11-04): all in Gujarat, the only region we have Indian
+# accuracy numbers for (steps 4.3/4.4). bbox = [west, south, east, north] in lon/lat.
+# Boxes for the new cities: about 20 x 20 km around the city centre, chosen by Claude from
+# rough coordinates. Tile = the one Sentinel-2 tile that fully covers the box in both windows
+# (found with a scene search on 2026-11-04; Surat is also covered by 42QZJ, 43QBD has more
+# clear days). Ahmedabad = exactly the step 4.7 box, tile and downloaded scenes.
+cities:
+  - id: ahmedabad
+    name: Ahmedabad
+    bbox: [72.40, 22.90, 72.70, 23.15]
+    tile: 43QBF
+    cache_dir: imagery/change          # reuses the scenes step 4.7 already read
+  - id: vadodara
+    name: Vadodara
+    bbox: [73.08, 22.22, 73.28, 22.40]
+    tile: 43QCE
+    cache_dir: imagery/showcase/vadodara
+  - id: surat
+    name: Surat
+    bbox: [72.73, 21.08, 72.93, 21.26]
+    tile: 43QBD
+    cache_dir: imagery/showcase/surat
+  - id: rajkot
+    name: Rajkot
+    bbox: [70.70, 22.21, 70.90, 22.39]
+    tile: 42QXK
+    cache_dir: imagery/showcase/rajkot
+
+# Same as step 4.7 (configs/change.yaml): dry season Dec-Feb, 2018 vs 2026.
+max_cloud: 10
+years:
+  "2018": 2017-12-01/2018-02-28
+  "2026": 2025-12-01/2026-02-28
+scale_max: 2750
+patch_size: 64
+calibration_path: results/imagery_calibration.json
+
+# The exported model from step 5.1 (seed 42, the default seed, not picked by any score).
+onnx_path: models/efficientnet_b0_india/seed42/model.onnx
+onnx_info_path: models/efficientnet_b0_india/seed42/onnx_info.json
+batch_size: 64
+
+# Fine-tune areas (bias note: patches touching them were seen in training, 2026 images).
+india_eval_config: configs/india_eval.yaml
+india_config: configs/india.yaml
+
+# The satellite picture for the before/after slider: every N x N pixels averaged (2 = 20 m pixels),
+# saved as WebP at this quality. It is the calibrated, EuroSAT-style RGB the model sees.
+rgb_downscale: 2
+rgb_webp_quality: 80
+
+# Map colours: the same as configs/change.yaml (5.3a may replace them with a colour-blind-safe set).
+change_config: configs/change.yaml
+
+out_dir: web/public/data
+
+# Check: Ahmedabad's ONNX classes vs step 4.7's PyTorch seed-42 classes, patch by patch.
+check_city: ahmedabad
+check_patches_csv: results/change_2018_2026_patches.csv
+check_seed: 42
+
+# Summary of every city, for PROGRESS.md and the README (numbers come from here).
+results_path: results/showcase.json

@@ -1,0 +1,179 @@
+{
+  "cities": {
+    "ahmedabad": {
+      "n_patches": 2112,
+      "n_patches_touching_finetune_area": 306,
+      "changed_patches": 780,
+      "changed_km2": 319.488,
+      "areas_km2": {
+        "2018": {
+          "AnnualCrop": 222.0032,
+          "Forest": 0.4096,
+          "HerbaceousVegetation": 69.632,
+          "Highway": 80.2816,
+          "Industrial": 153.6,
+          "Pasture": 9.0112,
+          "PermanentCrop": 80.6912,
+          "Residential": 221.184,
+          "River": 26.624,
+          "SeaLake": 1.6384
+        },
+        "2026": {
+          "AnnualCrop": 128.2048,
+          "Forest": 1.6384,
+          "HerbaceousVegetation": 22.9376,
+          "Highway": 104.448,
+          "Industrial": 218.3168,
+          "Pasture": 17.2032,
+          "PermanentCrop": 93.3888,
+          "Residential": 247.808,
+          "River": 30.3104,
+          "SeaLake": 0.8192
+        }
+      },
+      "mean_confidence": {
+        "2018": 0.7428,
+        "2026": 0.7493
+      },
+      "n_scenes": {
+        "2018": 13,
+        "2026": 16
+      },
+      "check_vs_step_4_7": {
+        "patches_here": 2112,
+        "patches_in_4_7": 2112,
+        "matched": 2112,
+        "different_class_2018": 0,
+        "different_class_2026": 0
+      }
+    },
+    "vadodara": {
+      "n_patches": 992,
+      "n_patches_touching_finetune_area": 0,
+      "changed_patches": 390,
+      "changed_km2": 159.744,
+      "areas_km2": {
+        "2018": {
+          "AnnualCrop": 151.552,
+          "Forest": 0.0,
+          "HerbaceousVegetation": 20.0704,
+          "Highway": 31.1296,
+          "Industrial": 64.7168,
+          "Pasture": 7.7824,
+          "PermanentCrop": 32.768,
+          "Residential": 95.8464,
+          "River": 2.4576,
+          "SeaLake": 0.0
+        },
+        "2026": {
+          "AnnualCrop": 80.6912,
+          "Forest": 0.0,
+          "HerbaceousVegetation": 7.3728,
+          "Highway": 66.3552,
+          "Industrial": 95.8464,
+          "Pasture": 27.4432,
+          "PermanentCrop": 25.3952,
+          "Residential": 101.5808,
+          "River": 1.6384,
+          "SeaLake": 0.0
+        }
+      },
+      "mean_confidence": {
+        "2018": 0.7452,
+        "2026": 0.7177
+      },
+      "n_scenes": {
+        "2018": 12,
+        "2026": 16
+      }
+    },
+    "surat": {
+      "n_patches": 992,
+      "n_patches_touching_finetune_area": 0,
+      "changed_patches": 353,
+      "changed_km2": 144.5888,
+      "areas_km2": {
+        "2018": {
+          "AnnualCrop": 139.264,
+          "Forest": 0.0,
+          "HerbaceousVegetation": 22.1184,
+          "Highway": 33.9968,
+          "Industrial": 65.536,
+          "Pasture": 2.8672,
+          "PermanentCrop": 26.2144,
+          "Residential": 89.7024,
+          "River": 25.3952,
+          "SeaLake": 1.2288
+        },
+        "2026": {
+          "AnnualCrop": 85.6064,
+          "Forest": 0.0,
+          "HerbaceousVegetation": 15.5648,
+          "Highway": 56.9344,
+          "Industrial": 113.0496,
+          "Pasture": 4.9152,
+          "PermanentCrop": 6.5536,
+          "Residential": 96.256,
+          "River": 26.624,
+          "SeaLake": 0.8192
+        }
+      },
+      "mean_confidence": {
+        "2018": 0.7698,
+        "2026": 0.7724
+      },
+      "n_scenes": {
+        "2018": 12,
+        "2026": 17
+      }
+    },
+    "rajkot": {
+      "n_patches": 992,
+      "n_patches_touching_finetune_area": 0,
+      "changed_patches": 322,
+      "changed_km2": 131.8912,
+      "areas_km2": {
+        "2018": {
+          "AnnualCrop": 194.9696,
+          "Forest": 0.0,
+          "HerbaceousVegetation": 45.8752,
+          "Highway": 22.528,
+          "Industrial": 28.2624,
+          "Pasture": 0.8192,
+          "PermanentCrop": 17.2032,
+          "Residential": 70.0416,
+          "River": 13.5168,
+          "SeaLake": 13.1072
+        },
+        "2026": {
+          "AnnualCrop": 159.3344,
+          "Forest": 0.0,
+          "HerbaceousVegetation": 27.0336,
+          "Highway": 37.6832,
+          "Industrial": 56.1152,
+          "Pasture": 3.6864,
+          "PermanentCrop": 13.5168,
+          "Residential": 82.3296,
+          "River": 20.8896,
+          "SeaLake": 5.7344
+        }
+      },
+      "mean_confidence": {
+        "2018": 0.7753,
+        "2026": 0.7659
+      },
+      "n_scenes": {
+        "2018": 9,
+        "2026": 18
+      }
+    }
+  },
+  "model": {
+    "onnx_path": "models/efficientnet_b0_india/seed42/model.onnx",
+    "seed": 42
+  },
+  "years": {
+    "2018": "2017-12-01/2018-02-28",
+    "2026": "2025-12-01/2026-02-28"
+  }
+}
