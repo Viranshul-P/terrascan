@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-5.1
+5.2
 
 ## Status
 not started
@@ -38,7 +38,7 @@ not started
 - [x] 4.6 Check data exists (change study)
 - [x] 4.7 Build the two maps
 - [x] 4.8 Sanity-check the change
-- [ ] 5.1 ONNX export
+- [x] 5.1 ONNX export
 - [ ] 5.2 Backend API + Docker
 - [ ] 5.3 Website
 - [ ] 6.1 Model on Hugging Face Hub
@@ -73,6 +73,7 @@ not started
 - 4.6 — scripts/change_scenes.py + src/imagery.month_summary list Sentinel-2 L2A scenes per month for the Ahmedabad change box (Dec 2017–Dec 2019, Dec 2025–Oct 2026) with tile, cloud and processing baseline -> results/change_scenes.json/.md; years and months picked in configs/change.yaml
 - 4.7 — src/change.py: median composites of tile 43QBF for Dec 2017–Feb 2018 (13 scenes) and Dec 2025–Feb 2026 (16 scenes), offset removed per scene before the median, one pixel grid checked for all 29 scenes; 2112 patches run through the fine-tuned EfficientNet-B0 (seeds 42/43/44) -> results/change_2018_2026.json + _patches.csv, reports/figures/change_map_2018.png, change_map_2026.png, change_composites.jpg
 - 4.8 — src/change_check.py: 50 random 'changed' patches (seed 42) shown as blind 2018/2026 pairs; Claude judged all 50, the user reviewed them (6 answers changed); rate + honest limits in results/change_check.json/.md
+- 5.1 — src/export_onnx.py: India fine-tuned EfficientNet-B0 seed 42 -> model.onnx + onnx_info.json; ONNX matches PyTorch on 20 Indian test patches (results/onnx_check.json)
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -252,6 +253,7 @@ not started
   2018 had enough clear scenes, so no fallback to 2019 was needed. Use only tile 43QBF (EPSG:32643) for one grid.
   Settings in configs/change.yaml.
 - 4.8 (user's decision, 2026-11-04): Claude judges the change pairs first, the user reviews them (like 4.2).
+- 5.1 (user OK'd, 2026-11-04): export seed 42 of efficientnet_b0_india (default seed, not picked by any score). Added onnx==1.23.2 and onnxruntime==1.31.1. Used the older TorchScript exporter (dynamo=False) so onnxscript isn't needed.
   Sample = 50 random patches the map seed (42) says changed class, sample seed 42. The judge sees only the
   2018/2026 crops (patch outlined, 32 px of surroundings), never the model's classes, and answers "did the land
   really change?" yes / no / unclear. Real-change rate = yes / (yes + no), 95% Wilson range; unclear reported
@@ -357,6 +359,9 @@ not started
 - 4.8 (from /review-step): Claude's blindness was by procedure only (same session could read the class CSV);
   the 119-207 km2 range is sampling error only, for seed 42, not seed spread. Both now stated in change_check.md.
 
+- 5.1: torch.onnx.export with dynamo=False prints a DeprecationWarning (legacy exporter). Works on torch 2.14.1; if a
+  future torch drops it, switch to dynamo=True and add onnxscript. The real-model ONNX test needs git-ignored weights
+  and patches, so it skips in CI; only the tiny-model export test runs there.
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)
@@ -405,3 +410,5 @@ not started
 - 4.8 change check (results/change_check.json): of 50 sampled reported changes (seed 42), final answers 24 yes /
   23 no / 3 unclear; real rate 0.5106 (95% Wilson 0.3724-0.6472). Rough scale-up: about 163.1 km2 real
   (119.0-206.8) of the 319.488 km2 reported. Claude alone before review: 21/22/7. User changed 6 answers.
+- ONNX export (5.1, results/onnx_check.json): largest PyTorch-vs-ONNX logit difference on 20 Indian test patches
+  7.15e-06 (limit 1e-4), passed.

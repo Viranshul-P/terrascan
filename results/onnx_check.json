@@ -1,0 +1,8 @@
+{
+  "onnx_path": "models/efficientnet_b0_india/seed42/model.onnx",
+  "n_images": 20,
+  "images": "first Indian TEST patches (configs/india_eval.yaml), no scores computed",
+  "max_abs_logit_difference": 7.152557373046875e-06,
+  "tolerance": 0.0001,
+  "passed": true
+}

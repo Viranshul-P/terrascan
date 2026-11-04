@@ -1,0 +1,14 @@
+# Step 5.1: export the India fine-tuned EfficientNet-B0 to ONNX for the API.
+#   python -m src.export_onnx --config configs/export_onnx.yaml
+#
+# Seed 42 = our default seed. Not picked by any score (picking by test score is not allowed).
+run_dir: models/efficientnet_b0_india/seed42
+onnx_path: models/efficientnet_b0_india/seed42/model.onnx
+info_path: models/efficientnet_b0_india/seed42/onnx_info.json
+opset_version: 17
+
+# For the PyTorch-vs-ONNX check: the first N Indian TEST patches (no scores are computed).
+india_eval_config: configs/india_eval.yaml
+check_images: 20
+tolerance: 1.0e-4
+check_path: results/onnx_check.json
