@@ -21,7 +21,7 @@ Read `CLAUDE.md`, `PROGRESS.md`, and `PLAN.md`. Read `SPEC.md` only for the phas
 - **Status = waiting on you:** show the "Waiting on you" text and ask whether they've done it.
   - If yes: check what can be checked (e.g. the labels CSV exists and how many rows it has, `wandb` is logged in,
     the HF repo URL they give you). Report what you found. If the step says Claude does more work after the
-    user's part (e.g. 5.3: fix the top 3 usability problems), plan that work, wait for OK, do it and verify it.
+    user's part (e.g. 5.3d: fix the top 3 usability problems), plan that work, wait for OK, do it and verify it.
     Then tick the step, update PROGRESS.md (next step, status `not started`, clear "Waiting on you"), commit,
     and STOP. Tell them to `/clear` then `/next`.
   - If no: remind them what to do and STOP.
@@ -87,7 +87,7 @@ End with a short message:
 1. What was built (2–4 lines).
 2. The step's **You check** items, as a checklist for the user.
 3. One question the user should be able to answer about this step in an interview (don't answer it unless asked).
-4. If the step was 2.2b, 2.2c, 2.4b, 2.5, 4.1, 4.3, 4.4, 4.7, 4.8, 5.3 or 6.3: recommend running `/review-step` before moving on.
+4. If the step was 2.2b, 2.2c, 2.4b, 2.5, 4.1, 4.3, 4.4, 4.7, 4.8, 5.3a, 5.3b, 5.3c, 5.3d or 6.3: recommend running `/review-step` before moving on.
 5. Effort for the next step, from PLAN.md:
    - next step has **Effort: high** → "Next: type `/clear`, then `/effort high`, then `/next`."
    - otherwise, if the current effort is `high` → "Next: type `/clear`, then `/effort medium` (saves usage), then `/next`."

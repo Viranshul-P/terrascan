@@ -270,35 +270,54 @@ Dockerfile for the API. Tests for the endpoint and the static-file script using 
 must load instantly every time; only the live feature should depend on the API.
 **Done when:** the container runs locally and all endpoint tests pass.
 
-### 5.3 Website (the face of the project)
-**Ask:** Build the front end in `web/` with Vite + React + TypeScript + MapLibre GL + Tailwind, as a static site.
-Use a free basemap that needs no API key; check its usage terms and show its attribution.
-**Before building, show me 2 layout options** (simple HTML mockups) and let me pick.
+### 5.3a Design system and two design directions
+**Effort: high**
+**Ask:** Before any real build, make 2 different design directions as quick static prototype pages (landing + map
+view), take screenshots with Playwright, and show me. I pick one. Then set up the design system in `web/`: one clean
+typeface (Inter or the system font), a neutral palette with ONE accent colour, spacing scale, light and dark mode, and
+reusable components (button, card, stat, toggle, slider, legend).
+Design goals: Apple-like restraint. Clean, calm, lots of whitespace, large confident type for key numbers, nothing
+cluttered or "funky". Visual first: every section is one strong visual plus one or two short sentences, never walls
+of text.
 
-Design brief:
-- **Map first.** Full-screen map with a floating side panel (desktop) or a bottom sheet (mobile).
-- **The finding in 5 seconds.** It opens on Ahmedabad with a before/after **swipe slider** (2019 | 2026) already on screen,
-  and one headline sentence with the key number, read from the data files (never hard-coded).
-- **Panel:** city picker, single-year / compare toggle, a legend that doubles as class on/off filters, km² bars per class,
-  a "biggest changes" list (e.g. farmland → residential), download buttons, a "show confidence" toggle that fades
-  low-confidence patches, and a short Limitations note (640 m patches, accuracy on Indian data, season).
-- **Hover or tap a patch:** class, confidence, and in compare mode "from → to".
-- **Map your own area:** draw a box, then clear progress states (waking the server → fetching imagery → running model
-  → done) and friendly errors. If the API is asleep, say so honestly ("waking up, about a minute") instead of hanging.
-- **"How it works" section:** 4 short steps with figures (data, model comparison, domain shift, change check) and links
-  to the repo, model, dataset and blog.
+### 5.3b The map experience
+**Ask:** Build the main map with MapLibre GL:
+- Opening: a 3D globe (MapLibre globe projection) that gently rotates, then flies smoothly down to Ahmedabad and tilts
+  into a 3D view.
+- Before/after swipe slider (2018 | 2026) with the land-use overlay.
+- Hover or tap a patch: class, confidence, and "from → to" in compare mode.
+- Side panel (bottom sheet on mobile): city picker, class filters that double as the legend, km² bars, "biggest
+  changes" list, confidence toggle, downloads.
+- "Map your own area": draw a box, clear progress states, honest "waking up the server" message.
 
-Feel and motion: calm and quick. Only purposeful motion: 150–250 ms fades and slides, a smooth fly-to when switching
-cities, skeleton loaders while loading. No bouncing or decorative animation. Respect `prefers-reduced-motion`.
+### 5.3c The story sections
+**Effort: high**
+**Ask:** Under the map, a scroll story told mostly with visuals:
+1. Europe: model comparison as interactive cards (accuracy, speed, size), including that our small from-scratch CNN
+   matches the big pretrained models.
+2. India: the drop and the fix (3-seed numbers) as an animated chart with uncertainty bars.
+3. Ahmedabad: 320 km² reported → about 163 km² real, shown visually (e.g. a bar that "shrinks" to the verified amount).
+4. "What it can't do yet": limitations as a clean, honest section, not hidden.
+5. How it works: 4 small illustrated steps, plus links to GitHub, model, dataset, blog.
+Every number is read from the data files, never hard-coded. Numbers count up when they scroll into view.
 
-Quality bar: colour-blind-safe palette for the 10 classes, keyboard accessible, works at 360 px width,
-Lighthouse performance and accessibility both 90+ (save the report to `reports/lighthouse/`), preset cities load in
-about 3 seconds on mobile.
-**Done when:** the site runs locally (preset cities with the API switched off, live mapping with it on), and the
-Lighthouse report is saved.
-**You do (30 minutes, high value):** show the site to 3 friends without explaining anything. Ask each to
-(1) find what changed in Ahmedabad and (2) map their own area. Note where they get stuck. Then `/next` fixes the top 3
-problems. Write 2 lines about it in PROGRESS.md; this becomes a great interview story.
+### 5.3d Polish, performance and real users
+**Ask:** A full performance and accessibility pass, then fix the top 3 problems from my friends test.
+**You do:** show the site to 3 friends without explaining. Ask each to (1) find what changed in Ahmedabad, (2) map
+their own area. Note where they get stuck.
+
+### Rules for all of 5.3a–5.3d
+- Motion: smooth and purposeful, never decorative. 200–400 ms transitions, gentle easing or spring feel,
+  scroll-triggered reveals, smooth camera moves on the map. Everything respects prefers-reduced-motion.
+- 3D: only the globe and terrain tilt from MapLibre. No Three.js or other heavy 3D library unless you show me why
+  it's worth the size.
+- Performance budget (check it at the end of each step and report the numbers): initial JavaScript at most 200 KB
+  gzipped (map tiles not counted), Largest Contentful Paint under 2.5 s on a mid-range phone, layout shift under 0.1,
+  smooth 60 fps scrolling, Lighthouse 90+ for performance, accessibility and best practices. Lazy-load the map and
+  everything below the fold. Images as WebP or AVIF.
+- Code: clean, simple, small components, no unused libraries. Prefer CSS transitions; add an animation library only
+  if it's clearly needed and small.
+- Works well on a 360 px wide phone, with keyboard, and with colour-blind-safe class colours.
 
 ---
 

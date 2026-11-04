@@ -40,7 +40,10 @@ not started
 - [x] 4.8 Sanity-check the change
 - [x] 5.1 ONNX export
 - [ ] 5.2 Backend API + Docker
-- [ ] 5.3 Website
+- [ ] 5.3a Design system and two design directions
+- [ ] 5.3b The map experience
+- [ ] 5.3c The story sections
+- [ ] 5.3d Polish, performance and real users
 - [ ] 6.1 Model on Hugging Face Hub
 - [ ] 6.2 Deploy the API and the website
 - [ ] 6.3 README
@@ -176,10 +179,13 @@ not started
   "the user labels by hand"). Claude recommended the user label by hand (SPEC: "by hand by me (not by an AI)") and
   offered this middle option; the user chose it. Claude labels blind to model predictions; every label is then shown to
   the user, who agrees or corrects it. Claude wrote the patch cutter and the labeller.
-  **Agreed wording for README, dataset card and blog (user OK'd, 2026-11-03):** Claude (an AI) labelled the patches
-  first, blind to the model. The user then reviewed all of them: per the user, they judged each patch against the
-  EuroSAT examples and decided before looking at Claude's label. The user agreed with every label Claude gave and
-  labelled patches Claude had skipped; every final label is the user's decision. Counts from results/india_labels.json.
+  **Agreed wording for README, dataset card and blog (updated 2026-11-04, user chose it):** Claude (an AI) suggested
+  a label for each patch, blind to the model. The user went through every patch; by their own account they decided
+  before reading Claude's suggestion, then compared. In 2-3 early cases Claude's label helped them understand a class
+  and they changed their mind. They kept all of Claude's class labels and labelled the patches Claude skipped; they
+  made every final call. Counts from results/india_labels.json. The data shows no Claude class label was changed, so
+  don't write that the user caught Claude's wrong classes. The user's pre-comparison labels were not saved, so no
+  agreement %/kappa can be computed (asked for 2026-11-04, skipped). README text waits for 6.3.
   Don't write that the user labelled them alone. (The review app shows Claude's label on screen with the patch.)
 - Indian areas (4.2, configs/india.yaml): 5 non-overlapping boxes in Gujarat, about 10 km wide: Ahmedabad city (same box
   as 4.1), Vadodara west edge, farmland SW of Sanand, Narmada at Bharuch, Ankleshwar GIDC. Boxes picked by Claude from

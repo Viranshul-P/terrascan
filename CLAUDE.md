@@ -17,7 +17,7 @@ The user drives work with three commands:
 - **You do** parts: Claude does them too (user's decision, 2026-10-30: the goal is a project to show now; the user
   will learn the details after their ML course). Only these stay with the user: anything that needs their accounts,
   logins or signatures (GitHub, W&B, Hugging Face, deploy services, pushing/publishing under their name), testing
-  with real people (5.3), and posting the launch (7.2). For those, stop, mark the step `waiting on you` in
+  with real people (5.3d), and posting the launch (7.2). For those, stop, mark the step `waiting on you` in
   PROGRESS.md, and tell the user exactly what to do.
 - Record honestly who did what. When Claude does a "You do" part (labels, judgements, write-ups), say so in
   PROGRESS.md and in any README, dataset/model card or blog text about it. Never present Claude's work as the user's.
@@ -67,3 +67,8 @@ The user drives work with three commands:
   25 Jan 2022, but re-processed older scenes can have it too. Decide **per scene** from `s2:processing_baseline`,
   never from the date, and subtract the offset before scaling.
 - 1 patch = 64×64 px at 10 m = 640 m × 640 m = 0.4096 km².
+- India "before fine-tuning" accuracy in the README, website, blog and any public text: always the 3-seed number
+  (Indian TEST areas, EfficientNet-B0, seeds 42/43/44, mean ± std: 0.4486 ± 0.0071, key
+  `summary_mean_std_over_seeds.india_test_accuracy_before` in `results/india_after.json`), shown next to
+  the 3-seed "after" number. Never the seed-42-only 0.444 from `results/india_before.json`. Read the numbers from
+  the file; don't copy them by hand.
