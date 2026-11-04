@@ -3,11 +3,13 @@ import pandas as pd
 import pytest
 
 from src.change_check import (
+    check_same_pairs,
     crop_with_outline,
     read_reviewed,
     real_change_rate,
     sample_changed,
     save_review,
+    scale_up,
     side_by_side,
     wilson_interval,
 )
@@ -72,3 +74,23 @@ def test_wilson_interval():
     assert low == pytest.approx(0, abs=1e-9) and 0 < high < 0.35
     low, high = wilson_interval(5, 10)  # symmetric around 0.5
     assert low == pytest.approx(1 - high)
+
+
+def test_scale_up_uses_rate_and_range():
+    seed_result = {"changed_patches": 10, "changed_km2": 100.0}
+    rate = {"real_rate": 0.5, "real_rate_95": [0.25, 0.75]}
+    out = scale_up(seed_result, rate)
+    assert out["estimated_real_changed_km2"] == 50.0
+    assert out["estimated_real_changed_km2_95"] == [25.0, 75.0]
+    assert out["reported_changed_km2"] == 100.0
+    no_clear = scale_up(seed_result, {"real_rate": None, "real_rate_95": None})
+    assert "estimated_real_changed_km2" not in no_clear
+
+
+def test_pairs_must_match():
+    claude = pd.DataFrame({"pair": ["pair_00", "pair_01"], "answer": ["yes", "no"]})
+    check_same_pairs(pd.DataFrame({"pair": ["pair_01", "pair_00"]}), claude)  # order doesn't matter
+    with pytest.raises(ValueError):
+        check_same_pairs(pd.DataFrame({"pair": ["pair_00", "pair_05"]}), claude)  # wrong ids
+    with pytest.raises(ValueError):
+        check_same_pairs(pd.DataFrame({"pair": ["pair_00"]}), claude)  # not finished

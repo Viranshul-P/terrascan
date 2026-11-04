@@ -354,6 +354,8 @@ not started
 - 4.8: the change check only measures whether reported changes are visibly real, not whether the new class is
   right, and not missed changes. Sample is 50 pairs from seed 42 only (wide range). The user reviewed Claude's
   answers instead of judging from scratch, so final answers may lean towards Claude's (results/change_check.md).
+- 4.8 (from /review-step): Claude's blindness was by procedure only (same session could read the class CSV);
+  the 119-207 km2 range is sampling error only, for seed 42, not seed spread. Both now stated in change_check.md.
 
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->

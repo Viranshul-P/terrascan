@@ -25,7 +25,9 @@ All numbers below come from `results/change_check.json` (made by
 show a real change on the ground. The other half are false alarms from model errors in one or both years.
 Scaling up roughly, that means about **163 km² of real change (range 119–207 km²)** instead of the
 319 km² the raw maps show. This rough number assumes the sample represents all 780 patches and leaves the
-3 unclear pairs out.
+3 unclear pairs out. The 119–207 range covers only the sampling error of 50 pairs, applied to seed 42's
+319.488 km². It ignores seed-to-seed spread (the 3-seed mean in step 4.7 is a different number) and what the
+3 unclear pairs really are.
 
 Claude's by-eye impression from the pairs (not measured): the real changes were mostly on the city's edges: new road grids and plotted land, new housing and
 building complexes, a new expressway or rail line. Most false alarms were in dense city, where both years
@@ -52,4 +54,8 @@ are built-up, or in farmland, where the crops looked different in the two winter
   similar number of changed patches but were not checked separately.
 - **Judges.** Claude judged first and the user reviewed Claude's answers (rather than judging from
   scratch), so the final answers may lean towards Claude's.
+- **Blindness was by procedure.** The pair images and the review page never show the model's classes.
+  But Claude ran in the same session as the code that can read the class file
+  (`results/change_2018_2026_patches.csv`), so nothing technically stopped Claude from looking. Claude only
+  printed the first 2 data rows of that file (patches at row 0, which are not in the sample) before judging.
 - The optional cross-check with ESA WorldCover was not done.

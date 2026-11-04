@@ -161,10 +161,29 @@ def build_review_app(cfg):
     return app
 
 
+def scale_up(seed_result, rate):
+    """Rough real changed area: the map seed's reported change times the real rate (and its range).
+    Only sampling error is in the range, not seed-to-seed spread or the unclear pairs."""
+    out = {"reported_changed_patches": seed_result["changed_patches"],
+           "reported_changed_km2": seed_result["changed_km2"]}
+    if rate["real_rate"] is not None:
+        out["estimated_real_changed_km2"] = round(seed_result["changed_km2"] * rate["real_rate"], 1)
+        out["estimated_real_changed_km2_95"] = [
+            round(seed_result["changed_km2"] * r, 1) for r in rate["real_rate_95"]
+        ]
+    return out
+
+
+def check_same_pairs(reviewed, claude):
+    """Stop unless the review covers exactly the pairs Claude answered (no stale/missing rows)."""
+    if set(reviewed["pair"]) != set(claude["pair"]) or len(reviewed) != len(claude):
+        raise ValueError("reviewed pairs don't match Claude's pairs: review every pair first")
+
+
 def summarise(cfg):
     reviewed = read_reviewed(cfg["check_reviewed_csv"])
     claude = pd.read_csv(cfg["check_claude_csv"])
-    assert len(reviewed) == len(claude), "review every pair first"
+    check_same_pairs(reviewed, claude)
     result = {
         "n_pairs": len(reviewed),
         "map_seed": cfg["map_seed"],
@@ -174,18 +193,8 @@ def summarise(cfg):
         "claude_before_review": real_change_rate(claude["answer"]),
         "n_changed_by_user": int(reviewed["changed"].astype(bool).sum()),
     }
-    # Rough scale-up: the real share of the map seed's reported change (unclear pairs left out).
     change = json.loads(Path(cfg["output_path"]).read_text(encoding="utf-8"))
-    seed_result = change["per_seed"][str(cfg["map_seed"])]
-    final = result["final"]
-    result["reported_changed_patches"] = seed_result["changed_patches"]
-    result["reported_changed_km2"] = seed_result["changed_km2"]
-    if final["real_rate"] is not None:
-        result["estimated_real_changed_km2"] = round(seed_result["changed_km2"]
-                                                     * final["real_rate"], 1)
-        result["estimated_real_changed_km2_95"] = [
-            round(seed_result["changed_km2"] * r, 1) for r in final["real_rate_95"]
-        ]
+    result.update(scale_up(change["per_seed"][str(cfg["map_seed"])], result["final"]))
     Path(cfg["check_output"]).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
 
