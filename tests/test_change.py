@@ -4,13 +4,13 @@ import numpy as np
 import pytest
 from affine import Affine
 
-from src.change import (
+from src.change import summarise_seed
+from src.composite import (
     change_matrix,
     check_same_grid,
     median_composite,
     one_per_date,
     patch_km2,
-    summarise_seed,
 )
 from src.data import CLASSES
 

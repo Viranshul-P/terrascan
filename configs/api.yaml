@@ -1,0 +1,30 @@
+# Step 5.2b: the API for "map your own area" (api/main.py, logic in src/live.py).
+#   Run locally:  uvicorn api.main:default_app --factory --port 8000
+#   Docker:       docker build -f api/Dockerfile -t terrascan-api .  &&  docker run -p 8000:8000 terrascan-api
+
+# Limits for one request.
+max_side_km: 10      # the drawn box may be at most about 10 x 10 km
+timeout_s: 60        # give up after this many seconds with a clear message
+max_scenes: 5        # live maps use the 5 clearest scenes of one tile (the showcase uses all of them,
+                     # 9-18 per year): reading more scenes would not fit in the time limit
+
+# Everything below is the same as configs/showcase.yaml (a test checks this), so a live map is made
+# exactly like the showcase maps: same dry-season windows, scaling, calibration and model.
+max_cloud: 10
+years:
+  "2018": 2017-12-01/2018-02-28
+  "2026": 2025-12-01/2026-02-28
+scale_max: 2750
+patch_size: 64
+calibration_path: results/imagery_calibration.json
+onnx_path: models/efficientnet_b0_india/seed42/model.onnx
+onnx_info_path: models/efficientnet_b0_india/seed42/onnx_info.json
+batch_size: 64
+india_eval_config: configs/india_eval.yaml
+india_config: configs/india.yaml
+rgb_downscale: 2
+rgb_webp_quality: 80
+change_config: configs/change.yaml
+
+# Which websites may call the API from a browser. "*" = any: the API is public and read-only.
+cors_origins: ["*"]

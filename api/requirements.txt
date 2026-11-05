@@ -1,0 +1,15 @@
+# The API container only (api/Dockerfile): no PyTorch. Same versions as the laptop .venv.
+numpy==2.1.1
+pandas==3.0.2
+PyYAML==6.0.3
+matplotlib==3.11.2
+pillow==12.3.0
+rasterio==1.5.2
+shapely==2.2.0
+affine==3.0.1
+pystac-client==0.9.1
+planetary-computer==1.0.0
+onnxruntime==1.31.1
+fastapi==0.162.0
+pydantic==2.14.1
+uvicorn==0.54.0

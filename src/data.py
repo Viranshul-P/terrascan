@@ -10,19 +10,7 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision.io import ImageReadMode, decode_image
 from torchvision.transforms import v2
 
-# Label number = position in this list (alphabetical, same as the folder names).
-CLASSES = [
-    "AnnualCrop",
-    "Forest",
-    "HerbaceousVegetation",
-    "Highway",
-    "Industrial",
-    "Pasture",
-    "PermanentCrop",
-    "Residential",
-    "River",
-    "SeaLake",
-]
+from src.classes import CLASSES  # the 10 class names; kept in a torch-free file for the API
 
 
 def list_images(raw_dir):

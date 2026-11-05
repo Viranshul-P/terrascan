@@ -3,18 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-5.2b
+5.3a
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Install Docker Desktop before 5.2b (about 20 min, one restart):
-1. On docker.com, download Docker Desktop for Windows. 2. Install it, keep "Use WSL 2" ticked. 3. Restart.
-4. Open Docker Desktop, accept the terms (free for personal use; signing in can be skipped).
-5. In a terminal: `docker --version`, then `docker run hello-world` (should print "Hello from Docker!").
-Then type /next. Claude will check `docker --version` and `docker run hello-world`.
+(nothing)
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -44,7 +40,7 @@ Then type /next. Claude will check `docker --version` and `docker run hello-worl
 - [x] 4.8 Sanity-check the change
 - [x] 5.1 ONNX export
 - [x] 5.2a Showcase static files
-- [ ] 5.2b API + Docker
+- [x] 5.2b API + Docker
 - [ ] 5.3a Design system and two design directions
 - [ ] 5.3b The map experience
 - [ ] 5.3c The story sections
@@ -83,6 +79,7 @@ Then type /next. Claude will check `docker --version` and `docker run hello-worl
 - 4.8 — src/change_check.py: 50 random 'changed' patches (seed 42) shown as blind 2018/2026 pairs; Claude judged all 50, the user reviewed them (6 answers changed); rate + honest limits in results/change_check.json/.md
 - 5.1 — src/export_onnx.py: India fine-tuned EfficientNet-B0 seed 42 -> model.onnx + onnx_info.json; ONNX matches PyTorch on 20 Indian test patches (results/onnx_check.json)
 - 5.2a — src/showcase.py + src/onnx_predict.py: static map files for Ahmedabad, Vadodara, Surat, Rajkot (2018 vs 2026, ONNX seed 42) in web/public/data/; Ahmedabad identical to 4.7 (results/showcase.json)
+- 5.2b — api/main.py (FastAPI: GET /health, POST /predict) + src/live.py + api/Dockerfile (no PyTorch); torch-free helpers moved to src/composite.py, src/classes.py; container run locally, live 10x10 km box mapped (results/api_check.json); 15 API tests with saved tile + fake model
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -286,6 +283,16 @@ Then type /next. Claude will check `docker --version` and `docker run hello-worl
   GeoTIFFs: one pixel per 640 m patch, class number (255 = none), UTM projection of the tile, colour table included.
 - tests/fixtures/ahmedabad_tile.npz: a real 192 x 192 px crop of two 4.7 Ahmedabad scenes (3 x 3 patches, 346 KB), so
   the showcase tests (and later the API tests) run without network.
+- 5.2b (user OK'd, 2026-11-05; Docker Desktop 29.9.2 installed by the user, checked with hello-world): (1) No PyTorch in the API container: the torch-free code of src/change.py moved
+  unchanged to src/composite.py, CLASSES to src/classes.py (src.data still exports it). (2) Live maps use at most the
+  5 clearest scenes of ONE tile (the tile with the most clear dates in the window), median per pixel; the showcase
+  uses all clear scenes. (3) Years 2018 and 2026 only, same Dec-Feb windows. (4) Pinned fastapi 0.162.0, uvicorn
+  0.54.0, httpx 0.28.1 (already installed via gradio, no upgrade). api/requirements.txt = slim container list.
+  /predict answers in the summary.json format for one year (no change table) + patches_geojson; "files" are data URLs
+  (PNG overlay, WebP picture, GeoTIFF) instead of file names. Box limit 10 x 10 km (422 with a plain message), 60 s
+  limit (504). CORS allows any origin (public, read-only). Settings: configs/api.yaml (a test checks the shared keys
+  equal configs/showcase.yaml). Docker: docker build -f api/Dockerfile -t terrascan-api . ; the git-ignored
+  model.onnx is copied from the local models/ folder (6.2 must get it from Hugging Face instead).
 
 - Impeccable design skill (2026-11-04, user asked): copied from the official repo github.com/pbakaus/impeccable
   (Apache-2.0, commit 695cea5, skill 4.8.0) into .claude/skills/impeccable and .claude/agents/impeccable-*.md, project
@@ -401,6 +408,12 @@ Then type /next. Claude will check `docker --version` and `docker run hello-worl
   4.3 TEST area vadodara_outskirts (test data, not training data, so no bias, but worth knowing).
 - 5.2a: Rajkot 2018 has only 9 clear scenes (others 12-13). patches.geojson is 0.7 MB for Ahmedabad: 5.3b should
   load it after the map, not up front.
+- 5.2b: after a timeout the work thread can't be stopped; it finishes its downloads in the background. No limit on
+  requests at once (each holds a few hundred MB while reading). Fine for a demo; revisit if the free host struggles.
+- 5.2b: a live map can come from a different tile than the showcase (Ahmedabad live picked 42QZL, the showcase uses
+  43QBF) and uses 5 scenes, not all, so live and showcase maps of the same place can differ a little. The model is only
+  measured on Gujarat (4.3/4.4); the site must say live maps elsewhere are untested. The container runs as root;
+  6.2 (Hugging Face Space) may need a non-root user.
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)
@@ -455,3 +468,6 @@ Then type /next. Claude will check `docker --version` and `docker run hello-worl
   Ahmedabad 2112 patches, 780 changed class (319.488 km2), ONNX classes identical to 4.7 PyTorch seed 42 for all 2112
   patches in both years. Vadodara 992 patches, 390 changed (159.744 km2); Surat 992, 353 (144.5888 km2); Rajkot 992,
   322 (131.8912 km2). Clear scenes 2018/2026: Ahmedabad 13/16, Vadodara 12/16, Surat 12/17, Rajkot 9/18.
+- API check (5.2b, results/api_check.json; Docker container on the laptop, real Planetary Computer downloads):
+  Ahmedabad 10 x 10 km box: 2026 in 22.9 s, 2018 in 26.2 s (225 patches, 5 scenes, tile 42QZL); 3 x 3 km box 11.1 s
+  (16 patches). 20 x 22 km box and year 2021 both refused with a clear 422 message in 0.3 s.

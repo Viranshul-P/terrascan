@@ -1,0 +1,98 @@
+{
+  "url": "http://localhost:8000",
+  "health": {
+    "status": "ok",
+    "years": [
+      "2018",
+      "2026"
+    ],
+    "max_side_km": 10,
+    "timeout_s": 60
+  },
+  "predict": {
+    "ahmedabad_10km_2026": {
+      "request": {
+        "bbox": [
+          72.52,
+          23.0,
+          72.615,
+          23.088
+        ],
+        "year": "2026"
+      },
+      "status": 200,
+      "seconds": 22.9,
+      "bytes": 183884,
+      "tile": "42QZL",
+      "n_scenes": 5,
+      "n_patches": 225,
+      "mean_confidence": 0.8376
+    },
+    "ahmedabad_10km_2018": {
+      "request": {
+        "bbox": [
+          72.52,
+          23.0,
+          72.615,
+          23.088
+        ],
+        "year": "2018"
+      },
+      "status": 200,
+      "seconds": 26.2,
+      "bytes": 176347,
+      "tile": "42QZL",
+      "n_scenes": 5,
+      "n_patches": 225,
+      "mean_confidence": 0.8223
+    },
+    "ahmedabad_3km_2026": {
+      "request": {
+        "bbox": [
+          72.55,
+          23.02,
+          72.58,
+          23.047
+        ],
+        "year": "2026"
+      },
+      "status": 200,
+      "seconds": 11.1,
+      "bytes": 18106,
+      "tile": "42QZL",
+      "n_scenes": 5,
+      "n_patches": 16,
+      "mean_confidence": 0.8135
+    },
+    "too_big_20km": {
+      "request": {
+        "bbox": [
+          72.4,
+          23.0,
+          72.6,
+          23.2
+        ],
+        "year": "2026"
+      },
+      "status": 422,
+      "seconds": 0.3,
+      "bytes": 71,
+      "detail": "The box is 20.5 x 22.3 km. Please draw at most 10 x 10 km."
+    },
+    "wrong_year": {
+      "request": {
+        "bbox": [
+          72.55,
+          23.02,
+          72.58,
+          23.047
+        ],
+        "year": "2021"
+      },
+      "status": 422,
+      "seconds": 0.3,
+      "bytes": 44,
+      "detail": "Year must be one of 2018, 2026."
+    }
+  }
+}

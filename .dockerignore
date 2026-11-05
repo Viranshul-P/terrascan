@@ -1,0 +1,9 @@
+# Docker build (api/Dockerfile): send only what the API needs, never data, imagery or other weights.
+*
+!api/
+!src/
+!configs/
+!results/imagery_calibration.json
+!models/efficientnet_b0_india/seed42/model.onnx
+!models/efficientnet_b0_india/seed42/onnx_info.json
+**/__pycache__

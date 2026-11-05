@@ -33,14 +33,14 @@ from rasterio.transform import xy
 from rasterio.warp import transform
 from shapely.geometry import box
 
-from src.change import (
+from src.classes import CLASSES
+from src.composite import (
     build_year,
     change_matrix,
     check_same_grid,
     patch_km2,
     save_class_map,
 )
-from src.data import CLASSES
 from src.imagery import cut_patches, values_to_rgb
 from src.onnx_predict import load_model, predict
 
@@ -99,7 +99,10 @@ def write_geotiff(path, grid, grid_transform, crs, size, colours):
 
 
 def patch_table(rows, cols, preds, years, grid_transform, crs, size, finetune_boxes):
-    """One row per patch: position, outline (lon/lat), class and confidence for both years."""
+    """One row per patch: position, outline (lon/lat), class and confidence for each year.
+
+    With two years there is also a "changed" column. The live API (5.2b) uses one year.
+    """
     table = pd.DataFrame({"row": rows, "col": cols})
     outlines = [
         to_lonlat(grid_transform, crs,
@@ -112,7 +115,8 @@ def patch_table(rows, cols, preds, years, grid_transform, crs, size, finetune_bo
         classes, confidence = preds[year]
         table[f"class_{year}"] = [CLASSES[k] for k in classes]
         table[f"confidence_{year}"] = np.round(confidence, 3)
-    table["changed"] = table[f"class_{years[0]}"] != table[f"class_{years[1]}"]
+    if len(years) == 2:
+        table["changed"] = table[f"class_{years[0]}"] != table[f"class_{years[1]}"]
     table["touches_finetune_area"] = [
         any(box(*b).intersects(box(min(p[0] for p in o), min(p[1] for p in o),
                                    max(p[0] for p in o), max(p[1] for p in o)))
@@ -130,7 +134,8 @@ def patches_geojson(table, outlines, years):
         for year in years:
             props[f"class_{year}"] = getattr(row, f"class_{year}")
             props[f"confidence_{year}"] = float(getattr(row, f"confidence_{year}"))
-        props["changed"] = bool(row.changed)
+        if len(years) == 2:
+            props["changed"] = bool(row.changed)
         features.append({
             "type": "Feature",
             "geometry": {"type": "Polygon", "coordinates": [outline + [outline[0]]]},
