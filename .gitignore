@@ -38,3 +38,6 @@ venv/
 .impeccable/config.local.json
 .impeccable/critique/*
 !.impeccable/critique/ignore.md
+
+# Design review videos (5.3a): about 4 MB each, made again by `npm run shots:c` in web/
+reports/design/**/*.webm

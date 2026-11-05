@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerraScan design review (5.3a)</title>
+  <style>
+    :root { --bg: #f4f5f5; --card: #fff; --ink: #121416; --ink-2: #5a6166; --rule: #dadddf; --accent: #9a5400; color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #0b0c0d; --card: #17191b; --ink: #f2f2f0; --ink-2: #a0a5a8; --rule: #2b2e31; --accent: #ffb224; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 1200px; margin: 0 auto; padding: 32px 16px 96px; }
+    h1 { font-size: 2rem; margin: 0 0 4px; letter-spacing: -0.02em; }
+    h2 { font-size: 1.4rem; margin: 56px 0 4px; letter-spacing: -0.01em; }
+    p, li { color: var(--ink-2); max-width: 75ch; }
+    a { color: var(--accent); }
+    .links { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    figure { margin: 0; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+    figure a { display: block; height: 220px; overflow: hidden; }
+    figure img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    figcaption { padding: 8px 12px; font-size: 13px; color: var(--ink-2); }
+    video { width: 100%; border-radius: 12px; border: 1px solid var(--rule); background: #000; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    ol.options li { margin: 10px 0; color: var(--ink); font-size: 1.15rem; }
+    ol.options li small { display: block; color: var(--ink-2); font-size: 0.85rem; }
+    .note { font-size: 14px; }
+    @media (max-width: 700px) { .two { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>TerraScan: design review (step 5.3a)</h1>
+  <p>Three directions for the website. A and B were the first two; C merges them, as asked, with light and dark mode
+    and working motion. Click any picture to open it full size. Full notes: <a href="directions.md">directions.md</a>.</p>
+  <p class="note">Open this page through a local server so the live links and the numbers work: in the repo root run
+    <code>python -m http.server 8000</code>, then go to
+    <code>http://localhost:8000/reports/design/5.3a/review.html</code>.</p>
+
+  <h2>C: the merge (recommended)</h2>
+  <div class="links">
+    <a href="../../../web/prototypes/c/index.html">Open C live: landing</a>
+    <a href="../../../web/prototypes/c/map.html">Open C live: map view</a>
+  </div>
+  <div class="two">
+    <video src="c-opening-light.webm" controls muted playsinline preload="metadata"></video>
+    <video src="c-opening-dark.webm" controls muted playsinline preload="metadata"></video>
+  </div>
+  <p class="note">Videos of the opening (light, dark). They live on your laptop only (not in git); if they don't play,
+    run <code>npm run shots:c</code> in <code>web/</code>. Recorded with software graphics, so they are less smooth than
+    a real browser.</p>
+  <div class="grid" id="c"></div>
+
+  <h2>A: "The condition report"</h2>
+  <div class="links">
+    <a href="../../../web/prototypes/a/index.html">Open A live</a>
+    <a href="../../../web/prototypes/a/map.html">A map view</a>
+  </div>
+  <div class="grid" id="a"></div>
+
+  <h2>B: "The figure"</h2>
+  <div class="links">
+    <a href="../../../web/prototypes/b/index.html">Open B live</a>
+    <a href="../../../web/prototypes/b/map.html">B map view</a>
+  </div>
+  <div class="grid" id="b"></div>
+
+  <h2>The words: which headline?</h2>
+  <p>You said you're not sure about the text. Here are options for the first sentence a visitor reads. Numbers are
+    filled in from <code>results/change_check.json</code> when this page loads.</p>
+  <ol class="options">
+    <li>The model saw <span data-rep></span> km² of Ahmedabad change. About <span data-real></span> km² really did.
+      <small>Now in C. Honest and specific, but long.</small></li>
+    <li>How much of Ahmedabad changed since <span data-y0></span>? An AI says <span data-rep></span> km². We checked: about <span data-real></span>.
+      <small>A question first, then the answer. Friendlier.</small></li>
+    <li>An AI mapped Ahmedabad from space. Then we checked its work.
+      <small>No numbers in the headline; the numbers come right below it. Calmest.</small></li>
+    <li>Ahmedabad, <span data-y0></span> to <span data-y1></span>. Mapped by AI, checked by eye.
+      <small>From A. Short, like a title.</small></li>
+  </ol>
+  <p>Other words to check: the class names on the site are Farmland (AnnualCrop), Orchards (PermanentCrop),
+    Scrub and grass (HerbaceousVegetation), Roads (Highway), Housing (Residential), Lake (SeaLake); the rest keep their
+    names (Forest, Pasture, Industrial, River).</p>
+</main>
+<script>
+  const shots = {
+    c: [
+      ["c-index-globe-desktop-light", "Opening, mid-spin (light)"], ["c-index-landed-desktop-light", "After landing (light)"],
+      ["c-index-landed-desktop-dark", "After landing (dark)"], ["c-story-desktop-light", "Story sections (light)"],
+      ["c-story-desktop-dark", "Story sections (dark)"], ["c-map-desktop-light", "Map view, hovering a square (light)"],
+      ["c-map-desktop-dark", "Map view (dark)"], ["c-index-landed-phone-light", "Phone, landing (light)"],
+      ["c-index-landed-phone-dark", "Phone, landing (dark)"], ["c-story-phone-dark", "Phone, story (dark)"],
+      ["c-map-phone-light", "Phone, map + bottom sheet (light)"], ["c-index-globe-phone-dark", "Phone, opening (dark)"],
+    ],
+    a: [
+      ["a-index-desktop-light", "Landing (light)"], ["a-index-desktop-dark", "Landing (dark)"],
+      ["a-map-desktop-light", "Map view (light)"], ["a-index-phone-light", "Phone (light)"],
+    ],
+    b: [
+      ["b-index-desktop-dark", "Landing (dark)"], ["b-index-desktop-light", "Landing (light)"],
+      ["b-map-desktop-dark", "Map view (dark)"], ["b-index-phone-dark", "Phone (dark)"],
+    ],
+  };
+  for (const [id, list] of Object.entries(shots)) {
+    document.getElementById(id).innerHTML = list
+      .map(([f, cap]) => `<figure><a href="${f}.jpg"><img src="${f}.jpg" alt="${cap}" loading="lazy"></a><figcaption>${cap}</figcaption></figure>`)
+      .join("");
+  }
+  Promise.all([fetch("../../../results/change_check.json").then((r) => r.json()), fetch("../../../web/public/data/index.json").then((r) => r.json())])
+    .then(([c, idx]) => {
+      const set = (sel, v) => document.querySelectorAll(sel).forEach((el) => (el.textContent = v));
+      set("[data-rep]", Math.round(c.reported_changed_km2));
+      set("[data-real]", Math.round(c.estimated_real_changed_km2));
+      set("[data-y0]", idx.years[0]);
+      set("[data-y1]", idx.years[1]);
+    })
+    .catch(() => document.querySelectorAll("[data-rep],[data-real],[data-y0],[data-y1]").forEach((el) => (el.textContent = "…")));
+</script>
+</body>
+</html>

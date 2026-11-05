@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerraScan map — direction B</title>
+  <link rel="preload" href="../fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="word" href="index.html" style="color:#fff">TerraScan</a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Story</a>
+      <a href="#">GitHub</a>
+      <a class="btn small ghost" href="#own" style="color:#fff">Map your own area</a>
+    </nav>
+  </header>
+  <main class="stage map" id="stage">
+    <div class="frame" id="frame">
+      <div class="layer before"><img data-rgb="2018" alt=""><img class="ov" data-ov="2018" alt=""></div>
+      <div class="layer after"><img data-rgb="2026" alt=""><img class="ov" data-ov="2026" alt=""></div>
+    </div>
+    <div class="scrim"></div>
+    <span class="yr l" data-y0></span><span class="yr r" data-y1></span>
+    <div class="handle" id="handle" role="slider" tabindex="0" aria-label="Compare years" aria-valuemin="0" aria-valuemax="100">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span>
+    </div>
+    <div class="tip" id="tip" hidden></div>
+
+    <aside class="panel" aria-label="Map controls">
+      <span class="grab" aria-hidden="true"></span>
+      <div>
+        <h3>City</h3>
+        <div class="seg" id="cities"></div>
+      </div>
+      <div>
+        <h3>Land use, km² (tap to hide)</h3>
+        <ul class="legend" id="legend"></ul>
+      </div>
+      <div>
+        <h3>Biggest changes</h3>
+        <ul class="changes" id="changes"></ul>
+        <p class="note">Reported by the model. In Ahmedabad, <span data-rate></span>% of a checked sample were real.</p>
+      </div>
+      <div class="row">
+        <span>Show how sure the model is</span>
+        <button class="switch" id="conf" role="switch" aria-checked="false" aria-label="Show confidence"></button>
+      </div>
+      <div>
+        <h3>Download</h3>
+        <div class="downloads">
+          <a class="btn small ghost" href="#">GeoTIFF</a>
+          <a class="btn small ghost" href="#">PNG</a>
+          <a class="btn small ghost" href="#">CSV</a>
+        </div>
+      </div>
+    </aside>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

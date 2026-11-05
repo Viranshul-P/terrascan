@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerraScan — direction C</title>
+  <script>
+    // Pick the theme before anything paints: saved choice, else the system setting.
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      document.documentElement.dataset.theme = t || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+    })();
+  </script>
+  <link rel="preload" href="../fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../node_modules/maplibre-gl/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="word" href="index.html">TerraScan</a>
+    <nav class="nav" aria-label="Main">
+      <a href="map.html">Map</a>
+      <a href="#honest">How sure is it?</a>
+      <a href="#">GitHub</a>
+      <button class="theme" id="theme" type="button">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="stage" aria-label="Ahmedabad from space">
+      <div class="map" id="map" role="img" aria-label="A globe that turns and flies down to Ahmedabad, showing the model's land-use map"></div>
+      <div class="claim">
+        <h1 class="rise">The model saw <span data-reported></span> km² of Ahmedabad change. <em>About <span data-real></span> km²</em> really did.</h1>
+        <p class="lede rise">A model trained on satellite images mapped the city in <span data-y0></span> and <span data-y1></span>. Then we checked its work.</p>
+        <div class="cta rise">
+          <a class="btn" href="map.html">Explore the map</a>
+          <a class="btn ghost" href="map.html#own">Map your own area</a>
+        </div>
+      </div>
+      <div class="fig later" id="fig">
+        <div class="seg" id="years" role="group" aria-label="Year"></div>
+        <p><b>Fig. 1 |</b> Ahmedabad, winter <span id="figYear"></span>. Each square is 640 m, coloured by what the model sees.</p>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="section" id="honest">
+        <div>
+          <h2>Not every change is real.</h2>
+          <p>We checked <b><span data-n></span></b> of the reported changes against the images, by eye. <b><span data-rate></span>%</b> held up.</p>
+        </div>
+        <div class="measure">
+          <div class="m-reported">
+            <div class="m-num"><span data-reported></span><small>km²</small></div>
+            <div class="m-label">reported as changed by the model</div>
+            <div class="m-track"><i></i></div>
+          </div>
+          <div class="m-real" id="mReal">
+            <div class="m-num"><span id="realCount" data-real></span><small>km²</small></div>
+            <div class="m-label">estimated real change (95% range <span data-lo></span>–<span data-hi></span> km²)</div>
+            <div class="m-track"><i id="realBar"></i></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div>
+          <h2>Trained in Europe. Tested in India.</h2>
+          <p><b>Fig. 2 |</b> Accuracy on held-out test images, mean ± spread over 3 training runs. A few Indian labels closed part of the gap.</p>
+        </div>
+        <div>
+          <div class="cols" id="cols"></div>
+          <div class="names"><span>Europe</span><span>India, before</span><span>India, after</span></div>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <span>TerraScan. Satellite images: Copernicus Sentinel-2.</span>
+        <span>Change check: Claude first (blind to the model), then reviewed by the author.</span>
+      </footer>
+    </div>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

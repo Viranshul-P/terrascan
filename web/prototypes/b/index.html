@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerraScan — direction B</title>
+  <link rel="preload" href="../fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="word" href="index.html" style="color:#fff">TerraScan</a>
+    <nav class="nav" aria-label="Main">
+      <a href="map.html">Map</a>
+      <a href="#how">How it works</a>
+      <a href="#">GitHub</a>
+    </nav>
+  </header>
+  <main>
+    <section class="stage" aria-label="Ahmedabad, before and after">
+      <div class="stage-map" id="stage">
+      <div class="frame" id="frame">
+        <div class="layer before"><img data-rgb="2018" alt=""><img class="ov" data-ov="2018" alt=""></div>
+        <div class="layer after"><img data-rgb="2026" alt=""><img class="ov" data-ov="2026" alt=""></div>
+      </div>
+      <div class="scrim"></div>
+      <span class="yr l" data-y0></span><span class="yr r" data-y1></span>
+      <div class="handle" id="handle" role="slider" tabindex="0" aria-label="Compare years" aria-valuemin="0" aria-valuemax="100">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span>
+      </div>
+      </div>
+
+      <div class="claim">
+        <h1><span data-reported></span> km² of Ahmedabad changed. <em>About <span data-real></span> km²</em> really did.</h1>
+        <p class="fig"><b>Fig. 1 |</b> Winter <span data-y0></span> (left) and <span data-y1></span> (right). Each square is 640 m, coloured by what the model sees. <span data-n></span> sampled changes were then checked by eye.</p>
+        <div class="cta">
+          <a class="btn" href="map.html">Explore the map</a>
+          <a class="btn ghost" href="map.html#own">Map your own area</a>
+        </div>
+      </div>
+      <div class="key" aria-label="Map key">
+        <ul id="key"></ul>
+        <div class="scalebar"><span id="scale"></span>5 km</div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="section" id="how">
+        <div>
+          <h2>Trained in Europe. Tested in India.</h2>
+          <p><b>Fig. 2 |</b> Accuracy on held-out test images, mean ± spread over 3 training runs. A small set of Indian labels closed part of the gap.</p>
+        </div>
+        <div>
+          <div class="cols" id="cols"></div>
+          <div class="names"><span>Europe</span><span>India, before</span><span>India, after</span></div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerraScan map — direction A</title>
+  <link rel="preload" href="../fonts/anek-latin-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mount">
+    <header class="top">
+      <a class="word" href="index.html">TerraScan</a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html">Story</a>
+        <a href="#">GitHub</a>
+        <a class="btn small quiet" href="#own">Map your own area</a>
+      </nav>
+    </header>
+    <main class="map-page">
+      <figure class="map-plate" id="mapPlate" style="margin:0">
+        <div class="frame">
+          <div class="layer before"><img data-rgb="2018" alt=""><img class="ov" data-ov="2018" alt=""></div>
+          <div class="layer after"><img data-rgb="2026" alt=""><img class="ov" data-ov="2026" alt=""></div>
+        </div>
+        <div class="ticks" aria-hidden="true"></div>
+        <span class="year l" data-y0></span><span class="year r" data-y1></span>
+        <div class="handle" id="handle" role="slider" tabindex="0" aria-label="Compare years" aria-valuemin="0" aria-valuemax="100">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="tip" id="tip" hidden></div>
+      </figure>
+
+      <aside class="sheet" aria-label="Map controls">
+        <div>
+          <h3>City</h3>
+          <div class="seg" id="cities"></div>
+        </div>
+        <div>
+          <h3><span id="cityName"></span>: land use, km²</h3>
+          <ul class="legend" id="legend"></ul>
+        </div>
+        <div>
+          <h3>Biggest changes</h3>
+          <ul class="changes" id="changes"></ul>
+          <p class="note" style="margin-top:8px">Reported by the model. In Ahmedabad, <span data-rate></span>% of a checked sample were real.</p>
+        </div>
+        <div class="row">
+          <span>Show how sure the model is</span>
+          <button class="switch" id="conf" role="switch" aria-checked="false" aria-label="Show confidence"></button>
+        </div>
+        <div>
+          <h3>Download</h3>
+          <div class="downloads">
+            <a class="btn small quiet" href="#">GeoTIFF</a>
+            <a class="btn small quiet" href="#">PNG</a>
+            <a class="btn small quiet" href="#">CSV</a>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

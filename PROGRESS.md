@@ -6,11 +6,15 @@ Claude updates this at the end of every step. Keep entries short.
 5.3a
 
 ## Status
-not started
+in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+5.3a part 1 is done and committed; the step is paused for your design decision (part 2, the design system, not
+started). Review the three directions: in the repo root run `python -m http.server 8000`, open
+http://localhost:8000/reports/design/5.3a/review.html (screenshots, the opening videos, live links, headline options).
+Then tell Claude: (1) which direction you genuinely like (Claude recommends C) or what to change, (2) which headline
+(or your own wording), (3) whether the plain class names are OK, (4) any reference screenshots of sites you like.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -299,6 +303,24 @@ not started
   only; our next/progress/review-step skills unchanged (checksums). Its hooks (.claude/settings.json) were NOT
   installed: they run a downloaded engine on every edit without approval. `/teach-impeccable` is now `/impeccable init`.
   Telemetry: the skill fetches design directions from impeccable.style when a design starts.
+- 5.3a (2026-11-05): styling is plain CSS with CSS custom properties, no Tailwind (user's choice). The user OK'd running
+  Impeccable. PRODUCT.md written by Claude via `/impeccable init` from SPEC/PLAN plus the user's answers: main users are
+  recruiters + engineers; key message "an AI that maps how Indian cities changed, and honestly tells you how wrong it
+  can be"; English only; limitations always visible. No image generator here, so Impeccable runs "code-first".
+- 5.3a: web/package.json pins playwright 1.64.1 (matches the cached Chromium 1248), maplibre-gl 6.15.0 (6.16.0 was
+  under 2 weeks old), @fontsource-variable/anek-latin 5.3.0 and @fontsource-variable/schibsted-grotesk 5.3.0
+  (fonts copied into web/prototypes/fonts, OFL licences next to them). Mona Sans was dropped: Impeccable flags it as overused.
+- 5.3a directions (all prototypes by Claude, web/prototypes/a|b|c, notes in reports/design/5.3a/directions.md):
+  A "condition report" = Impeccable's roll (seed:2b35c1e9b09beb65, candidate 6 of Claude's 7); B "figure" = Claude's
+  top pick; Impeccable's 6 dealt challengers were declined (clash with the brief). Presented as screenshots instead of
+  Impeccable's decision web page (PLAN asks for screenshots). The user then asked for light + dark mode and working
+  motion and left the choice to Claude, so Claude made C (B's full-screen map opening + A's measured honesty, MapLibre
+  globe fly-in, light/dark switch). NOT approved yet; the user wants to review before deciding.
+- 5.3a: plain class names on the site (Farmland, Orchards, Scrub and grass, Roads, Housing, Lake) were chosen by Claude,
+  not yet confirmed. Headline in C reworded to "The model saw … km² of Ahmedabad change. About … km² really did." so
+  the model's report is not stated as fact; wording not decided yet.
+- 5.3a: screenshots are committed as JPEG (reports/design/5.3a/*.jpg, 5.4 MB); the opening videos (*.webm, about 4 MB
+  each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
@@ -414,6 +436,13 @@ not started
   43QBF) and uses 5 scenes, not all, so live and showcase maps of the same place can differ a little. The model is only
   measured on Gujarat (4.3/4.4); the site must say live maps elsewhere are untested. The container runs as root;
   6.2 (Hugging Face Space) may need a non-root user.
+- 5.3a: MapLibre 6.15.0 is about 285 KB gzipped + a 143 KB worker (measured with gzip -9 on the installed files), over
+  the 200 KB initial-JS budget. 5.3b must load the map after the text (headline paints first, globe fades in). The two
+  Ahmedabad RGB WebPs are 1.28 MB together: too heavy for phones, 5.3b needs smaller versions or tiles.
+- 5.3a: prototype C cross-fades 2018 | 2026 instead of the swipe slider in the plan; the swipe needs two synced maps (5.3b).
+  C's globe uses demotiles.maplibre.org (free, no key); if it is down the globe is empty. 5.3b could self-host an outline.
+- 5.3a: Impeccable's detector on the prototypes reports only false alarms of a static scan (img src set by JS, white
+  text on the always-dark map, "km²" size computed without its parent) and MapLibre's own location-dot CSS.
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)

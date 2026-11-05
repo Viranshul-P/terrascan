@@ -1,0 +1,18 @@
+{
+  "name": "terrascan-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "shots:prototypes": "node scripts/shoot-prototypes.mjs",
+    "shots:c": "node scripts/shoot-direction-c.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/anek-latin": "5.3.0",
+    "@fontsource-variable/schibsted-grotesk": "5.3.0",
+    "maplibre-gl": "6.15.0"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}

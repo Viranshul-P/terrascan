@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerraScan — direction A</title>
+  <link rel="preload" href="../fonts/anek-latin-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mount">
+    <header class="top">
+      <a class="word" href="index.html">TerraScan</a>
+      <nav class="nav" aria-label="Main">
+        <a href="map.html">Map</a>
+        <a href="#how">How it works</a>
+        <a href="#">GitHub</a>
+        <a class="btn small" href="map.html">Open the map</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="report-head" aria-labelledby="title">
+        <div>
+          <h1 id="title">Ahmedabad, <span data-y0></span> to <span data-y1></span>.</h1>
+          <p class="lede">A model mapped every 640 m square of the city twice. Then we checked its work.</p>
+        </div>
+        <div class="measure" aria-label="Changed area">
+          <div class="m-row">
+            <span class="m-num"><span data-reported></span><small>km²</small></span>
+            <span class="m-label">reported as changed by the model</span>
+            <span class="m-bar"><i style="--w:100%"></i></span>
+          </div>
+          <div class="m-row real">
+            <span class="m-num"><span data-real></span><small>km²</small></span>
+            <span class="m-label">estimated real change, from <span data-n></span> sampled changes checked by eye</span>
+            <span class="m-bar"><i data-real-bar></i></span>
+          </div>
+        </div>
+      </section>
+
+      <figure class="plate" id="plate" style="margin:0">
+        <div class="frame" id="frame">
+          <div class="layer before"><img data-rgb="2018" alt=""><img class="ov" data-ov="2018" alt=""></div>
+          <div class="layer after"><img data-rgb="2026" alt=""><img class="ov" data-ov="2026" alt=""></div>
+        </div>
+        <div class="ticks" aria-hidden="true"></div>
+        <span class="year l" data-y0></span><span class="year r" data-y1></span>
+        <div class="handle" id="handle" role="slider" tabindex="0" aria-label="Compare years" aria-valuemin="0" aria-valuemax="100">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span>
+        </div>
+      </figure>
+      <div class="caption">
+        <p><b>Plate 1.</b> Ahmedabad in winter <span data-y0></span> and <span data-y1></span>, Sentinel-2 at 10 m. Colours are the model's land-use classes; marks <b>1–3</b> are farmland it now calls industrial.</p>
+        <div class="actions">
+          <a class="btn" href="map.html">Open the map</a>
+          <a class="btn quiet" href="map.html#own">Map your own area</a>
+        </div>
+      </div>
+
+      <section class="section" id="how">
+        <div>
+          <h2>Trained in Europe. Tested in India.</h2>
+          <p>On Indian land it got much worse. A little Indian data fixed part of that.</p>
+        </div>
+        <div>
+          <div class="dots" id="dots"></div>
+          <div class="scale"><span>0%</span><span>50%</span><span>100%</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
