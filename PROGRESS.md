@@ -10,10 +10,10 @@ in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-5.3a part 1 is done and committed; the step is paused for your design decision (part 2, the design system, not
-started). Review the three directions: in the repo root run `python -m http.server 8000`, open
+5.3a is paused for your design decision (part 2, the React design system, not started). Newest: prototype D (full
+redesign after your feedback on C). Review it: in the repo root run `python -m http.server 8000`, open
 http://localhost:8000/reports/design/5.3a/review.html (screenshots, the opening videos, live links, headline options).
-Then tell Claude: (1) which direction you genuinely like (Claude recommends C) or what to change, (2) which headline
+Then tell Claude: (1) whether you genuinely like D, or what to change, (2) which headline
 (or your own wording), (3) whether the plain class names are OK, (4) any reference screenshots of sites you like.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
@@ -319,6 +319,13 @@ Then tell Claude: (1) which direction you genuinely like (Claude recommends C) o
 - 5.3a: plain class names on the site (Farmland, Orchards, Scrub and grass, Roads, Housing, Lake) were chosen by Claude,
   not yet confirmed. Headline in C reworded to "The model saw … km² of Ahmedabad change. About … km² really did." so
   the model's report is not stated as fact; wording not decided yet.
+- 5.3a round 2 (2026-11-05): the user said C looked "too simple … extremely AI done … no proper UX and navigation".
+  User picked all four reference worlds (Apple product pages, crafted product UI, pro map tools, data journalism) and
+  OK'd Claude's redesign plan. Claude built prototype D (web/prototypes/d: Story, Explorer, Method & Limits; tokens.css
+  + base.css as the design system draft). Globe imagery: NASA Blue Marble via NASA GIBS (no key, CORS open, NASA asks
+  for an acknowledgement; NASA data CC0 unless marked; the Blue Marble page itself was not checked). EOX Sentinel-2
+  cloudless was NOT used: non-commercial CC BY-NC-SA and no published tile URL. Added JetBrains Mono 5.3.0 (data only).
+  Numbers now use en-US grouping (1,311,050) instead of en-IN (13,11,050) for an international audience.
 - 5.3a: screenshots are committed as JPEG (reports/design/5.3a/*.jpg, 5.4 MB); the opening videos (*.webm, about 4 MB
   each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
@@ -441,6 +448,10 @@ Then tell Claude: (1) which direction you genuinely like (Claude recommends C) o
   Ahmedabad RGB WebPs are 1.28 MB together: too heavy for phones, 5.3b needs smaller versions or tiles.
 - 5.3a: prototype C cross-fades 2018 | 2026 instead of the swipe slider in the plan; the swipe needs two synced maps (5.3b).
   C's globe uses demotiles.maplibre.org (free, no key); if it is down the globe is empty. 5.3b could self-host an outline.
+- 5.3a (D): the prototypes build HTML with innerHTML from our own data files only (no user input); the React build
+  (5.3b) escapes text by default. D's Explorer inspector crops come from the 20 m preview pictures, so they look soft
+  (labelled as such). D's "map your own area" is not connected (says so, with the local API timing from
+  results/api_check.json). D loads 4 full RGB WebPs for the city cards (lazy): 5.3b needs real thumbnails.
 - 5.3a: Impeccable's detector on the prototypes reports only false alarms of a static scan (img src set by JS, white
   text on the always-dark map, "km²" size computed without its parent) and MapLibre's own location-dot CSS.
 ## Results so far (copied from results/ files only, with the file name)

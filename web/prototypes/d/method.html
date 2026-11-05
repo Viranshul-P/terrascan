@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Method · TerraScan</title>
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      document.documentElement.dataset.theme = t || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    })();
+  </script>
+  <link rel="preload" href="../fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="method.css">
+</head>
+<body>
+  <main class="page">
+    <div class="wrap">
+      <header class="page-head">
+        <div>
+          <h1 class="reveal">How TerraScan works, and where it doesn't.</h1>
+          <p class="lede reveal">From a satellite picture to a land-use map in four steps, the models we compared, and the checks that keep the numbers honest.</p>
+          <nav class="toc reveal" aria-label="On this page"><a href="#pipeline">Pipeline</a><a href="#models">Models</a><a href="#india">Europe → India</a><a href="#explain">Why it decides</a><a href="#limits">Limits</a><a href="#credits">Who did what</a></nav>
+        </div>
+        <aside class="spec reveal" aria-label="Spec sheet">
+          <h2>Spec sheet</h2>
+          <dl id="spec"></dl>
+        </aside>
+      </header>
+
+      <section class="block" id="pipeline">
+        <div class="block-head"><h2 class="reveal">From orbit to map.</h2><p class="reveal">The same steps run for the four showcase cities and for any area you draw in the Explorer.</p></div>
+        <div class="pipe">
+          <div class="pstep reveal"><div class="art"><svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="20" y="22" width="44" height="34" rx="3" opacity=".35" transform="rotate(-6 42 39)"/><rect x="34" y="28" width="44" height="34" rx="3" opacity=".6" transform="rotate(-2 56 45)"/><rect x="48" y="34" width="44" height="34" rx="3" fill="var(--surface-2)"/><path d="m52 62 12-12 9 9 7-6 12 9" stroke-linejoin="round"/><circle cx="82" cy="44" r="4"/></svg></div><span class="n">1</span><b>Clear winter pictures</b><span>Every cloud-free Sentinel-2 scene from Dec–Feb, merged per pixel into one picture per year.</span></div>
+          <div class="pstep reveal"><div class="art"><svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="28" y="13" width="64" height="64" rx="3" fill="var(--surface-2)"/><path d="M44 13v64M60 13v64M76 13v64M28 29h64M28 45h64M28 61h64" opacity=".6"/><rect x="60" y="29" width="16" height="16" stroke="var(--accent)" stroke-width="2.5"/></svg></div><span class="n">2</span><b>Cut into squares</b><span>64 × 64 pixels at 10 m: one square covers 640 × 640 m.</span></div>
+          <div class="pstep reveal"><div class="art"><svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="14" y="31" width="28" height="28" rx="3" fill="var(--surface-2)"/><path d="M48 45h8"/><rect x="58" y="24" width="10" height="42" rx="2" opacity=".5"/><rect x="72" y="30" width="10" height="30" rx="2" opacity=".7"/><rect x="86" y="36" width="10" height="18" rx="2"/><path d="M100 45h6" /><circle cx="110" cy="45" r="3" fill="var(--accent-fill)" stroke="none"/></svg></div><span class="n">3</span><b>Name each square</b><span>A fine-tuned EfficientNet-B0 picks one of 10 classes and says how sure it is.</span></div>
+          <div class="pstep reveal"><div class="art"><svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="16" y="22" width="40" height="40" rx="3" fill="var(--surface-2)"/><rect x="64" y="22" width="40" height="40" rx="3" fill="var(--surface-2)"/><rect x="26" y="32" width="10" height="10" fill="#e6c84a" stroke="none"/><rect x="74" y="32" width="10" height="10" fill="#762a83" stroke="none"/><text x="26" y="78" font-size="9" fill="currentColor" stroke="none" font-family="monospace">2018</text><text x="74" y="78" font-size="9" fill="currentColor" stroke="none" font-family="monospace">2026</text></svg></div><span class="n">4</span><b>Compare the years</b><span>A square whose class differs between the two years is reported as a change.</span></div>
+          <div class="pstep reveal"><div class="art"><svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="54" cy="42" r="20" fill="var(--surface-2)"/><path d="m69 57 14 14" stroke-width="3" stroke-linecap="round"/><path d="m45 42 6 6 11-12" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="n">5</span><b>Check by eye</b><span>A random sample of reported changes is compared in the pictures to estimate how many are real.</span></div>
+        </div>
+      </section>
+
+      <section class="block" id="models">
+        <div class="block-head"><h2 class="reveal">Five models, one test.</h2><p class="reveal">All trained on European satellite squares (EuroSAT) and scored on the same held-out test images. Click a column to sort.</p></div>
+        <div class="tbl-wrap reveal"><table id="tbl"></table></div>
+        <p class="tbl-note reveal" id="tblNote"></p>
+      </section>
+
+      <section class="block" id="india">
+        <div class="block-head"><h2 class="reveal">Europe is not India.</h2><p class="reveal">A model that is nearly perfect on European test images got much worse on Indian ones. Fine-tuning on a small set of labelled Indian squares fixed part of that.</p></div>
+        <div class="stat-pair" id="indiaStats"></div>
+      </section>
+
+      <section class="block" id="explain">
+        <div class="block-head"><h2 class="reveal">Where the model looks.</h2><p class="reveal">Grad-CAM colours the part of a square that pushed the model towards its answer: red mattered most. Right answers on top, wrong ones below.</p></div>
+        <figure class="fig reveal"><div class="frame"><img src="../../../reports/figures/gradcam.png" alt="Grad-CAM heatmaps for correct and wrong predictions of EfficientNet-B0" loading="lazy"></div>
+          <figcaption><b>Figure.</b> EfficientNet-B0, seed 42, random test squares. File: <span class="mono">reports/figures/gradcam.png</span> (step 3.2).</figcaption></figure>
+      </section>
+
+      <section class="block" id="limits">
+        <div class="block-head"><h2 class="reveal">Limits, in plain words.</h2><p class="reveal">What to keep in mind before trusting any map on this site.</p></div>
+        <div class="limit-grid">
+          <div class="limit reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><b>Tested in Gujarat only</b><p>Accuracy was measured on Indian test areas in Gujarat. Maps of other places, including ones you draw, are untested.</p></div>
+          <div class="limit reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/></svg><b>640 m squares are coarse</b><p>A square can hold a road, houses and a field, but it gets one name. Small changes inside a square are invisible.</p></div>
+          <div class="limit reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 9 11l4 4 7-8"/><path d="M15 7h5v5"/></svg><b>Change is over-reported</b><p id="limitChange"></p></div>
+          <div class="limit reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg><b>Winter only, two years</b><p>Both maps use December–February pictures. Seasonal fields can look different in other months.</p></div>
+          <div class="limit reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><b>One model run per map</b><p>Accuracy is averaged over 3 training runs, but the maps come from one of them (seed 42), so they don't show run-to-run spread.</p></div>
+          <div class="limit reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M12 5v14" opacity=".4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg><b>Live maps differ a little</b><p>“Map your own area” uses the 5 clearest pictures, not all of them, and may pick another satellite tile, so it can differ slightly from the showcase.</p></div>
+        </div>
+      </section>
+
+      <section class="block" id="credits" style="border-bottom:0">
+        <div class="block-head"><h2 class="reveal">Who did what.</h2><p class="reveal">This project was built with an AI coding assistant. Here is exactly how the work was split.</p></div>
+        <div class="credits">
+          <div class="credit reveal"><h3>The author (Viranshul-P)</h3><ul id="creditUser"></ul></div>
+          <div class="credit reveal"><h3>Claude (Anthropic), as assistant</h3><ul id="creditClaude"></ul></div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <script type="module" src="method.js"></script>
+</body>
+</html>

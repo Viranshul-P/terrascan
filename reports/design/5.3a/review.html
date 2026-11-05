@@ -31,13 +31,34 @@
 <body>
 <main>
   <h1>TerraScan: design review (step 5.3a)</h1>
-  <p>Three directions for the website. A and B were the first two; C merges them, as asked, with light and dark mode
-    and working motion. Click any picture to open it full size. Full notes: <a href="directions.md">directions.md</a>.</p>
+  <p>Design directions for the website, newest first. Click any picture to open it full size. Full notes: <a href="directions.md">directions.md</a>.</p>
   <p class="note">Open this page through a local server so the live links and the numbers work: in the repo root run
     <code>python -m http.server 8000</code>, then go to
     <code>http://localhost:8000/reports/design/5.3a/review.html</code>.</p>
 
-  <h2>C: the merge (recommended)</h2>
+  <h2>D: the full redesign (current)</h2>
+  <p>After your feedback ("too simple, looks AI-made, no real UX or navigation"): a real site structure (Story,
+    Explorer, Cities menu, Method, Limits), a pinned-map scroll story, a full Explorer tool, NASA Blue Marble Earth on
+    the globe, and an ⓘ on every number that shows the file it came from. Light and dark everywhere.</p>
+  <div class="links">
+    <a href="../../../web/prototypes/d/index.html">Open D: Story</a>
+    <a href="../../../web/prototypes/d/explorer.html">Open D: Explorer</a>
+    <a href="../../../web/prototypes/d/method.html">Open D: Method &amp; Limits</a>
+  </div>
+  <div class="two">
+    <video src="d/story-light.webm" controls muted playsinline preload="metadata"></video>
+    <video src="d/story-dark.webm" controls muted playsinline preload="metadata"></video>
+  </div>
+  <p class="note">Videos: scrolling through the story (light, dark). Local only, not in git; remake with
+    <code>npm run shots:d -- --video</code> in <code>web/</code>.</p>
+  <h3 style="margin:32px 0 8px">Story</h3><div class="grid" id="dStory"></div>
+  <h3 style="margin:32px 0 8px">Explorer</h3><div class="grid" id="dExplorer"></div>
+  <h3 style="margin:32px 0 8px">Method, phone views, navigation</h3><div class="grid" id="dMore"></div>
+
+  <h2>Earlier rounds</h2>
+  <p>Kept for comparison. C was the first merge; you said it looked too simple.</p>
+
+  <h2>C: the merge</h2>
   <div class="links">
     <a href="../../../web/prototypes/c/index.html">Open C live: landing</a>
     <a href="../../../web/prototypes/c/map.html">Open C live: map view</a>
@@ -69,8 +90,10 @@
   <p>You said you're not sure about the text. Here are options for the first sentence a visitor reads. Numbers are
     filled in from <code>results/change_check.json</code> when this page loads.</p>
   <ol class="options">
+    <li>How much of Ahmedabad really changed?
+      <small>Now in D. A question the whole story answers; the numbers follow in chapter 4.</small></li>
     <li>The model saw <span data-rep></span> km² of Ahmedabad change. About <span data-real></span> km² really did.
-      <small>Now in C. Honest and specific, but long.</small></li>
+      <small>Was in C. Honest and specific, but long.</small></li>
     <li>How much of Ahmedabad changed since <span data-y0></span>? An AI says <span data-rep></span> km². We checked: about <span data-real></span>.
       <small>A question first, then the answer. Friendlier.</small></li>
     <li>An AI mapped Ahmedabad from space. Then we checked its work.
@@ -101,6 +124,26 @@
       ["b-map-desktop-dark", "Map view (dark)"], ["b-index-phone-dark", "Phone (dark)"],
     ],
   };
+  const D = (n, cap) => [`d/${n}`, cap];
+  Object.assign(shots, {
+    dStory: [
+      D("story-0-desktop-dark", "Opening: the globe (dark)"), D("story-0-desktop-light", "Opening (light)"),
+      D("story-1-desktop-dark", "1 · The city, tilted in 3D"), D("story-2-desktop-light", "2 · What the model sees: real squares"),
+      D("story-3-desktop-light", "3 · What changed, with map notes"), D("story-4-desktop-dark", "4 · How sure: the 50 checks"),
+      D("story-5-desktop-light", "5 · Europe → India"), D("story-6-desktop-dark", "6 · Limits, faint = unsure"),
+      D("story-cities-desktop-light", "The four cities"), D("story-footer-desktop-dark", "Footer"),
+    ],
+    dExplorer: [
+      D("explorer-desktop-light", "Explorer (light)"), D("explorer-desktop-dark", "Explorer (dark)"),
+      D("explorer-selected-desktop-light", "A square selected: the inspector"), D("explorer-compare-desktop-dark", "Compare: swipe 2018 | 2026"),
+      D("explorer-own-desktop-light", "Map your own area"), D("explorer-selected-phone-dark", "Phone: inspector sheet"),
+    ],
+    dMore: [
+      D("method-desktop-light", "Method & Limits (full page)"), D("method-desktop-dark", "Method (dark)"),
+      D("nav-cities-menu-desktop-dark", "Cities menu"), D("story-0-phone-light", "Phone: opening"),
+      D("story-3-phone-light", "Phone: chapter 3"), D("method-phone-dark", "Phone: Method"),
+    ],
+  });
   for (const [id, list] of Object.entries(shots)) {
     document.getElementById(id).innerHTML = list
       .map(([f, cap]) => `<figure><a href="${f}.jpg"><img src="${f}.jpg" alt="${cap}" loading="lazy"></a><figcaption>${cap}</figcaption></figure>`)

@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "shots:prototypes": "node scripts/shoot-prototypes.mjs",
-    "shots:c": "node scripts/shoot-direction-c.mjs"
+    "shots:c": "node scripts/shoot-direction-c.mjs",
+    "shots:d": "node scripts/shoot-d.mjs"
   },
   "dependencies": {
     "@fontsource-variable/anek-latin": "5.3.0",
+    "@fontsource-variable/jetbrains-mono": "5.3.0",
     "@fontsource-variable/schibsted-grotesk": "5.3.0",
     "maplibre-gl": "6.15.0"
   },

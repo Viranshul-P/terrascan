@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explorer · TerraScan</title>
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      document.documentElement.dataset.theme = t || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    })();
+  </script>
+  <link rel="preload" href="../fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../node_modules/maplibre-gl/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="explorer.css">
+</head>
+<body class="app">
+  <div class="app-shell">
+    <div class="toolbar" role="toolbar" aria-label="Map tools">
+      <div class="tb-group" style="position:relative">
+        <button class="combo" id="cityBtn" aria-haspopup="listbox" aria-expanded="false"><span class="sw" id="citySw"></span><span id="cityName">…</span><span class="sub" id="cityTile"></span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 4.5 3 3 3-3"/></svg></button>
+        <div class="pop" id="cityPop" role="dialog" aria-label="Choose a city">
+          <input id="cityFilter" type="search" placeholder="Find a city" aria-label="Find a city" autocomplete="off">
+          <div id="cityList" role="listbox"></div>
+          <hr>
+          <button class="row-link" id="ownBtn2" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke-dasharray="2.5 2"/><path d="M8 5.5v5M5.5 8h5" stroke-linecap="round"/></svg>Map your own area</button>
+        </div>
+      </div>
+      <span class="tb-sep"></span>
+      <div class="tb-group">
+        <div class="seg" id="years" role="group" aria-label="Year"></div>
+        <button class="toggle-chip tb-hide-phone" id="compareBtn" aria-pressed="false" title="Compare years (C)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2v12"/><path d="m5 5-3 3 3 3M11 5l3 3-3 3" stroke-linejoin="round"/></svg>Compare</button>
+      </div>
+      <div class="tb-group tb-right">
+        <button class="toggle-chip only-phone" id="layersBtnPhone" aria-pressed="false">Layers</button>
+        <button class="toggle-chip tb-hide-phone" id="ownBtn" aria-pressed="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke-dasharray="2.5 2"/></svg>Map your own area</button>
+        <div style="position:relative" class="tb-hide-phone">
+          <button class="toggle-chip" id="dlBtn" aria-expanded="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10"/></svg>Download</button>
+          <div class="pop" id="dlPop" style="right:0;left:auto;transform-origin:top right;min-width:260px" role="menu"></div>
+        </div>
+        <button class="btn btn-sm btn-primary" id="shareBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 9.5 9.5 6.5M7 4.5l1-1a3 3 0 0 1 4.2 4.2l-1 1M9 11.5l-1 1A3 3 0 0 1 3.8 8.3l1-1"/></svg><span class="tb-hide-phone">Copy link</span></button>
+        <div style="position:relative" class="tb-hide-phone">
+          <button class="icon-btn" id="keysBtn" aria-label="Keyboard shortcuts" aria-expanded="false"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="16" height="10" rx="2"/><path d="M5 8h1M8 8h1M11 8h1M14 8h1M6 12h8" stroke-linecap="round"/></svg></button>
+          <div class="pop" id="keysPop" style="right:0;left:auto;transform-origin:top right;min-width:280px">
+            <div class="shortcuts">
+              <span>Previous / next year</span><span><kbd>←</kbd><kbd>→</kbd></span>
+              <span>Switch city</span><span><kbd>1</kbd>–<kbd>4</kbd></span>
+              <span>Compare years</span><span><kbd>C</kbd></span>
+              <span>Hide panels</span><span><kbd>H</kbd></span>
+              <span>Clear selection</span><span><kbd>Esc</kbd></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="map" id="map" aria-label="Land-use map"></div>
+      <div class="map-b" id="mapB" aria-hidden="true"></div>
+      <span class="yr-tag l" id="tagL"></span><span class="yr-tag r" id="tagR"></span>
+      <div class="swipe" id="swipe" role="slider" tabindex="0" aria-label="Compare years: drag to reveal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4-4 4 4 4M10 4l4 4-4 4"/></svg></span>
+      </div>
+      <div class="tip" id="tip" hidden></div>
+
+      <aside class="panel left" id="layersPanel" aria-label="Layers and legend">
+        <div class="p-head"><h2>Layers</h2><button class="icon-btn" id="hideLayers" aria-label="Hide panel"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="m10 4-4 4 4 4"/></svg></button></div>
+        <div class="p-body">
+          <div class="group">
+            <div class="lrow"><span class="name"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="m2 11 3.5-3.5L9 11l2-2 3 3"/></svg>Satellite picture</span><button class="switch" role="switch" aria-checked="true" id="swSat" aria-label="Satellite picture"></button></div>
+            <div class="lrow"><span class="name"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Land use</span><button class="switch" role="switch" aria-checked="true" id="swLand" aria-label="Land use"></button></div>
+            <div class="slider-row"><input class="range" id="opacity" type="range" min="0" max="100" value="60" aria-label="Land-use opacity"><span id="opacityVal">60%</span></div>
+            <div class="lrow"><span class="name"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12Z" fill="currentColor" stroke="none"/></svg><span>Shade by confidence<small>Faint = model unsure</small></span></span><button class="switch" role="switch" aria-checked="false" id="swConf" aria-label="Shade by confidence"></button></div>
+            <div class="lrow"><span class="name"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 11.5 6.5 8 9 10.5 13 5"/><path d="M10 5h3v3"/></svg><span>Changes only<small><span id="changedCount"></span> squares flagged</small></span></span><button class="switch" role="switch" aria-checked="false" id="swChange" aria-label="Changes only"></button></div>
+            <div class="lrow" id="checksRow"><span class="name"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg><span>Checked by eye<small id="checksNote"></small></span></span><button class="switch" role="switch" aria-checked="false" id="swChecks" aria-label="Checked squares"></button></div>
+          </div>
+          <div class="group">
+            <div class="label"><span>Land use, <span id="legYear"></span></span><span>km²</span></div>
+            <div class="legend" id="legend"></div>
+            <div class="leg-foot"><span id="legHint">Click a class to show only it</span><button id="legReset" hidden>Show all</button></div>
+          </div>
+        </div>
+      </aside>
+
+      <aside class="panel right" id="inspector" aria-label="Selected square" aria-live="polite"></aside>
+
+      <div class="status" id="status"><span id="cursor">—</span><span>zoom <b id="zoomVal">—</b></span><span id="modelTag"></span></div>
+      <div class="zoombar">
+        <button id="zIn" aria-label="Zoom in"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button>
+        <button id="zOut" aria-label="Zoom out"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 8h10"/></svg></button>
+        <button id="zFit" aria-label="Fit city"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button>
+      </div>
+
+      <div class="own" id="own" aria-label="Map your own area">
+        <h3>Map your own area</h3>
+        <p>Drag a box on the map (at most <span id="maxKm"></span> km a side), pick a year, and the model maps it live.</p>
+        <ol class="steps-own" id="ownSteps" style="padding:0;margin-bottom:0">
+          <li data-state="active">Step 1<b>Draw a box</b></li>
+          <li>Step 2<b>Pick a year</b></li>
+          <li>Step 3<b>Run the model</b></li>
+        </ol>
+        <div class="row"><span class="msg" id="ownMsg">Click and drag on the map.</span>
+          <span style="display:flex;gap:8px"><button class="btn btn-sm btn-ghost" id="ownCancel">Cancel</button><button class="btn btn-sm btn-accent" id="ownRun" disabled>Map this area</button></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="explorer.js"></script>
+</body>
+</html>

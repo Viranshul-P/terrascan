@@ -11,6 +11,43 @@ To try them yourself: in the repo root run `python -m http.server 8000`, then op
 `http://localhost:8000/web/prototypes/a/index.html` (or `b`). The swipe handle can be dragged or moved with the arrow
 keys; on the map view, hover the map for a patch's class and confidence, and the city buttons load the other cities.
 
+## Direction D: the full redesign (current, 2026-11-05)
+
+The user's review of C: "too simple, lacks depth … looks extremely AI done … no proper UX and nice navigation … feels
+personal project, incomplete and raw". The user picked all four reference worlds (Apple product pages, crafted product
+UI like Linear/Vercel/Stripe, pro map tools like Google Earth/Mapbox, data journalism like Reuters/NYT/The Pudding) and
+approved a redesign plan. Prototype: `web/prototypes/d/` (Story `index.html`, `explorer.html`, `method.html`).
+
+**Structure (the main fix).** A real site: top navigation (Story · Explorer · Cities menu · Method · Limits · GitHub ·
+theme), a footer with a sitemap, credits and who-did-what, and a mobile menu.
+- **Story:** a pinned map with 6 chapters scrolling over it, a chapter list on the right (a progress bar on phones).
+  Each chapter moves the camera or changes layers: globe → the city in 3D → land use with real 640 m squares → what
+  changed (notes pinned on the map) → how sure (reported vs real bar + the 50 checked squares as a grid and as dots on
+  the map) → Europe vs India (camera flies out over both) → limits (faint = unsure). Then the four cities as cards.
+- **Explorer:** a toolbar (city switcher with search, 2018 | 2026, Compare = swipe between two linked maps, Map your
+  own area, Download, Copy link, keyboard shortcuts), a Layers panel (satellite, land use + opacity, shade by
+  confidence, changes only, checked by eye; the legend is a filter with km² and change), an inspector for any clicked
+  square (real 2018 and 2026 crops, class + confidence bars, check verdict if it was in the sample, coordinates),
+  a status bar, zoom controls, links that keep city/year/square/compare in the URL, and an honest "map your own area"
+  flow (draw a box, size check against the API's limit, "waking up the server", then says it isn't connected yet).
+- **Method & Limits:** a spec sheet, a 5-step pipeline drawn as small diagrams, a sortable table of the 5 models
+  (mean ± std computed from `results/<model>.json`), Europe vs India stats, the Grad-CAM figure, six limits, and
+  who did what (the author vs Claude, with counts from `results/india_labels.json` and `results/change_check.json`).
+
+**Details.** NASA Blue Marble Earth on the globe with an atmosphere (NASA GIBS, no key; acknowledgement in the
+credits), fading back near the city so our sharp picture stands out. Every number has an ⓘ that shows the file and
+key it came from. Design tokens in `tokens.css` (neutrals tinted towards the map, one marigold accent in two tones,
+type scale, 4 px spacing, 3 depth levels, motion timings), shared components in `base.css`. Logo: a 3 × 3 grid of
+640 m squares with one flagged. Fonts: Schibsted Grotesk + JetBrains Mono for coordinates, file names and data only.
+
+**Corrections made while building (so the copy matches the data):** the biggest change in Ahmedabad is Farmland →
+Orchards, not Farmland → Industrial; fine-tuning used 149 Indian squares (`results/india_dataset.json`), not "a few
+hundred"; the author labelled 43 squares Claude had skipped and kept all 187 of Claude's labels.
+
+**Still open:** the headline wording (options on the review page); class names; real swipe/tiles/performance work is
+5.3b. The NASA Blue Marble layer's own licence page was not checked; NASA's data-use page says NASA data is CC0
+unless marked. Screenshots: `d/*.jpg`; videos `d/story-*.webm` (local only).
+
 ## Direction C: the merge (Claude's recommendation, after the user asked for both themes + working motion)
 
 The user's answer (2026-11-05): "I want both light and dark mode … animations and effects work as well … what you

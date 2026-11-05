@@ -51,7 +51,7 @@ export const LABEL = {
   SeaLake: "Lake",
 };
 
-export const km2 = (v) => `${Math.round(v).toLocaleString("en-IN")}`;
+export const km2 = (v) => `${Math.round(v).toLocaleString("en-US")}`;
 export const pct = (v, digits = 1) => `${(v * 100).toFixed(digits)}`;
 
 // Row/col of the 640 m patch under a point given as 0–1 fractions of the image.
