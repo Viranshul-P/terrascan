@@ -1,0 +1,20 @@
+.legend { display: grid; gap: 2px; }
+.leg {
+  position: relative; isolation: isolate; display: grid; grid-template-columns: 12px 1fr auto; gap: 10px; align-items: center;
+  width: 100%; min-height: 34px; padding: 4px 8px; border: 0; border-radius: var(--r-sm); background: transparent;
+  font-size: var(--t-sm); text-align: left; cursor: pointer; transition: opacity var(--d-2) var(--ease-out);
+}
+/* The bar: the class colour, faint, scaled to the biggest class; it grows to a new length when values change */
+.leg::before {
+  content: ""; position: absolute; inset: 2px auto 2px 0; width: 100%; border-radius: 6px; z-index: -1; background: var(--c);
+  opacity: 0.14; transform-origin: left; transform: scaleX(var(--w, 0));
+  transition: transform 700ms var(--ease-out), opacity var(--d-2) var(--ease-out);
+}
+.leg:hover::before { opacity: 0.26; }
+.leg i { width: 12px; height: 12px; border-radius: 3px; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); }
+/* Plain name on top, the original EuroSAT name on a small second line */
+.leg-name { display: grid; min-width: 0; line-height: 1.25; }
+.leg-name small { font: 500 10.5px var(--mono); color: var(--ink-3); overflow-wrap: anywhere; }
+.leg-v { font: 500 12px var(--mono); color: var(--ink-2); white-space: nowrap; }
+.leg-v em { font-style: normal; color: var(--ink-3); margin-left: 6px; }
+.legend[data-filtered] .leg[aria-pressed="false"] { opacity: 0.38; }

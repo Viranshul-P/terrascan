@@ -3,17 +3,15 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-5.3a
+5.3b
 
 ## Status
-in progress
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Nothing right now. 2026-11-07: the user reviewed prototype E and said "looks good for now", and asked to move on.
-Next: 5.3a part 2, the design system in web/ (Vite + React + TS) based on E. Still open, ask before part 2 needs them:
-which headline, whether the plain class names are OK, reference screenshots of sites the user likes.
-Push of the E commit: the user runs `git push` (pushing under their name stays with them, see CLAUDE.md).
+Nothing right now. Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so
+packages are added with `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 
@@ -44,7 +42,7 @@ Push of the E commit: the user runs `git push` (pushing under their name stays w
 - [x] 5.1 ONNX export
 - [x] 5.2a Showcase static files
 - [x] 5.2b API + Docker
-- [ ] 5.3a Design system and two design directions
+- [x] 5.3a Design system and two design directions
 - [ ] 5.3b The map experience
 - [ ] 5.3c The story sections
 - [ ] 5.3d Polish, performance and real users
@@ -83,6 +81,7 @@ Push of the E commit: the user runs `git push` (pushing under their name stays w
 - 5.1 — src/export_onnx.py: India fine-tuned EfficientNet-B0 seed 42 -> model.onnx + onnx_info.json; ONNX matches PyTorch on 20 Indian test patches (results/onnx_check.json)
 - 5.2a — src/showcase.py + src/onnx_predict.py: static map files for Ahmedabad, Vadodara, Surat, Rajkot (2018 vs 2026, ONNX seed 42) in web/public/data/; Ahmedabad identical to 4.7 (results/showcase.json)
 - 5.2b — api/main.py (FastAPI: GET /health, POST /predict) + src/live.py + api/Dockerfile (no PyTorch); torch-free helpers moved to src/composite.py, src/classes.py; container run locally, live 10x10 km box mapped (results/api_check.json); 15 API tests with saved tile + fake model
+- 5.3a — commits d93cf29 (prototype E) + step5.3a part 2 — directions A–E (user chose E, built by Claude); React design system in web/src (tokens, Button, Card, Stat, Switch, Segmented, Slider, Legend, SourceMarker), 10 web tests, CI web job; first-load JS 72 KB gz, LCP 0.30 s / CLS 0 (reports/design/5.3a/ds/load_metrics.json, local)
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->

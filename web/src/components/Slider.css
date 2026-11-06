@@ -1,0 +1,13 @@
+.slider { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px var(--s-3); }
+.slider label { grid-column: 1 / -1; font-size: var(--t-sm); font-weight: 500; }
+.slider output { font: 500 12px var(--mono); color: var(--ink-2); min-width: 4ch; text-align: right; }
+.range { -webkit-appearance: none; appearance: none; width: 100%; height: 24px; margin: 0; background: transparent; cursor: pointer; }
+.range::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--ink) var(--v, 50%), var(--line-strong) var(--v, 50%)); }
+.range::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line-strong); }
+.range::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--ink); }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--surface);
+  box-shadow: 0 0 0 1px var(--line-strong), var(--e2); transition: transform var(--d-2) var(--ease-spring);
+}
+.range::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: var(--surface); box-shadow: 0 0 0 1px var(--line-strong), var(--e2); }
+.range:hover::-webkit-slider-thumb, .range:active::-webkit-slider-thumb { transform: scale(1.15); }

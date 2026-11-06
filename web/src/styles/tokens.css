@@ -1,0 +1,119 @@
+/* TerraScan design tokens (step 5.3a, taken unchanged from prototype E). Every colour, size, depth and timing
+   lives here; components only use these variables. Light is the base; dark comes from the system setting or from
+   the theme switch ([data-theme] on <html>). Fonts come from the @fontsource-variable packages (see main.tsx). */
+
+:root {
+  /* Neutrals: cool grey, tinted slightly towards the map's blue so the UI sits with the imagery */
+  --n-0: #ffffff;
+  --n-25: #f8f9fa;
+  --n-50: #f1f3f4;
+  --n-100: #e6e9eb;
+  --n-200: #d3d8db;
+  --n-300: #b4bcc1;
+  --n-500: #6b757c;
+  --n-600: #535c62;
+  --n-700: #3a4146;
+  --n-800: #23282c;
+  --n-850: #1a1e21;
+  --n-900: #131619;
+  --n-950: #0b0d0f;
+
+  /* One accent: marigold. Two tones so it passes contrast as text on both themes. */
+  --marigold-300: #ffc94d;
+  --marigold-400: #ffb224;
+  --marigold-600: #a65c00;
+  --marigold-700: #8a4b00;
+
+  /* Semantic: light theme */
+  --bg: var(--n-25);
+  --bg-sunken: var(--n-50);
+  --surface: var(--n-0);
+  --surface-2: var(--n-50);
+  --surface-glass: rgb(255 255 255 / 0.95);
+  --ink: var(--n-900);
+  --ink-2: var(--n-600);
+  --ink-3: var(--n-500);
+  --line: rgb(19 22 25 / 0.1);
+  --line-strong: rgb(19 22 25 / 0.18);
+  --accent: var(--marigold-600);
+  --accent-strong: var(--marigold-700);
+  --accent-fill: var(--marigold-400);
+  --accent-fill-ink: #1f1300;
+  --accent-wash: rgb(255 178 36 / 0.14);
+  --verified: var(--marigold-600);
+  --unverified: var(--n-500);
+  --focus: #2f6fed;
+
+  /* Map chrome */
+  --space-bg: #e9edf0;          /* behind the globe */
+  --atmosphere: #bcd3ea;
+  --map-ink: #0b0d0f;
+
+  /* Depth: three levels. Shadows always have an offset and a soft blur. */
+  --e1: 0 1px 2px rgb(16 20 24 / 0.06), 0 1px 1px rgb(16 20 24 / 0.04);
+  --e2: 0 8px 24px -6px rgb(16 20 24 / 0.16), 0 2px 6px rgb(16 20 24 / 0.06);
+  --e3: 0 24px 56px -12px rgb(16 20 24 / 0.28), 0 6px 16px rgb(16 20 24 / 0.08);
+  --ring: 0 0 0 1px var(--line);
+
+  /* Type */
+  --font: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+  --t-xs: 0.75rem;     /* 12 labels, captions */
+  --t-sm: 0.875rem;    /* 14 UI */
+  --t-md: 1rem;        /* 16 UI body */
+  --t-lg: 1.1875rem;   /* 19 reading */
+  --t-xl: 1.5rem;      /* 24 */
+  --t-2xl: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+  --t-3xl: clamp(2.25rem, 1.4rem + 2.8vw, 3.75rem);
+  --t-4xl: clamp(2.75rem, 1.2rem + 5vw, 6rem);
+  --lh-tight: 1.02;
+  --lh-snug: 1.2;
+  --lh-body: 1.55;
+
+  /* Space: 4-px base */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px; --s-7: 32px;
+  --s-8: 40px; --s-9: 48px; --s-10: 64px; --s-11: 96px; --s-12: 128px; --s-13: 160px;
+
+  /* Layout */
+  --page-max: 1320px;
+  --gutter: 24px;
+  --margin: clamp(16px, 4vw, 48px);
+  --nav-h: 60px;
+
+  /* Shape */
+  --r-xs: 4px; --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --d-1: 160ms; --d-2: 240ms; --d-3: 320ms; --d-4: 400ms;
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);   /* a small overshoot, for little things that "land" */
+
+  color-scheme: light;
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: var(--n-950); --bg-sunken: #070809; --surface: var(--n-900); --surface-2: var(--n-850);
+    --surface-glass: rgb(19 22 25 / 0.94); --ink: #eef1f2; --ink-2: #a3acb2; --ink-3: #7d878e;
+    --line: rgb(238 241 242 / 0.09); --line-strong: rgb(238 241 242 / 0.16);
+    --accent: var(--marigold-400); --accent-strong: var(--marigold-300); --accent-fill: var(--marigold-400);
+    --accent-wash: rgb(255 178 36 / 0.12); --verified: var(--marigold-400); --unverified: #7d878e; --focus: #6aa0ff;
+    --space-bg: #050607; --atmosphere: #3a6ea8;
+    --e1: 0 1px 2px rgb(0 0 0 / 0.4); --e2: 0 10px 28px -6px rgb(0 0 0 / 0.6), 0 2px 6px rgb(0 0 0 / 0.3);
+    --e3: 0 28px 64px -12px rgb(0 0 0 / 0.75), 0 6px 16px rgb(0 0 0 / 0.4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: var(--n-950); --bg-sunken: #070809; --surface: var(--n-900); --surface-2: var(--n-850);
+  --surface-glass: rgb(19 22 25 / 0.94); --ink: #eef1f2; --ink-2: #a3acb2; --ink-3: #7d878e;
+  --line: rgb(238 241 242 / 0.09); --line-strong: rgb(238 241 242 / 0.16);
+  --accent: var(--marigold-400); --accent-strong: var(--marigold-300); --accent-fill: var(--marigold-400);
+  --accent-wash: rgb(255 178 36 / 0.12); --verified: var(--marigold-400); --unverified: #7d878e; --focus: #6aa0ff;
+  --space-bg: #050607; --atmosphere: #3a6ea8;
+  --e1: 0 1px 2px rgb(0 0 0 / 0.4); --e2: 0 10px 28px -6px rgb(0 0 0 / 0.6), 0 2px 6px rgb(0 0 0 / 0.3);
+  --e3: 0 28px 64px -12px rgb(0 0 0 / 0.75), 0 6px 16px rgb(0 0 0 / 0.4);
+  color-scheme: dark;
+}

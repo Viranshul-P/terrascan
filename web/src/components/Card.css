@@ -1,0 +1,13 @@
+.card {
+  position: relative; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--e1), var(--ring);
+  transition: transform 450ms var(--ease-out), box-shadow var(--d-3) var(--ease-out);
+}
+.card-in { padding: var(--s-6); }
+.card-interactive:hover { box-shadow: var(--e3), var(--ring); }
+/* The light that follows the mouse (useSpotlight sets --mx/--my) */
+.card-interactive::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.12), transparent 45%);
+  transition: opacity var(--d-3) var(--ease-out);
+}
+.card-interactive:hover::after { opacity: 1; }

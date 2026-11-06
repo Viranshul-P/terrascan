@@ -1,0 +1,37 @@
+/* Page basics shared by every page (from prototype E). Only tokens.css values are used. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: var(--t-md);
+  line-height: var(--lh-body); -webkit-font-smoothing: antialiased;
+  transition: background-color var(--d-3) var(--ease-out), color var(--d-3) var(--ease-out);
+}
+img, svg, video, canvas { display: block; max-width: 100%; }
+button, input { font: inherit; color: inherit; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+::selection { background: var(--accent-fill); color: var(--accent-fill-ink); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--r-xs); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mono { font-family: var(--mono); font-size: 0.86em; letter-spacing: -0.01em; }
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--margin); }
+.label { font-size: var(--t-xs); font-weight: 600; color: var(--ink-3); letter-spacing: 0.01em; }
+
+/* Scroll reveal: content is visible by default; useReveal adds data-reveal only when motion is allowed. */
+[data-reveal] { transition: opacity var(--d-4) var(--ease-out), transform 600ms var(--ease-out); }
+[data-reveal="hidden"] { opacity: 0; transform: translateY(16px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; scroll-behavior: auto !important; }
+}
+
+/* Square icon button (theme switch, close buttons) */
+.icon-btn {
+  width: 36px; height: 36px; display: inline-grid; place-items: center; padding: 0; border: 0; border-radius: var(--r-sm);
+  background: none; color: var(--ink-2); cursor: pointer; transition: color var(--d-1) var(--ease-out), background-color var(--d-1) var(--ease-out);
+}
+.icon-btn:hover { color: var(--ink); background: var(--line); }
+.icon-btn svg { width: 18px; height: 18px; }

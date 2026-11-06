@@ -1,0 +1,12 @@
+.stat { display: grid; gap: 6px; }
+/* No tabular digits needed: the hidden final value already keeps the box steady while counting. */
+.stat-v { display: flex; align-items: baseline; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+.stat-lg .stat-v { font-size: var(--t-3xl); }
+.stat-md .stat-v { font-size: 2.1rem; }
+.stat-accent .stat-v { color: var(--verified); }
+/* Ghost (final value) and live (counting value) share one grid cell, so the box keeps the final size. */
+.stat-num { display: inline-grid; contain: layout paint; }
+.stat-ghost, .stat-live { grid-area: 1 / 1; }
+.stat-ghost { visibility: hidden; }
+.stat-v small { font-size: 0.42em; font-weight: 500; color: var(--ink-3); letter-spacing: 0; margin-left: 3px; }
+.stat-l { font-size: var(--t-sm); color: var(--ink-2); }
