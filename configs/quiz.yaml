@@ -1,0 +1,21 @@
+# Step 5.3a (prototype E): data for the website's "You vs the model" game.
+#   python -m src.quiz --config configs/quiz.yaml
+#
+# The game uses the 81 Indian TEST squares from step 4.3/4.4 (same areas, same labels), so the model's score in the
+# game is the real test score, not a hand-picked set. Labels: Claude labelled first, the author reviewed every one
+# (step 4.2, final_label). Only for display on the website; no model choice is made from these.
+reviewed_csv: data/india/labels_reviewed.csv
+patches_dir: data/india/patches
+test_areas: [vadodara_outskirts, sanand_farmland]
+finetune_areas: [ahmedabad_city, narmada_bharuch, ankleshwar_industrial]
+
+# Fine-tuned EfficientNet-B0, seed 42: the model the website's maps use (step 5.1 ONNX export).
+onnx_path: models/efficientnet_b0_india/seed42/model.onnx
+onnx_info_path: models/efficientnet_b0_india/seed42/onnx_info.json
+# The script checks its accuracy against this saved result and stops if they differ.
+expected_result: results/india_after.json
+expected_key: per_seed.42.india_test_after.accuracy
+
+sprite_cols: 9          # 81 squares -> a 9 x 9 sheet of 64 px tiles
+sprite_quality: 90      # WebP quality for the sheet
+out_dir: web/public/data/quiz

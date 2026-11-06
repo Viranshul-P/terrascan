@@ -1,0 +1,580 @@
+{
+ "made_by": "src/quiz.py with configs/quiz.yaml",
+ "about": "Indian TEST squares (areas never used for training). Labels: Claude first, every one reviewed by the author (step 4.2). Model: fine-tuned EfficientNet-B0, seed 42 (ONNX).",
+ "model_accuracy": 0.7160493827160493,
+ "model_accuracy_source": "results/india_after.json per_seed.42.india_test_after.accuracy",
+ "sprite": {
+  "file": "squares.webp",
+  "cols": 9,
+  "size": 64
+ },
+ "squares": [
+  {
+   "i": 0,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.7691
+  },
+  {
+   "i": 1,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8886
+  },
+  {
+   "i": 2,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "PermanentCrop",
+   "confidence": 0.7208
+  },
+  {
+   "i": 3,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "Highway",
+   "confidence": 0.7235
+  },
+  {
+   "i": 4,
+   "area": "sanand_farmland",
+   "label": "Forest",
+   "model": "Forest",
+   "confidence": 0.881
+  },
+  {
+   "i": 5,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.9054
+  },
+  {
+   "i": 6,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.8608
+  },
+  {
+   "i": 7,
+   "area": "vadodara_outskirts",
+   "label": "Industrial",
+   "model": "Industrial",
+   "confidence": 0.5569
+  },
+  {
+   "i": 8,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.4746
+  },
+  {
+   "i": 9,
+   "area": "sanand_farmland",
+   "label": "Industrial",
+   "model": "AnnualCrop",
+   "confidence": 0.4904
+  },
+  {
+   "i": 10,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.5491
+  },
+  {
+   "i": 11,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.7805
+  },
+  {
+   "i": 12,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.8865
+  },
+  {
+   "i": 13,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.9085
+  },
+  {
+   "i": 14,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8933
+  },
+  {
+   "i": 15,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.6842
+  },
+  {
+   "i": 16,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.8155
+  },
+  {
+   "i": 17,
+   "area": "sanand_farmland",
+   "label": "Industrial",
+   "model": "Industrial",
+   "confidence": 0.8663
+  },
+  {
+   "i": 18,
+   "area": "vadodara_outskirts",
+   "label": "Industrial",
+   "model": "Residential",
+   "confidence": 0.4581
+  },
+  {
+   "i": 19,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Industrial",
+   "confidence": 0.6019
+  },
+  {
+   "i": 20,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8872
+  },
+  {
+   "i": 21,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8963
+  },
+  {
+   "i": 22,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.4824
+  },
+  {
+   "i": 23,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.9097
+  },
+  {
+   "i": 24,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.9056
+  },
+  {
+   "i": 25,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.6961
+  },
+  {
+   "i": 26,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8339
+  },
+  {
+   "i": 27,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8913
+  },
+  {
+   "i": 28,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.5525
+  },
+  {
+   "i": 29,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "PermanentCrop",
+   "confidence": 0.6881
+  },
+  {
+   "i": 30,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Industrial",
+   "confidence": 0.7906
+  },
+  {
+   "i": 31,
+   "area": "sanand_farmland",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.7562
+  },
+  {
+   "i": 32,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "HerbaceousVegetation",
+   "confidence": 0.8141
+  },
+  {
+   "i": 33,
+   "area": "sanand_farmland",
+   "label": "Forest",
+   "model": "HerbaceousVegetation",
+   "confidence": 0.9101
+  },
+  {
+   "i": 34,
+   "area": "vadodara_outskirts",
+   "label": "Industrial",
+   "model": "Industrial",
+   "confidence": 0.8789
+  },
+  {
+   "i": 35,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.9006
+  },
+  {
+   "i": 36,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "PermanentCrop",
+   "confidence": 0.5884
+  },
+  {
+   "i": 37,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8618
+  },
+  {
+   "i": 38,
+   "area": "sanand_farmland",
+   "label": "HerbaceousVegetation",
+   "model": "HerbaceousVegetation",
+   "confidence": 0.8961
+  },
+  {
+   "i": 39,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.7554
+  },
+  {
+   "i": 40,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.8934
+  },
+  {
+   "i": 41,
+   "area": "sanand_farmland",
+   "label": "Pasture",
+   "model": "HerbaceousVegetation",
+   "confidence": 0.9137
+  },
+  {
+   "i": 42,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "PermanentCrop",
+   "confidence": 0.5663
+  },
+  {
+   "i": 43,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8888
+  },
+  {
+   "i": 44,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8839
+  },
+  {
+   "i": 45,
+   "area": "sanand_farmland",
+   "label": "HerbaceousVegetation",
+   "model": "HerbaceousVegetation",
+   "confidence": 0.8273
+  },
+  {
+   "i": 46,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "PermanentCrop",
+   "confidence": 0.5314
+  },
+  {
+   "i": 47,
+   "area": "sanand_farmland",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.4941
+  },
+  {
+   "i": 48,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.8033
+  },
+  {
+   "i": 49,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.905
+  },
+  {
+   "i": 50,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.9113
+  },
+  {
+   "i": 51,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.566
+  },
+  {
+   "i": 52,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.7236
+  },
+  {
+   "i": 53,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8806
+  },
+  {
+   "i": 54,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "Highway",
+   "confidence": 0.3418
+  },
+  {
+   "i": 55,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.9008
+  },
+  {
+   "i": 56,
+   "area": "sanand_farmland",
+   "label": "PermanentCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.5621
+  },
+  {
+   "i": 57,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8601
+  },
+  {
+   "i": 58,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.909
+  },
+  {
+   "i": 59,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.7814
+  },
+  {
+   "i": 60,
+   "area": "sanand_farmland",
+   "label": "Forest",
+   "model": "HerbaceousVegetation",
+   "confidence": 0.6364
+  },
+  {
+   "i": 61,
+   "area": "vadodara_outskirts",
+   "label": "Highway",
+   "model": "Highway",
+   "confidence": 0.8606
+  },
+  {
+   "i": 62,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.328
+  },
+  {
+   "i": 63,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.8915
+  },
+  {
+   "i": 64,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.9091
+  },
+  {
+   "i": 65,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8816
+  },
+  {
+   "i": 66,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Industrial",
+   "confidence": 0.4431
+  },
+  {
+   "i": 67,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.5841
+  },
+  {
+   "i": 68,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "Industrial",
+   "confidence": 0.6982
+  },
+  {
+   "i": 69,
+   "area": "vadodara_outskirts",
+   "label": "HerbaceousVegetation",
+   "model": "HerbaceousVegetation",
+   "confidence": 0.8202
+  },
+  {
+   "i": 70,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8772
+  },
+  {
+   "i": 71,
+   "area": "vadodara_outskirts",
+   "label": "Industrial",
+   "model": "Industrial",
+   "confidence": 0.5341
+  },
+  {
+   "i": 72,
+   "area": "sanand_farmland",
+   "label": "PermanentCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.6486
+  },
+  {
+   "i": 73,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.7776
+  },
+  {
+   "i": 74,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "AnnualCrop",
+   "confidence": 0.7427
+  },
+  {
+   "i": 75,
+   "area": "vadodara_outskirts",
+   "label": "AnnualCrop",
+   "model": "Highway",
+   "confidence": 0.7694
+  },
+  {
+   "i": 76,
+   "area": "sanand_farmland",
+   "label": "HerbaceousVegetation",
+   "model": "AnnualCrop",
+   "confidence": 0.3965
+  },
+  {
+   "i": 77,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8963
+  },
+  {
+   "i": 78,
+   "area": "sanand_farmland",
+   "label": "HerbaceousVegetation",
+   "model": "AnnualCrop",
+   "confidence": 0.8786
+  },
+  {
+   "i": 79,
+   "area": "vadodara_outskirts",
+   "label": "Residential",
+   "model": "Residential",
+   "confidence": 0.8837
+  },
+  {
+   "i": 80,
+   "area": "sanand_farmland",
+   "label": "Forest",
+   "model": "AnnualCrop",
+   "confidence": 0.8833
+  }
+ ]
+}

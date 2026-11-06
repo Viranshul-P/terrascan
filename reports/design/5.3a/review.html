@@ -36,7 +36,27 @@
     <code>python -m http.server 8000</code>, then go to
     <code>http://localhost:8000/reports/design/5.3a/review.html</code>.</p>
 
-  <h2>D: the full redesign (current)</h2>
+  <h2>E: D with motion, interaction and speed work (newest)</h2>
+  <p>After your feedback ("lively but calm, more animation and interaction, and no lag"). Same pages as D, plus:
+    the headline arrives word by word, numbers count up, chapter cards rise in piece by piece, pointing at a square,
+    a change bar or a checked square finds it on the map, a <b>"Can you beat the model?"</b> game with real Indian test
+    squares, and city cards that change from <span data-y0></span> to <span data-y1></span> square by square on hover.
+    In the Explorer the legend doubles as a bar chart and pointing at a class previews it. All built by Claude in plain
+    JS and CSS (no React, no animation library).</p>
+  <div class="links">
+    <a href="../../../web/prototypes/e/index.html">Open E: Story</a>
+    <a href="../../../web/prototypes/e/explorer.html">Open E: Explorer</a>
+    <a href="../../../web/prototypes/e/method.html">Open E: Method &amp; Limits</a>
+  </div>
+  <h3 style="margin:24px 0 8px">Smoothness: scrolling the whole Story page, D vs E</h3>
+  <table id="perf" style="border-collapse:collapse;font-size:14px"></table>
+  <p class="note">Mean of 3 runs each, laptop Intel graphics in headless Chrome. "Slow frames" = frames over 33 ms
+    (below 30 fps). The 4× row slows the CPU as a rough stand-in for a mid-range phone. Files:
+    <code>perf_d_page3b.json</code>, <code>perf_e_page3b.json</code> (made by <code>web/scripts/perf-proto.mjs</code>).</p>
+  <h3 style="margin:32px 0 8px">Story</h3><div class="grid" id="eStory"></div>
+  <h3 style="margin:32px 0 8px">Explorer, Method, phone</h3><div class="grid" id="eMore"></div>
+
+  <h2>D: the full redesign</h2>
   <p>After your feedback ("too simple, looks AI-made, no real UX or navigation"): a real site structure (Story,
     Explorer, Cities menu, Method, Limits), a pinned-map scroll story, a full Explorer tool, NASA Blue Marble Earth on
     the globe, and an ⓘ on every number that shows the file it came from. Light and dark everywhere.</p>
@@ -125,6 +145,27 @@
     ],
   };
   const D = (n, cap) => [`d/${n}`, cap];
+  const E = (n, cap) => [`e/${n}`, cap];
+  Object.assign(shots, {
+    eStory: [
+      E("story-0-desktop-dark", "Opening: headline, counted stats"), E("story-2-desktop-dark", "2 · Squares are scanned, then named"),
+      E("story-3-shift-hover-desktop-light", "3 · Pointing at a change shows only those squares"), E("story-4-desktop-light", "4 · Real change counts down from reported"),
+      E("story-game-desktop-light", "Game: can you beat the model?"), E("story-game-answered-desktop-light", "Game: after an answer"),
+      E("story-cities-desktop-dark", "The four cities"), E("story-cities-hover-desktop-dark", "Hover: tilt, light, year changes square by square"),
+    ],
+    eMore: [
+      E("explorer-selected-desktop-light", "Explorer: legend as bars, square panel"), E("explorer-compare-desktop-dark", "Explorer: compare"),
+      E("method-desktop-light", "Method (full page)"), E("story-0-phone-dark", "Phone: opening"),
+      E("story-game-answered-phone-dark", "Phone: game"), E("story-5-phone-dark", "Phone: chapter 5"),
+    ],
+  });
+  Promise.all(["d", "e"].map((x) => fetch(`perf_${x}_page3b.json`).then((r) => r.json()))).then(([d, e]) => {
+    const row = (label, cpu) => {
+      const c = (r) => r[cpu].story_scroll;
+      return `<tr><td style="padding:6px 16px 6px 0">${label}</td>${[d, e].map((r) => `<td style="padding:6px 16px 6px 0">${c(r).avg_fps.toFixed(1)} fps · ${(c(r).janky_share * 100).toFixed(1)}% slow frames · worst ${Math.round(c(r).worst_frame_ms)} ms</td>`).join("")}</tr>`;
+    };
+    document.getElementById("perf").innerHTML = `<tr><th></th><th style="text-align:left">D</th><th style="text-align:left">E</th></tr>${row("Normal CPU", "cpu_x1")}${row("CPU slowed 4×", "cpu_x4")}`;
+  }).catch(() => (document.getElementById("perf").textContent = "Could not load the perf files."));
   Object.assign(shots, {
     dStory: [
       D("story-0-desktop-dark", "Opening: the globe (dark)"), D("story-0-desktop-light", "Opening (light)"),

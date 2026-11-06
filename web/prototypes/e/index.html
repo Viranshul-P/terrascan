@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerraScan: how much of Ahmedabad really changed?</title>
+  <meta name="description" content="A land-use model mapped Ahmedabad from space in 2018 and 2026, then its work was checked square by square.">
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      document.documentElement.dataset.theme = t || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    })();
+  </script>
+  <link rel="preload" href="../fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../node_modules/maplibre-gl/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="story.css">
+</head>
+<body>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <main>
+    <section class="story" aria-label="Story">
+      <div class="story-map"><div class="map" id="map" role="img" aria-label="Map that follows the story: globe, then Ahmedabad and its land use"></div></div>
+
+      <div class="steps">
+        <!-- Hero -->
+        <div class="step hero" data-step="0" id="start">
+          <div class="hero-in">
+            <h1 id="heroTitle">How much of Ahmedabad <em>really</em> changed?</h1>
+            <p class="lede reveal">An AI read satellite pictures of the city from <span data-y0></span> and <span data-y1></span> and mapped every 640&nbsp;m square. Then we checked its work, square by square.</p>
+            <div class="actions reveal">
+              <a class="btn btn-primary" href="#c1">Start the story <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M4 9l4 4 4-4"/></svg></a>
+              <a class="btn btn-quiet" href="explorer.html">Open the Explorer</a>
+            </div>
+            <dl class="hero-stats reveal" id="heroStats">
+              <div><dt>squares mapped</dt><dd><span data-hs-squares>0</span><span data-src-hs-squares></span></dd></div>
+              <div><dt>km² flagged as changed</dt><dd><span data-hs-km>0</span><span data-src-hs-km></span></dd></div>
+              <div><dt>of checked changes were real</dt><dd><span data-hs-real>0</span><small>%</small><span data-src-hs-real></span></dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="step" data-step="1" id="c1">
+          <article class="card">
+            <div class="chap"><b>01</b><span>/ 06</span><i></i><span>The city</span></div>
+            <h2>Ahmedabad, seen from orbit.</h2>
+            <p>Sentinel-2 photographs the city every few days. We merged <b><span data-scenes0></span></b><span data-src-scenes0></span> clear winter days of <span data-y0></span> and <b><span data-scenes1></span></b><span data-src-scenes1></span> of <span data-y1></span> into one cloud-free picture per year.</p>
+          </article>
+        </div>
+
+        <div class="step" data-step="2" id="c2">
+          <article class="card">
+            <div class="chap"><b>02</b><span>/ 06</span><i></i><span>What the model sees</span></div>
+            <h2>Every 640&nbsp;m square gets a name.</h2>
+            <p>The model looks at one square at a time and picks one of 10 land-use classes. These are real squares from the <span data-y1></span> picture, with the model's answer.</p>
+            <div class="figure sheet" id="sheet"></div>
+            <p class="hint"><span class="hint-dot"></span>Point at a square to find it on the map.</p>
+          </article>
+        </div>
+
+        <div class="step" data-step="3" id="c3">
+          <article class="card">
+            <div class="chap"><b>03</b><span>/ 06</span><i></i><span>What changed</span></div>
+            <h2>The model sees farmland giving way.</h2>
+            <p>Between <span data-y0></span> and <span data-y1></span> it flags <b><span data-changed></span> of <span data-total></span> squares</b><span data-src-changed></span> as changed. <span data-top-note>Its three biggest shifts:</span></p>
+            <div class="shifts" id="shifts"></div>
+            <p class="hint"><span class="hint-dot"></span>Point at a shift to see only those squares.</p>
+          </article>
+        </div>
+
+        <div class="step" data-step="4" id="c4">
+          <article class="card">
+            <div class="chap"><b>04</b><span>/ 06</span><i></i><span>How sure</span></div>
+            <h2>About half of it is real.</h2>
+            <p>We picked <b><span data-n></span></b> flagged squares at random and compared the two pictures by eye. <b><span data-rate></span>%</b><span data-src-rate></span> really changed.</p>
+            <div class="figure measure">
+              <div class="m-row"><div class="top"><span class="v"><span data-reported></span><small>km²</small></span><span class="l">reported by the model<span data-src-reported></span></span></div><div class="m-track"><i style="--to:1"></i></div></div>
+              <div class="m-row real"><div class="top"><span class="v"><span data-real></span><small>km²</small></span><span class="l">estimated real change<span data-src-real></span></span></div><div class="m-track"><i id="realBar"></i><span class="ci" id="realCi"></span></div></div>
+            </div>
+            <div class="waffle" id="waffle" aria-label="The checked squares"></div>
+            <div class="key"><span><i style="background:var(--accent-fill)"></i>Real change</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--ink-3)"></i>Not real</span><span><i style="background:var(--line-strong)"></i>Unclear</span></div>
+            <p class="hint"><span class="hint-dot"></span>Point at a checked square to find it on the map.</p>
+            <p class="cap">Hatched: 95% range <span data-lo></span>–<span data-hi></span> km². Checked by Claude first, without seeing the model's answers, then reviewed by the author.</p>
+          </article>
+        </div>
+
+        <div class="step" data-step="5" id="c5">
+          <article class="card">
+            <div class="chap"><b>05</b><span>/ 06</span><i></i><span>Europe → India</span></div>
+            <h2>Trained in Europe. Tested in India.</h2>
+            <p>The model learned from European photos. On Indian land it was right less than half the time. Fine-tuning on <b><span data-ntrain></span></b><span data-src-ntrain></span> labelled Indian squares closed part of the gap.</p>
+            <div class="dots" id="dots"></div>
+            <div class="ticks"><span>0%</span><span>50%</span><span>100%</span></div>
+            <p class="cap">Accuracy on held-out test images. Dot = mean of 3 training runs, bar = ± spread.</p>
+          </article>
+        </div>
+
+        <div class="step" data-step="6" id="c6">
+          <article class="card">
+            <div class="chap"><b>06</b><span>/ 06</span><i></i><span>Limits</span></div>
+            <h2>What it can't do yet.</h2>
+            <ul class="limits">
+              <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v5M10 13.5v.5" stroke-linecap="round"/></svg><span><b>Only tested in Gujarat.</b>Maps of other places are untested.</span></li>
+              <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 10h14M10 3v14"/></svg><span><b>640 m squares are coarse.</b>One square can hold a road, houses and a field; it gets one name.</span></li>
+              <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 15 8 9l3 3 6-7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Change is over-reported.</b>Only about half held up in Ahmedabad; the other cities were not checked.</span></li>
+            </ul>
+            <p>On the map, faint squares are the ones the model was least sure about.</p>
+            <div class="actions"><a class="btn btn-primary" href="explorer.html">Explore the four cities</a><a class="btn btn-ghost" href="method.html">Read the method</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="game" id="game" aria-labelledby="gameTitle">
+      <div class="wrap game-grid">
+        <div class="game-copy">
+          <span class="eyebrow reveal">Your turn</span>
+          <h2 id="gameTitle" class="reveal">Can you beat the model?</h2>
+          <p class="reveal">Five real 640&nbsp;m squares from the Indian test areas, places the model never trained on. Name what you see, then see what the model said.</p>
+          <div class="scoreboard reveal" aria-live="polite">
+            <div><span>You</span><b id="sYou">0</b></div>
+            <div><span>Model</span><b id="sModel">0</b></div>
+            <div class="round"><span>Square</span><b id="sRound">1</b><small>/ 5</small></div>
+          </div>
+          <p class="cap reveal" id="gameAbout"></p>
+        </div>
+        <div class="game-card reveal" id="gameCard">
+          <div class="g-img">
+            <canvas id="gCanvas" width="64" height="64" role="img" aria-label="Satellite square to name"></canvas>
+            <span class="g-scale"><i></i>640 m</span>
+            <span class="g-area" id="gArea"></span>
+          </div>
+          <div class="g-side">
+            <span class="label">What is this square?</span>
+            <div class="g-opts" id="gOpts" role="group" aria-label="Your answer"></div>
+            <div class="g-result" id="gResult" aria-live="polite"></div>
+            <div class="g-actions"><button class="btn btn-primary" id="gNext" type="button" hidden>Next square <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span class="g-keys"><kbd>1</kbd>–<kbd>4</kbd> to answer</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cities" id="cities" aria-labelledby="citiesTitle">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="citiesTitle" class="reveal">Four cities, two winters.</h2>
+          <p class="reveal">Pre-computed maps, so they open instantly. Hover a city to watch it change from <span data-y0></span> to <span data-y1></span>, square by square.</p>
+        </div>
+        <div class="city-cards" id="cityCards"></div>
+        <p class="unchecked reveal">Change numbers are what the model reports. Only Ahmedabad's were checked by eye.</p>
+      </div>
+    </section>
+  </main>
+  <nav class="rail" id="rail" aria-label="Chapters"></nav>
+  <div id="footer"></div>
+  <div class="scroll-cue" id="cue" aria-hidden="true"><span>Scroll</span><i></i></div>
+  <script type="module" src="story.js"></script>
+</body>
+</html>

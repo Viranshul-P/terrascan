@@ -1,0 +1,48 @@
+{
+  "prototype": "d",
+  "made_by": "web/scripts/perf-proto.mjs",
+  "date": "2026-11-05",
+  "note": "Frame times from requestAnimationFrame in headless Chromium on this laptop. 16.7 ms = 60 fps. cpu_x4 slows the CPU 4x as a rough stand-in for a mid-range phone (the GPU is not slowed).",
+  "cpu_x1": {
+    "webgl": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "story_scroll": {
+      "frames": 450,
+      "avg_fps": 52.8,
+      "median_frame_ms": 16.7,
+      "p95_frame_ms": 16.8,
+      "worst_frame_ms": 233.3,
+      "janky_frames_over_33ms": 13,
+      "janky_share": 0.029
+    },
+    "explorer_pan": {
+      "frames": 386,
+      "avg_fps": 60,
+      "median_frame_ms": 16.7,
+      "p95_frame_ms": 16.7,
+      "worst_frame_ms": 16.8,
+      "janky_frames_over_33ms": 0,
+      "janky_share": 0
+    }
+  },
+  "cpu_x4": {
+    "webgl": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "story_scroll": {
+      "frames": 366,
+      "avg_fps": 39.4,
+      "median_frame_ms": 16.7,
+      "p95_frame_ms": 50.1,
+      "worst_frame_ms": 116.7,
+      "janky_frames_over_33ms": 43,
+      "janky_share": 0.117
+    },
+    "explorer_pan": {
+      "frames": 426,
+      "avg_fps": 59.6,
+      "median_frame_ms": 16.7,
+      "p95_frame_ms": 16.7,
+      "worst_frame_ms": 50,
+      "janky_frames_over_33ms": 1,
+      "janky_share": 0.002
+    }
+  }
+}

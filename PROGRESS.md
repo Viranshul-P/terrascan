@@ -10,11 +10,10 @@ in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-5.3a is paused for your design decision (part 2, the React design system, not started). Newest: prototype D (full
-redesign after your feedback on C). Review it: in the repo root run `python -m http.server 8000`, open
-http://localhost:8000/reports/design/5.3a/review.html (screenshots, the opening videos, live links, headline options).
-Then tell Claude: (1) whether you genuinely like D, or what to change, (2) which headline
-(or your own wording), (3) whether the plain class names are OK, (4) any reference screenshots of sites you like.
+Nothing right now. 2026-11-07: the user reviewed prototype E and said "looks good for now", and asked to move on.
+Next: 5.3a part 2, the design system in web/ (Vite + React + TS) based on E. Still open, ask before part 2 needs them:
+which headline, whether the plain class names are OK, reference screenshots of sites the user likes.
+Push of the E commit: the user runs `git push` (pushing under their name stays with them, see CLAUDE.md).
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 

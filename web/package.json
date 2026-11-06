@@ -6,7 +6,9 @@
   "scripts": {
     "shots:prototypes": "node scripts/shoot-prototypes.mjs",
     "shots:c": "node scripts/shoot-direction-c.mjs",
-    "shots:d": "node scripts/shoot-d.mjs"
+    "shots:d": "node scripts/shoot-d.mjs",
+    "shots:e": "node scripts/shoot-e.mjs",
+    "perf": "node scripts/perf-proto.mjs"
   },
   "dependencies": {
     "@fontsource-variable/anek-latin": "5.3.0",
