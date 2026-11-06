@@ -3,6 +3,6 @@
   "date": "2026-11-06",
   "page": "design system (production build, local preview server)",
   "note": "Phone-sized window, CPU slowed 4x, no network slowdown (files come from this laptop). Budget: LCP < 2500 ms, CLS < 0.1.",
-  "lcp_ms": 296,
+  "lcp_ms": 300,
   "cls": 0
 }

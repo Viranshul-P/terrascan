@@ -6,12 +6,16 @@ Claude updates this at the end of every step. Keep entries short.
 5.3b
 
 ## Status
-not started
+in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Nothing right now. Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so
-packages are added with `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
+Nothing right now. 5.3b is split in two (user OK'd 2026-11-07; map JS loads after the page; tilt without a terrain
+service). Part 1 (map, opening, swipe compare, hover/tap, side panel, inspector) is committed; the user looked and
+said to commit. Next session: 5.3b part 2 = phone bottom sheet (fix: panels cover the map, credits overlap the
+inspector, Compare chip looks empty on phone) + "map your own area" (draw box, progress states, waking-up message).
+Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
+`npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
      write exactly what they must do here. /next checks this before moving on. -->
 

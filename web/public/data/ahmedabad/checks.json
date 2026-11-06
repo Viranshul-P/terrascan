@@ -1,0 +1,365 @@
+{
+ "made_by": "src/web_checks.py",
+ "sources": [
+  "results/change_check_sample.csv",
+  "results/change_check_reviewed.csv",
+  "results/change_check.json"
+ ],
+ "judged_by": "Claude first (blind to the model's classes), then reviewed by the user",
+ "n_pairs": 50,
+ "real_rate": 0.5106,
+ "reported_changed_km2": 319.488,
+ "estimated_real_changed_km2": 163.1,
+ "squares": [
+  {
+   "pair": "pair_00",
+   "id": 1753,
+   "lon": 72.5582,
+   "lat": 22.94164,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_01",
+   "id": 1733,
+   "lon": 72.433473,
+   "lat": 22.939671,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_02",
+   "id": 1623,
+   "lon": 72.645216,
+   "lat": 22.960289,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_03",
+   "id": 1839,
+   "lon": 72.496047,
+   "lat": 22.929116,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_04",
+   "id": 1404,
+   "lon": 72.476376,
+   "lat": 22.980801,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_05",
+   "id": 441,
+   "lon": 72.455492,
+   "lat": 23.096015,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_06",
+   "id": 1013,
+   "lon": 72.431835,
+   "lat": 23.026304,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_07",
+   "id": 1547,
+   "lon": 72.47046,
+   "lat": 22.963375,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_08",
+   "id": 530,
+   "lon": 72.412011,
+   "lat": 23.083754,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_09",
+   "id": 1728,
+   "lon": 72.402294,
+   "lat": 22.939163,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_10",
+   "id": 927,
+   "lon": 72.494023,
+   "lat": 23.038857,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_11",
+   "id": 1819,
+   "lon": 72.670564,
+   "lat": 22.937552,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_12",
+   "id": 2041,
+   "lon": 72.558821,
+   "lat": 22.906983,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_13",
+   "id": 2100,
+   "lon": 72.627509,
+   "lat": 22.902246,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_14",
+   "id": 2084,
+   "lon": 72.527751,
+   "lat": 22.900724,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_15",
+   "id": 304,
+   "lon": 72.498874,
+   "lat": 23.114041,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_16",
+   "id": 1495,
+   "lon": 72.445403,
+   "lat": 22.96875,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_17",
+   "id": 133,
+   "lon": 72.629606,
+   "lat": 23.139172,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_18",
+   "id": 637,
+   "lon": 72.480896,
+   "lat": 23.073313,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_19",
+   "id": 218,
+   "lon": 72.56111,
+   "lat": 23.126572,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_20",
+   "id": 132,
+   "lon": 72.62336,
+   "lat": 23.139078,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_21",
+   "id": 397,
+   "lon": 72.480357,
+   "lat": 23.102192,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_22",
+   "id": 162,
+   "lon": 72.511043,
+   "lat": 23.131567,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_23",
+   "id": 1508,
+   "lon": 72.526492,
+   "lat": 22.970037,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_24",
+   "id": 54,
+   "lon": 72.435884,
+   "lat": 23.141916,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_25",
+   "id": 1721,
+   "lon": 72.657891,
+   "lat": 22.948921,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_26",
+   "id": 1960,
+   "lon": 72.652152,
+   "lat": 22.919946,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_27",
+   "id": 1247,
+   "lon": 72.694336,
+   "lat": 23.007237,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_28",
+   "id": 1096,
+   "lon": 72.650354,
+   "lat": 23.023924,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_29",
+   "id": 84,
+   "lon": 72.623258,
+   "lat": 23.144854,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_30",
+   "id": 1306,
+   "lon": 72.463684,
+   "lat": 22.992154,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_31",
+   "id": 176,
+   "lon": 72.598479,
+   "lat": 23.132923,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_32",
+   "id": 269,
+   "lon": 72.57995,
+   "lat": 23.121084,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_33",
+   "id": 1779,
+   "lon": 72.421111,
+   "lat": 22.933693,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_34",
+   "id": 2103,
+   "lon": 72.646215,
+   "lat": 22.902524,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_35",
+   "id": 687,
+   "lon": 72.493488,
+   "lat": 23.067736,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_36",
+   "id": 2011,
+   "lon": 72.670959,
+   "lat": 22.914445,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_37",
+   "id": 1494,
+   "lon": 72.439166,
+   "lat": 22.968649,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_38",
+   "id": 813,
+   "lon": 72.680965,
+   "lat": 23.059044,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_39",
+   "id": 1658,
+   "lon": 72.56423,
+   "lat": 22.953288,
+   "verdict": "unclear"
+  },
+  {
+   "pair": "pair_40",
+   "id": 826,
+   "lon": 72.462603,
+   "lat": 23.049911,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_41",
+   "id": 2106,
+   "lon": 72.664921,
+   "lat": 22.9028,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_42",
+   "id": 236,
+   "lon": 72.673529,
+   "lat": 23.128271,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_43",
+   "id": 1850,
+   "lon": 72.564643,
+   "lat": 22.930183,
+   "verdict": "unclear"
+  },
+  {
+   "pair": "pair_44",
+   "id": 451,
+   "lon": 72.517926,
+   "lat": 23.09701,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_45",
+   "id": 2105,
+   "lon": 72.658686,
+   "lat": 22.902708,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_46",
+   "id": 870,
+   "lon": 72.437747,
+   "lat": 23.043732,
+   "verdict": "unclear"
+  },
+  {
+   "pair": "pair_47",
+   "id": 1099,
+   "lon": 72.669077,
+   "lat": 23.024201,
+   "verdict": "no"
+  },
+  {
+   "pair": "pair_48",
+   "id": 159,
+   "lon": 72.492308,
+   "lat": 23.13127,
+   "verdict": "yes"
+  },
+  {
+   "pair": "pair_49",
+   "id": 1928,
+   "lon": 72.452614,
+   "lat": 22.916869,
+   "verdict": "yes"
+  }
+ ]
+}

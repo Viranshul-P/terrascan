@@ -10,7 +10,7 @@ const ROOT = resolve(import.meta.dirname, "..", "..");
 const OUT = join(ROOT, "reports", "design", "5.3a", "ds");
 await mkdir(OUT, { recursive: true });
 const server = await preview({ root: resolve(import.meta.dirname, ".."), preview: { port: 4317, strictPort: true } });
-const url = "http://localhost:4317/";
+const url = "http://localhost:4317/design";
 const browser = await chromium.launch();
 const errors = [];
 

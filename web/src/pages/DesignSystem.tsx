@@ -6,7 +6,7 @@ import { Card } from "../components/Card";
 import { Legend } from "../components/Legend";
 import { Slider } from "../components/Slider";
 import { Stat } from "../components/Stat";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { SiteHeader } from "../components/SiteHeader";
 import { Segmented, Switch } from "../components/Toggle";
 import { className } from "../lib/classes";
 import { km2, useJson } from "../lib/data";
@@ -23,17 +23,6 @@ type Quiz = { model_accuracy: number; squares: unknown[] };
 const SUM = "web/public/data/ahmedabad/summary.json";
 const SURFACES = ["--bg", "--surface", "--surface-2", "--line-strong", "--ink-3", "--ink-2", "--ink"];
 const ACCENTS = ["--accent-fill", "--accent", "--accent-wash", "--focus"];
-
-// Logomark: a 3 x 3 grid of 640 m squares, one of them flagged (from prototype E).
-const Logo = () => (
-  <svg viewBox="0 0 22 22" width="22" height="22" aria-hidden="true">
-    {[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => {
-      const flag = r === 0 && c === 2;
-      return <rect key={`${r}${c}`} x={1 + c * 7} y={1 + r * 7} width="6" height="6" rx="1.5"
-        fill={flag ? "var(--accent-fill)" : "currentColor"} opacity={flag ? 1 : 0.22 + (r + c) * 0.13} />;
-    }))}
-  </svg>
-);
 
 function Section({ id, title, text, children }: { id: string; title: string; text: string; children: ReactNode }) {
   const rise = useReveal<HTMLElement>();
@@ -72,11 +61,7 @@ export function DesignSystem() {
 
   return (
     <>
-      <header className="ds-nav">
-        <a className="brand" href="/"><Logo /><span>TerraScan</span></a>
-        <span className="ds-crumb">Design system</span>
-        <ThemeToggle />
-      </header>
+      <SiteHeader page="design" />
 
       <main className="wrap">
         <div className="ds-hero">

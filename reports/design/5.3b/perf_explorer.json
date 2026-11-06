@@ -1,0 +1,48 @@
+{
+  "made_by": "web/scripts/perf-explorer.mjs",
+  "date": "2026-11-06",
+  "runs_each": 3,
+  "note": "Production build, headless Chromium, laptop GPU. 16.7 ms = 60 fps; janky = frames over 33 ms. cpu_x4 slows the CPU 4x as a rough stand-in for a mid-range phone.",
+  "cpu_x1": {
+    "webgl": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "opening": {
+      "avg_fps": 59.294,
+      "p95_frame_ms": 16.733,
+      "worst_frame_ms": 66.733,
+      "janky_share": 0.002
+    },
+    "pan": {
+      "avg_fps": 60.051,
+      "p95_frame_ms": 16.733,
+      "worst_frame_ms": 16.8,
+      "janky_share": 0
+    },
+    "compare_drag": {
+      "avg_fps": 60.003,
+      "p95_frame_ms": 16.733,
+      "worst_frame_ms": 16.8,
+      "janky_share": 0
+    }
+  },
+  "cpu_x4": {
+    "webgl": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "opening": {
+      "avg_fps": 57.419,
+      "p95_frame_ms": 16.8,
+      "worst_frame_ms": 127.767,
+      "janky_share": 0.01
+    },
+    "pan": {
+      "avg_fps": 59.876,
+      "p95_frame_ms": 16.733,
+      "worst_frame_ms": 33.3,
+      "janky_share": 0
+    },
+    "compare_drag": {
+      "avg_fps": 60.003,
+      "p95_frame_ms": 16.733,
+      "worst_frame_ms": 16.8,
+      "janky_share": 0
+    }
+  }
+}
