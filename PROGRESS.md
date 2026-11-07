@@ -17,8 +17,8 @@ waiting on you
    and the internet to Sentinel-2 are not in Claude's cloud container. In one terminal from the repo root:
    `uvicorn api.main:default_app --factory --port 8000`, then open the site (the dev server talks to
    http://localhost:8000 by itself). Draw a ~3 km box over Ahmedabad and tell Claude what happens (time, any error).
-3. Push to GitHub: the push from Claude's container failed with 403 (Claude's GitHub app has no access to the repo).
-   Either reconnect GitHub for Claude at https://claude.ai/connect-github, or pull/push the two local commits yourself.
+3. Everything is already on GitHub (branch claude/ig-5.3b-remaining-work-rcpfv1). On your laptop: `git fetch origin`,
+   then `git checkout claude/ig-5.3b-remaining-work-rcpfv1` (or `git pull` if you are already on it).
 When you OK it, Claude ticks 5.3b and the next step is 5.3c.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
