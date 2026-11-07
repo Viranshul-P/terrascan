@@ -18,7 +18,6 @@ type Props = {
   compare: boolean;
   onCompare: (on: boolean) => void;
   onCopy: () => void;
-  onLayers: () => void; // phone only: show the layers panel
 };
 
 const Chevron = () => <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 4.5 3 3 3-3" /></svg>;
@@ -67,7 +66,6 @@ export function Toolbar(p: Props) {
         </button>
       </div>
       <div className="tb-group tb-right">
-        <button type="button" className="toggle-chip only-phone" onClick={p.onLayers}>Layers</button>
         <div className="pop-anchor tb-hide-phone" ref={dl.ref}>
           <button type="button" className="toggle-chip" aria-expanded={dl.open} onClick={() => dl.setOpen(!dl.open)}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10" /></svg>
@@ -85,7 +83,7 @@ export function Toolbar(p: Props) {
             ))}
           </div>
         </div>
-        <Button size="sm" onClick={p.onCopy}>Copy link</Button>
+        <span className="tb-hide-phone"><Button size="sm" onClick={p.onCopy}>Copy link</Button></span>
       </div>
     </div>
   );

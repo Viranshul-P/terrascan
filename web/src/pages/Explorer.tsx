@@ -11,6 +11,7 @@ import { cityBounds, DATA, loadCity } from "../lib/city";
 import { className } from "../lib/classes";
 import { getJson, pct, useJson } from "../lib/data";
 import { reducedMotion } from "../lib/motion";
+import { snapPx, type Snap } from "../lib/sheet";
 import type { Checks, City, Index, Summary } from "../lib/types";
 import type { TerraMap } from "../map/TerraMap";
 import "../explorer/Explorer.css";
@@ -44,7 +45,9 @@ function ExplorerView({ index }: { index: Index }) {
   const [preview, setPreview] = useState<string | null>(null);
   const [pair, setPair] = useState<Pair>(null);
   const [split, setSplit] = useState(50);
-  const [panel, setPanel] = useState(!phone());
+  const [panel, setPanel] = useState(!phone()); // desktop: is the layers panel open
+  const [layersSnap, setLayersSnap] = useState<Snap>("peek"); // phone: height of the layers sheet
+  const [inspSnap, setInspSnap] = useState<Snap>("half"); // phone: height of the square sheet
   const [intro, setIntro] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -76,9 +79,12 @@ function ExplorerView({ index }: { index: Index }) {
   }, [index]);
 
   // ---------- Camera ----------
+  // On a phone the sheet sits over the bottom of the map, so the city is fitted into the part above it (never more
+  // than half the map, even when the sheet is tall).
+  const sheetNow = sel !== null ? inspSnap : layersSnap;
   const pad = useCallback(() => phone()
-    ? { top: 40, bottom: 40, left: 16, right: 16 }
-    : { top: 40, bottom: 70, left: panel ? 340 : 40, right: 360 }, [panel]);
+    ? { top: 40, bottom: Math.min(snapPx(sheetNow, stage.current?.clientHeight ?? 700), (stage.current?.clientHeight ?? 700) / 2) + 16, left: 16, right: 16 }
+    : { top: 40, bottom: 70, left: panel ? 340 : 40, right: 360 }, [panel, sheetNow]);
   const fitCam = useCallback((tilt: boolean): EndCamera => {
     const m = tm.current!.map;
     const pitch = tilt ? 50 : 0, bearing = tilt ? -14 : 0;
@@ -143,6 +149,20 @@ function ExplorerView({ index }: { index: Index }) {
     // The map is made once; later changes are applied by the effects below.
   }, [city]);
   useEffect(() => () => { tm.current?.remove(); tmB.current?.remove(); }, []);
+
+  // A tapped square opens the sheet at half height; the map moves so the square stays visible above it. When the
+  // sheet closes the map moves back (only if it had been moved).
+  useEffect(() => { if (sel !== null) setInspSnap("half"); }, [sel]);
+  useEffect(() => {
+    if (!ready || intro || !phone() || !tm.current) return;
+    const m = tm.current.map;
+    const area = stage.current!.clientHeight;
+    const bottom = sel !== null ? Math.min(snapPx(inspSnap, area), area / 2) : 0;
+    if (Math.round(m.getPadding().bottom ?? 0) === Math.round(bottom)) return;
+    const to = { top: 0, left: 0, right: 0, bottom };
+    const p = sel !== null ? city?.patches[sel] : null;
+    m.easeTo({ ...(p ? { center: [p.lon, p.lat] as [number, number] } : {}), padding: to, duration: reducedMotion() ? 0 : 400, essential: true });
+  }, [ready, intro, sel, inspSnap, city]);
 
   // ---------- Keep the map in step with the state ----------
   const apply = useCallback((t: TerraMap | null, isB = false) => {
@@ -250,8 +270,8 @@ function ExplorerView({ index }: { index: Index }) {
       <SiteHeader page="explorer" />
       <div className="app-shell">
         <Toolbar cities={index.cities} sums={sums} city={s} onCity={switchCity} years={years} year={year} onYear={setYear}
-          compare={compare} onCompare={setCompare} onCopy={copyLink} onLayers={() => setPanel((v) => !v)} />
-        <div className="stage" ref={stage} data-compare={compare} data-inspect={sel !== null} style={{ "--split": `${split}%` } as CSSProperties}>
+          compare={compare} onCompare={setCompare} onCopy={copyLink} />
+        <div className="stage" ref={stage} data-compare={compare} data-inspect={sel !== null} data-sheet={intro ? "none" : sheetNow} style={{ "--split": `${split}%` } as CSSProperties}>
           <div className="map" ref={mapEl} role="region" aria-label={`Land-use map of ${s.name}`} />
           <div className="map-b" ref={mapBEl} aria-hidden="true" />
           {compare && <>
@@ -267,7 +287,7 @@ function ExplorerView({ index }: { index: Index }) {
           {!ready && <div className="map-loading" role="status"><span className="spinner" />Loading the map…</div>}
           {intro && <button type="button" className="skip" onClick={() => setIntro(false)}>Skip intro</button>}
 
-          <LayersPanel layers={layers} setLayers={setLayers} hidden={!panel || intro} onHide={() => setPanel(false)}
+          <LayersPanel layers={layers} setLayers={setLayers} hidden={phone() ? sel !== null || intro : !panel || intro} onHide={() => setPanel(false)} snap={layersSnap} onSnap={setLayersSnap}
             legendTitle={compare ? `Land use, ${y0} → ${y1}` : `Land use, ${legendYear}`}
             legend={index.classes.map((c) => ({ key: c.name, colour: c.colour, value: s.areas_km2[legendYear][c.name], delta: s.areas_km2[legendYear][c.name] - s.areas_km2[otherYear][c.name] }))}
             active={only} onToggleClass={toggleClass} onShowAll={() => setOnly(null)} onPreview={(k) => setPreview(only ? null : k)}
@@ -278,7 +298,7 @@ function ExplorerView({ index }: { index: Index }) {
           )}
           <Inspector city={city} years={years} colour={colour} sel={sel} verdict={sel !== null ? verdicts[sel] : undefined}
             hidden={intro || (phone() && sel === null)} modelName={index.model}
-            onClose={() => setSel(null)} onCopy={copyLink}
+            onClose={() => setSel(null)} onCopy={copyLink} snap={inspSnap} onSnap={setInspSnap}
             onZoom={() => { const p = city.patches[sel!]; tm.current?.map.flyTo({ center: [p.lon, p.lat], zoom: 14, pitch: 0, duration: reducedMotion() ? 0 : 1400, essential: true }); }} />
 
           <div className="status"><span ref={cursor}>—</span><span>zoom <b ref={zoomVal}>—</b></span><span>{s.tile} · 10 m Sentinel-2</span></div>

@@ -191,18 +191,43 @@
 .maplibregl-ctrl-attrib { background: var(--surface-glass) !important; font-family: var(--font); font-size: 11px; }
 .maplibregl-ctrl-attrib, .maplibregl-ctrl-attrib * { color: var(--ink-3) !important; }
 
-/* Phone (part 2 of 5.3b turns these into draggable bottom sheets) */
-.only-phone { display: none; }
+/* Grabber: the handle of a phone bottom sheet (hidden on desktop) */
+.grabber { display: none; }
+
+/* Phone: the two panels become bottom sheets with three heights (peek, half, full; see src/lib/sheet.ts) */
 @media (max-width: 960px) {
+  :root { --sheet-peek: 76px; }
   .toolbar { gap: var(--s-2); padding: 0 var(--s-3); overflow-x: auto; }
-  .tb-hide-phone, .tb-sep, .combo .sub { display: none; }
-  .only-phone { display: inline-flex; }
-  .toggle-chip span { display: none; }
-  .panel.left { top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 55%; border-radius: var(--r-lg) var(--r-lg) 0 0; }
-  .panel.right { top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 62%; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .tb-hide-phone, .tb-sep, .combo .sub, .combo .sw { display: none; }
+  .combo { padding: 0 6px 0 8px; gap: 6px; }
+  .panel.left, .panel.right {
+    background: var(--surface); /* solid: the map must not shine through the text */
+    top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: none; height: var(--sheet-peek);
+    border-radius: var(--r-lg) var(--r-lg) 0 0; padding-bottom: env(safe-area-inset-bottom);
+    transition: height var(--d-3) var(--ease-out), transform var(--d-3) var(--ease-out), opacity var(--d-3) var(--ease-out), visibility 0s;
+  }
+  .panel[data-snap="half"] { height: 46%; }
+  .panel[data-snap="full"] { height: 84%; }
+  .panel[data-dragging="true"] { transition: none; }
   .panel[data-hidden="true"], .panel.right[data-hidden="true"] { transform: translateY(16px); }
+  .panel .p-head { padding-top: 0; }
+  .panel.left .p-head .icon-btn { display: none; } /* the grabber replaces "hide panel" */
+  .grabber {
+    display: grid; place-items: center; flex: none; width: 100%; height: 32px; padding: 0; border: 0; background: transparent;
+    cursor: grab; touch-action: none; /* the finger drags the sheet, not the page */
+  }
+  .grabber span { width: 40px; height: 5px; border-radius: 3px; background: var(--line-strong); transition: background-color var(--d-1); }
+  .grabber:hover span, .grabber:focus-visible span { background: var(--ink-3); }
+  .grabber:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; border-radius: var(--r-lg) var(--r-lg) 0 0; }
   .status { display: none; }
   .zoombar { bottom: auto; top: var(--s-3); right: var(--s-3); }
   .stage[data-inspect="true"] .zoombar { right: var(--s-3); }
   .crops { max-width: 300px; margin: 0 auto; }
+  /* Credits stay readable: they sit just above the sheet instead of under it */
+  .stage .maplibregl-ctrl-bottom-right, .stage .maplibregl-ctrl-bottom-left { transition: bottom var(--d-3) var(--ease-out); }
+  .stage[data-sheet="peek"] .maplibregl-ctrl-bottom-right { bottom: var(--sheet-peek); }
+  .stage[data-sheet="half"] .maplibregl-ctrl-bottom-right { bottom: 46%; }
+  .stage[data-sheet="full"] .maplibregl-ctrl-bottom-right { bottom: 84%; }
+  .stage[data-sheet="full"] .zoombar { display: none; } /* the map strip above a tall sheet is too small to need it */
+  .toast { bottom: calc(var(--sheet-peek) + 16px); }
 }

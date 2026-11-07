@@ -30,3 +30,8 @@ class FakeObserver {
   takeRecords() { return []; }
 }
 window.IntersectionObserver = FakeObserver as unknown as typeof IntersectionObserver;
+
+// jsdom has no pointer capture (used by the swipe handle and the sheet grabber): do nothing.
+Element.prototype.setPointerCapture = () => {};
+Element.prototype.releasePointerCapture = () => {};
+Element.prototype.hasPointerCapture = () => false;

@@ -11,9 +11,9 @@ in progress
 
 ## Waiting on you
 Nothing right now. 5.3b is split in two (user OK'd 2026-11-07; map JS loads after the page; tilt without a terrain
-service). Part 1 (map, opening, swipe compare, hover/tap, side panel, inspector) is committed; the user looked and
-said to commit. Next session: 5.3b part 2 = phone bottom sheet (fix: panels cover the map, credits overlap the
-inspector, Compare chip looks empty on phone) + "map your own area" (draw box, progress states, waking-up message).
+service). Part 1 (map, opening, swipe compare, hover/tap, side panel, inspector) is committed. Part 2 is done in two
+commits (user OK'd 2026-11-07): (A) phone bottom sheet - committed, please look at it on your phone; (B) "map your own
+area" (draw box, progress states, waking-up message) - next in this session.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -86,6 +86,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.2a — src/showcase.py + src/onnx_predict.py: static map files for Ahmedabad, Vadodara, Surat, Rajkot (2018 vs 2026, ONNX seed 42) in web/public/data/; Ahmedabad identical to 4.7 (results/showcase.json)
 - 5.2b — api/main.py (FastAPI: GET /health, POST /predict) + src/live.py + api/Dockerfile (no PyTorch); torch-free helpers moved to src/composite.py, src/classes.py; container run locally, live 10x10 km box mapped (results/api_check.json); 15 API tests with saved tile + fake model
 - 5.3a — commits d93cf29 (prototype E) + step5.3a part 2 — directions A–E (user chose E, built by Claude); React design system in web/src (tokens, Button, Card, Stat, Switch, Segmented, Slider, Legend, SourceMarker), 10 web tests, CI web job; first-load JS 72 KB gz, LCP 0.30 s / CLS 0 (reports/design/5.3a/ds/load_metrics.json, local)
+- 5.3b part 2A — phone bottom sheet (Claude): the Layers panel and the square inspector are sheets with 3 heights (peek/half/full; drag, tap or arrow keys; src/lib/sheet.ts, SheetGrabber.tsx); map is fitted above the sheet; credits sit above it; Compare chip shows its label; 5 new tests (23 web tests pass); first-load JS 80.0 KB gz (npm run size)
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -456,6 +457,10 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   results/api_check.json). D loads 4 full RGB WebPs for the city cards (lazy): 5.3b needs real thumbnails.
 - 5.3a: Impeccable's detector on the prototypes reports only false alarms of a static scan (img src set by JS, white
   text on the always-dark map, "km²" size computed without its parent) and MapLibre's own location-dot CSS.
+- 5.3b part 2A: phone checks were run in headless Chromium at 390x844 (taps, a drag, tapping a square): heights peek 76 px,
+  half 337 px, full 615 px as designed. NASA/MapLibre demo tiles are blocked in this cloud container, so these checks had
+  no globe imagery behind the city; the real phone look still needs your eyes. Known, not fixed: desktop zoom buttons
+  overlap the map credits at the bottom right; no favicon (one 404 on every page load). Both go to 5.3d.
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)

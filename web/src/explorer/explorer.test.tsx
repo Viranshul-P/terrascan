@@ -5,8 +5,10 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { cityBounds, parsePatches } from "../lib/city";
 import type { City, Summary } from "../lib/types";
+import { nearestSnap, nextSnap, snapPx, stepSnap } from "../lib/sheet";
 import { Inspector } from "./Inspector";
 import { LayersPanel, type Layers } from "./LayersPanel";
+import { SheetGrabber } from "./SheetGrabber";
 
 const YEARS = ["2018", "2026"];
 const CSV = `row,col,lon,lat,class_2018,confidence_2018,class_2026,confidence_2026,changed,touches_finetune_area
@@ -41,7 +43,7 @@ const panelProps = {
   active: null, onToggleClass: vi.fn(), onShowAll: vi.fn(), onPreview: vi.fn(),
   changes: [{ from: "AnnualCrop", to: "Industrial", patches: 98, km2: 40.1 }],
   changedPatches: 780, pair: null, onPair: vi.fn(), checksCount: 50,
-  summaryFile: "web/public/data/ahmedabad/summary.json", hidden: false, onHide: vi.fn(),
+  summaryFile: "web/public/data/ahmedabad/summary.json", hidden: false, onHide: vi.fn(), snap: "peek" as const, onSnap: vi.fn(),
 };
 
 describe("LayersPanel", () => {
@@ -73,7 +75,7 @@ describe("Inspector", () => {
     summary: { grid_cols: 2, grid_rows: 1, tile: "43QBF", files: { rgb: { 2018: "rgb_2018.webp", 2026: "rgb_2026.webp" } } } as unknown as Summary,
     patches: parsePatches(CSV, YEARS),
   } as City;
-  const props = { city, years: YEARS, colour: {}, hidden: false, modelName: "EfficientNet-B0", onClose: vi.fn(), onZoom: vi.fn(), onCopy: vi.fn() };
+  const props = { city, years: YEARS, colour: {}, hidden: false, modelName: "EfficientNet-B0", snap: "half" as const, onSnap: vi.fn(), onClose: vi.fn(), onZoom: vi.fn(), onCopy: vi.fn() };
 
   it("asks to pick a square when none is chosen", () => {
     render(<Inspector {...props} sel={null} />);
@@ -87,5 +89,46 @@ describe("Inspector", () => {
     expect(screen.getByText("AnnualCrop")).toBeInTheDocument();
     expect(screen.getByText("93% sure")).toBeInTheDocument();
     expect(screen.getByText("not a real change")).toBeInTheDocument();
+  });
+});
+
+describe("phone bottom sheet", () => {
+  it("a tap steps peek -> half -> full -> peek", () => {
+    expect(nextSnap("peek")).toBe("half");
+    expect(nextSnap("half")).toBe("full");
+    expect(nextSnap("full")).toBe("peek");
+  });
+
+  it("arrow keys stop at the ends", () => {
+    expect(stepSnap("peek", -1)).toBe("peek");
+    expect(stepSnap("peek", 1)).toBe("half");
+    expect(stepSnap("full", 1)).toBe("full");
+  });
+
+  it("a dragged sheet settles on the closest height", () => {
+    const area = 700; // map area height in px: half = 322, full = 588, peek = 76
+    expect(snapPx("half", area)).toBe(322);
+    expect(nearestSnap(100, area)).toBe("peek");
+    expect(nearestSnap(250, area)).toBe("half");
+    expect(nearestSnap(520, area)).toBe("full");
+  });
+
+  it("the grabber is a button: a click or Enter asks for the next height, the arrow keys step", async () => {
+    const onSnap = vi.fn();
+    render(<aside className="panel"><SheetGrabber snap="peek" onSnap={onSnap} label="Layers" /></aside>);
+    const grabber = screen.getByRole("button", { name: "Layers: open" });
+    expect(grabber).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(grabber);
+    expect(onSnap).toHaveBeenLastCalledWith("half");
+    grabber.focus();
+    await userEvent.keyboard("{ArrowUp}");
+    expect(onSnap).toHaveBeenLastCalledWith("half");
+    await userEvent.keyboard("{Enter}");
+    expect(onSnap).toHaveBeenCalledTimes(3);
+  });
+
+  it("both panels show the grabber, so they can be resized on a phone", () => {
+    render(<LayersPanel {...panelProps} />);
+    expect(screen.getByRole("button", { name: /Layers and legend/ })).toBeInTheDocument();
   });
 });

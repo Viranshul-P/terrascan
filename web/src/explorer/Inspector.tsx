@@ -5,7 +5,9 @@ import { Button } from "../components/Button";
 import { SourceMarker } from "../components/SourceMarker";
 import { className } from "../lib/classes";
 import { pct } from "../lib/data";
+import type { Snap } from "../lib/sheet";
 import type { City } from "../lib/types";
+import { SheetGrabber } from "./SheetGrabber";
 
 type Props = {
   city: City;
@@ -18,6 +20,8 @@ type Props = {
   onClose: () => void;
   onZoom: () => void;
   onCopy: () => void;
+  snap: Snap; // phone bottom sheet height
+  onSnap: (s: Snap) => void;
 };
 
 const VERDICT = { yes: "a real change", no: "not a real change", unclear: "unclear" };
@@ -28,10 +32,10 @@ const EmptyIcon = () => (
   </svg>
 );
 
-export function Inspector({ city, years, colour, sel, verdict, hidden, modelName, onClose, onZoom, onCopy }: Props) {
+export function Inspector({ city, years, colour, sel, verdict, hidden, modelName, onClose, onZoom, onCopy, snap, onSnap }: Props) {
   if (sel === null) {
     return (
-      <aside className="panel right" data-hidden={hidden} aria-label="Selected square">
+      <aside className="panel right" data-hidden={hidden} data-snap={snap} aria-label="Selected square">
         <div className="empty"><EmptyIcon /><b>Pick a square</b>Click anywhere on the city to see what the model saw there, in both years.</div>
       </aside>
     );
@@ -45,7 +49,8 @@ export function Inspector({ city, years, colour, sel, verdict, hidden, modelName
     backgroundPosition: `${(p.col / (s.grid_cols - 1)) * 100}% ${(p.row / (s.grid_rows - 1)) * 100}%`,
   });
   return (
-    <aside className="panel right" data-hidden={hidden} aria-label="Selected square" aria-live="polite">
+    <aside className="panel right" data-hidden={hidden} data-snap={snap} aria-label="Selected square" aria-live="polite">
+      <SheetGrabber snap={snap} onSnap={onSnap} label="Selected square" />
       <div className="p-head">
         <h2>Square <span className="mono">#{sel.toLocaleString("en-US")}</span></h2>
         <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">

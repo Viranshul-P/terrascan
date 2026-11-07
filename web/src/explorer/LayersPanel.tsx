@@ -6,7 +6,9 @@ import { SourceMarker } from "../components/SourceMarker";
 import { Switch } from "../components/Toggle";
 import { className } from "../lib/classes";
 import { km2 } from "../lib/data";
+import type { Snap } from "../lib/sheet";
 import type { Change } from "../lib/types";
+import { SheetGrabber } from "./SheetGrabber";
 
 export type Layers = { sat: boolean; land: boolean; opacity: number; conf: boolean; change: boolean; checks: boolean };
 export type Pair = { from: string; to: string } | null;
@@ -28,13 +30,16 @@ type Props = {
   summaryFile: string;
   hidden: boolean;
   onHide: () => void;
+  snap: Snap; // phone bottom sheet height
+  onSnap: (s: Snap) => void;
 };
 
 export function LayersPanel(p: Props) {
   const L = p.layers;
   const set = (patch: Partial<Layers>) => p.setLayers({ ...L, ...patch });
   return (
-    <aside className="panel left" data-hidden={p.hidden} aria-label="Layers and legend">
+    <aside className="panel left" data-hidden={p.hidden} data-snap={p.snap} aria-label="Layers and legend">
+      <SheetGrabber snap={p.snap} onSnap={p.onSnap} label="Layers and legend" />
       <div className="p-head">
         <h2>Layers</h2>
         <button type="button" className="icon-btn" onClick={p.onHide} aria-label="Hide panel">
