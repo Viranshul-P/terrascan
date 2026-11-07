@@ -7,6 +7,9 @@
 .story-map { position: sticky; top: var(--nav-h); height: calc(100svh - var(--nav-h)); overflow: hidden; background: var(--space-bg); }
 :root[data-theme="dark"] .story-map { background: #05070a; }
 .story-map .map { position: absolute; inset: 0; }
+/* the map loads a moment after the headline, then fades in */
+.motion .story-map .map { opacity: 0; transition: opacity 900ms var(--ease-out); }
+.motion .story-map[data-ready="true"] .map { opacity: 1; }
 /* soft vignette so cards and the hero text always read against the imagery */
 .story-map::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;

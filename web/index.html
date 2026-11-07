@@ -13,6 +13,14 @@
       document.documentElement.dataset.theme = t || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     })();
   </script>
+  <!-- The Story (and the Explorer's first city) need these small data files before the headline can show. Fetching
+       them alongside the JavaScript, instead of one after another once it has run, saves several round trips on a
+       slow phone connection (Lighthouse, step 5.3c). The page reads them with fetch(), so as="fetch". -->
+  <link rel="preload" href="/data/index.json" as="fetch" crossorigin>
+  <link rel="preload" href="/data/story.json" as="fetch" crossorigin>
+  <link rel="preload" href="/data/ahmedabad/summary.json" as="fetch" crossorigin>
+  <link rel="preload" href="/data/ahmedabad/patches.csv" as="fetch" crossorigin>
+  <link rel="preload" href="/data/ahmedabad/checks.json" as="fetch" crossorigin>
 </head>
 <body>
   <div id="root"></div>

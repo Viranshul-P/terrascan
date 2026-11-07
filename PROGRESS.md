@@ -6,14 +6,19 @@ Claude updates this at the end of every step. Keep entries short.
 5.3c
 
 ## Status
-in progress
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing) 5.3c is split (user agreed 2026-11-07): part 1 DONE = web/public/data/story.json from results/
-(src/web_story.py) + Story page at / (pinned map, hero, 6 chapters incl. Ahmedabad shrink bar, India before/after,
-limits). Part 2 NEXT = Europe model cards, How it works + links (GitHub only until 6.x/7.x), the game and city cards
-from prototype E, end-of-step gate (brief pass/fail list, Lighthouse).
+5.3c parts 1 and 2 are built and committed (Claude). Two things before it can be ticked:
+1. Look at it: `cd web && npm run dev`, open http://localhost:5173/ on the laptop and the phone (same Wi-Fi, the
+   Network address it prints). Scroll the whole story, try the model cards (Accuracy / Speed / Size), play the game,
+   point at / tap a city card.
+2. Decide on Lighthouse performance: 81 and 84 in two runs (budget 90+; accessibility 100, best practices 96;
+   reports/design/5.3c/lighthouse.json). What's left is the live 3D map starting up ~1.6 s after load and the
+   headline's word-by-word fade. Options: (A) show a still picture of the globe first and start the live map on the
+   first scroll; (B) make the headline appear faster; (C) leave it for the full performance pass in 5.3d.
+When you OK it (and pick A, B or C), Claude ticks 5.3c and the next step is 5.3d.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -90,8 +95,19 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3b part 2B — "Map your own area" (Claude): draw a box (drag, or "use the middle of the screen"), box size checked against the server's limits (read from GET /health), year choice, Map this box -> progress state with seconds counter and the server's time limit, honest "server is waking up" note after 3 s without an answer, result on the map (picture, class squares, hover/tap a square) with km² per class, average confidence, GeoTIFF download, Cancel, Draw again. New: lib/api.ts, explorer/useAreaMap.ts, AreaPanel.tsx, DrawLayer.tsx, live layers in map/TerraMap.ts. 24 new web tests (47 pass; fake fetch, no network); first-load JS 83.8 KB gz (npm run size)
 - 5.3b part 3 (laptop, 2026-11-07, Claude; from the user's feedback) — commits 59f894b + d8b7671: opening lands flat and centred between the panels (was tilted and low); compass in the zoom bar (needle follows the map, drag sideways = turn, click = north up) and a 3D / 2D button (explorer/ViewControls.tsx); tip on how to turn by hand; gentler wheel zoom; no turning/tilting while drawing an area. 7 new web tests (54 pass). Live "map your own area" API checked on the laptop by Claude with curl (3 km Ahmedabad box, 2018 + 2026 answered, ~30 km box refused); screenshots + load check in reports/design/5.3b/ (LCP 608 ms, CLS 0.008, load_metrics.json). User OK'd 5.3b on 2026-11-07.
 - 5.3c part 1 (Claude, 2026-11-07, on medium effort at the user's request) — src/web_story.py writes web/public/data/story.json (Ahmedabad check, India 3-seed numbers, per-model EuroSAT results, each with its source file; 4 pytest tests); Story page at / in React from prototype E (web/src/pages/Story.tsx, story/Chapters.tsx, story/Story.css, lib/story.ts, components/CountUp.tsx): pinned map, hero with count-ups, chapters The city / What the model sees / What changed / How sure (319 -> 163 km² bar that shrinks, 50-square waffle) / Europe -> India (dots ± std) / Limits; header gets a Story link, Explorer stays at /explorer. 14 new web tests (68 pass), incl. one that renders every chapter with made-up numbers to prove nothing is typed in. Screenshots + load check: reports/design/5.3c/ (web/scripts/shoot-story.mjs).
+- 5.3c part 2 (Claude, 2026-11-07, medium effort) — under the story map: model cards (story/Models.tsx; Accuracy / Speed / Size switch, "Ours" = best multi-seed from-scratch model, sentence built from range overlaps AND from CPU speed so it also says EfficientNet-B0 is faster), the game ported from prototype E (story/Game.tsx, quiz.json), city cards that change year square by square (story/Cities.tsx, lib/pixelSwap.ts), How it works (4 drawn steps + links: GitHub, Indian dataset; model card and blog shown as "coming soon"), footer with data credits and a plain note that much of the work was done with Claude. Speed fixes after Lighthouse: map loads after the headline (1.6 s or first scroll/touch) and fades in; data files preloaded in index.html; GitHub header link named; footer headings fixed. 10 new web tests (78 pass). Screenshots: reports/design/5.3c/.
 
 ## Decisions made
+- 5.3c part 2 (Claude): model cards compare by mean ± std ranges (overlap = about the same, the CLAUDE.md rule); the
+  sentence is built from the data and also names faster models, so the page doesn't only show what flatters ours.
+  A one-seed model shows "1 seed" instead of "± 0". The game's final line uses quiz.json's model_accuracy (seed 42,
+  the model behind the maps, labelled "one training run"); the story's India chart keeps the 3-seed numbers.
+- 5.3c part 2: links only to things that exist (GitHub; Indian dataset from step 4.5). Model card (6.1) and blog
+  (6.4) say "coming soon" until those steps; add the links then. The footer says Claude made the code, website and
+  first pass of the Indian labels and the author reviewed them; the user can reword it.
+- 5.3c: Lighthouse is run with `npx -y lighthouse@12.0.0` (not added to package.json). With
+  --use-angle=swiftshader (software graphics) the 3D map makes performance 39; without it (this laptop's GPU) 63
+  before the speed fixes, 81/84 after. The saved file has the runs after the fixes.
 - 5.3c part 1 (Claude): the Story keeps prototype E's chapters but tilts the map less (35°/30° in two chapters, flat in
   the rest) after the user found the tilted Explorer view hard to read. Texts that stated a share in words ("About half
   of it is real", "right less than half the time") were reworded so every share on the page is a number from a data
@@ -345,6 +361,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
+- 5.3c: Lighthouse performance 81/84, under the 90 budget (reports/design/5.3c/lighthouse.json); waiting on the user's choice (see Waiting on you). The favicon 404 (from 5.3b) is the console error Lighthouse lists under best practices.
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
 - scripts/compute_stats.py takes ~3 min (reads 18,900 images one by one). Only run once, so left simple.
 - In fast-dev-run, the 2 val batches are all AnnualCrop (val isn't shuffled), so fast-dev-run val accuracy means nothing. Only real runs count.
@@ -482,7 +499,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3b part 2B: a drawn box is a true lon/lat box only on a flat, north-up map, so opening the tool flattens the map;
   opening Compare closes the tool and the tool turns Compare off (the second map would hide the live layers).
 ## Results so far (copied from results/ files only, with the file name)
-- 5.3c part 1 Story page load (phone size, CPU 4x slower, local build): LCP 1744 ms, CLS 0.039 (reports/design/5.3c/load_metrics.json). First-load JS 89.9 KB gzipped (npm run size output, not saved to a file).
+- 5.3c Story page (final build of part 2): own load check, phone size, CPU 4x slower, local: LCP 1820 ms, CLS 0 (reports/design/5.3c/load_metrics.json). Lighthouse 12.0.0 mobile, 2 runs: performance 81 / 84 (FAILS the 90 budget), accessibility 100 / 100, best practices 96 / 96, simulated LCP 2.72 s, TBT 531 / 447 ms, CLS 0 (reports/design/5.3c/lighthouse.json). First-load JS 96.3 KB gzipped (npm run size output, not saved to a file).
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)
 - SmallCNN v2, seeds 42/43/44 (VAL split, not test): val acc 0.9830 ± 0.0022, val macro-F1 0.9825 ± 0.0023, 1,311,050 params (results/small_cnn_ablation.md, from models/small_cnn_v2/seed{42,43,44}/metrics.json)

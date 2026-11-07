@@ -1,0 +1,12 @@
+.foot { position: relative; z-index: 3; background: var(--bg); border-top: 1px solid var(--line); padding: var(--s-10) 0 var(--s-11); font-size: var(--t-sm); color: var(--ink-2); }
+.foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: var(--s-8); }
+.foot .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 17px; color: var(--ink); }
+.foot p { margin: var(--s-3) 0 0; max-width: 36ch; line-height: 1.5; }
+.foot p.made { font-size: var(--t-xs); color: var(--ink-3); }
+.foot h2 { margin: 0 0 var(--s-3); font-size: var(--t-xs); font-weight: 600; color: var(--ink-3); letter-spacing: 0.02em; }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+.foot a { color: var(--ink-2); text-decoration: none; }
+.foot a:hover { color: var(--ink); }
+.foot .soon { color: var(--ink-3); }
+@media (max-width: 960px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .foot-grid { grid-template-columns: 1fr; } }

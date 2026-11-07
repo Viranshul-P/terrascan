@@ -1,5 +1,5 @@
-// Screenshots of the Story page (step 5.3c) into reports/design/5.3c/, from the production build, plus its load
-// speed. Needs the internet (globe tiles). Usage (from web/): npm run build && npm run shots:story
+// Screenshots of the Story page (step 5.3c: the chapters, then the sections under the map) into
+// reports/design/5.3c/, from the production build, plus its load speed. Needs the internet (globe tiles). Usage (from web/): npm run build && npm run shots:story
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { preview } from "vite";
@@ -29,6 +29,28 @@ for (const vp of [{ name: "desktop", width: 1440, height: 900, scale: 1 }, { nam
       await page.waitForTimeout(4200);
       await page.screenshot({ path: join(OUT, `chapter${k}-${tag}.jpg`), ...JPG });
     }
+    // The sections under the map (part 2).
+    const shotOf = async (sel, name) => {
+      await page.locator(sel).scrollIntoViewIfNeeded();
+      await page.waitForTimeout(1600);
+      await page.screenshot({ path: join(OUT, `${name}-${tag}.jpg`), ...JPG });
+    };
+    await shotOf("#models", "models");
+    await page.getByRole("button", { name: "Speed" }).click();
+    await page.waitForTimeout(900);
+    await page.screenshot({ path: join(OUT, `models-speed-${tag}.jpg`), ...JPG });
+    await shotOf("#game", "game");
+    await page.locator(".g-opt").first().click();
+    await page.waitForTimeout(700);
+    await page.screenshot({ path: join(OUT, `game-answered-${tag}.jpg`), ...JPG });
+    await shotOf("#cities", "cities");
+    if (vp.name === "desktop") {
+      await page.locator(".ccard").first().hover();
+      await page.waitForTimeout(1300);
+      await page.screenshot({ path: join(OUT, `cities-hover-${tag}.jpg`), ...JPG });
+    }
+    await shotOf("#how", "how");
+    await shotOf(".foot", "footer");
     const sideways = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     if (sideways > 0) errors.push(`${tag}: the page scrolls sideways by ${sideways}px`);
     await page.close();

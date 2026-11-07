@@ -1,0 +1,32 @@
+{
+  "made_by": "npx lighthouse@12.0.0 (not a project dependency), run by Claude on 2026-11-07",
+  "command": "CHROME_PATH=<Playwright Chromium 1248> npx -y lighthouse@12.0.0 http://localhost:4320/ --only-categories=performance,accessibility,best-practices --chrome-flags=\"--headless=new\"  (page served by: npx vite preview --port 4320, production build)",
+  "settings": "Lighthouse defaults: mobile, simulated slow 4G, CPU 4x slower. Real GPU of this laptop (no --use-angle=swiftshader).",
+  "budget": "90+ for performance, accessibility and best practices",
+  "runs": [
+    {
+      "fetched": "2026-11-07T10:59:57.519Z",
+      "scores": {
+        "performance": 81,
+        "accessibility": 100,
+        "best-practices": 96
+      },
+      "lcp_s": 2.72,
+      "tbt_ms": 531,
+      "cls": 0,
+      "fcp_s": 1.81
+    },
+    {
+      "fetched": "2026-11-07T11:00:13.919Z",
+      "scores": {
+        "performance": 84,
+        "accessibility": 100,
+        "best-practices": 96
+      },
+      "lcp_s": 2.72,
+      "tbt_ms": 447,
+      "cls": 0,
+      "fcp_s": 1.81
+    }
+  ]
+}

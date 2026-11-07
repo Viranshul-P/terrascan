@@ -1,7 +1,9 @@
 // The Story page (step 5.3c), the site's front page: a map that stays on screen while chapter cards scroll over it
-// (ported from prototype E). Each chapter moves the map (camera, layers). The map code (TerraMap + maplibre-gl) is
+// (ported from prototype E). Each chapter moves the map (camera, layers). Under the map: the model cards, the game,
+// the city cards and How it works (part 2). The map code (TerraMap + maplibre-gl) is
 // downloaded after the page shows, so the page itself stays small.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
 import { cityBounds, DATA, loadCity } from "../lib/city";
 import { className } from "../lib/classes";
@@ -11,6 +13,11 @@ import { pinFor, topShifts, type StoryData } from "../lib/story";
 import type { Checks, City, Index } from "../lib/types";
 import type { TerraMap } from "../map/TerraMap";
 import { CHAPTERS, EuropeIndia, Hero, HowSure, Limits, TheCity, WhatChanged, WhatItSees, type Ctx } from "../story/Chapters";
+import { Cities } from "../story/Cities";
+import { Game } from "../story/Game";
+import { HowItWorks } from "../story/HowItWorks";
+import { Models } from "../story/Models";
+import "../story/Sections.css";
 import "../story/Story.css";
 
 const phone = () => innerWidth <= 960;
@@ -51,6 +58,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
   const [active, setActive] = useState(0); // the chapter on screen now
   const [seen, setSeen] = useState<Set<number>>(() => new Set([0]));
   const [ready, setReady] = useState(false); // map loaded
+  const [inStory, setInStory] = useState(true); // the chapters (not the sections below them) are on screen
   const mapEl = useRef<HTMLDivElement>(null);
   const stepsEl = useRef<HTMLDivElement>(null);
   const tm = useRef<TerraMap | null>(null);
@@ -74,7 +82,19 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
   }, [city]);
 
   // ---------- Make the map (once) ----------
+  // The map (its code, the city pictures and the squares, about 2 MB) starts loading only after the headline is on
+  // screen, or as soon as the visitor scrolls or touches the page. Loading it at once made the headline wait behind
+  // it on a slow phone connection (Lighthouse, step 5.3c).
+  const [mapGo, setMapGo] = useState(false);
   useEffect(() => {
+    const go = () => setMapGo(true);
+    const timer = window.setTimeout(go, 1600);
+    const events = ["scroll", "pointerdown", "keydown", "touchstart"];
+    events.forEach((e) => addEventListener(e, go, { once: true, passive: true }));
+    return () => { clearTimeout(timer); events.forEach((e) => removeEventListener(e, go)); };
+  }, []);
+  useEffect(() => {
+    if (!mapGo) return;
     let cancelled = false;
     import("../map/TerraMap").then(({ TerraMap, maplibregl }) => {
       if (cancelled || !mapEl.current) return;
@@ -105,7 +125,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
     });
     return () => { cancelled = true; tm.current?.remove(); tm.current = null; };
     // Made once; chapters change it through the effects below.
-  }, []);
+  }, [mapGo]);
 
   // ---------- Chapters: which card is on screen ----------
   useEffect(() => {
@@ -118,7 +138,10 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
       }
     }, { rootMargin: "-45% 0px -45% 0px" });
     stepsEl.current?.querySelectorAll(".step").forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    // The chapter dots belong to the story only: hidden once the story has scrolled away.
+    const away = new IntersectionObserver(([e]) => setInStory(e.isIntersecting), { rootMargin: "0px 0px -60% 0px" });
+    if (stepsEl.current) away.observe(stepsEl.current);
+    return () => { io.disconnect(); away.disconnect(); };
   }, []);
 
   // Move the map for the chapter on screen.
@@ -198,7 +221,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
       <div className="progress" ref={progress} aria-hidden="true" />
       <main>
         <section className="story" aria-label="Story">
-          <div className="story-map"><div className="map" ref={mapEl} role="img" aria-label="Map that follows the story: globe, then Ahmedabad and its land use" /></div>
+          <div className="story-map" data-ready={ready}><div className="map" ref={mapEl} role="img" aria-label="Map that follows the story: globe, then Ahmedabad and its land use" /></div>
           <div className="steps" ref={stepsEl}>
             <Hero ctx={ctx} />
             <TheCity ctx={ctx} />
@@ -209,8 +232,13 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
             <Limits ctx={ctx} />
           </div>
         </section>
+        <Models story={story} />
+        <Game colour={colour} />
+        <Cities index={index} />
+        <HowItWorks index={index} story={story} />
       </main>
-      <nav className="rail" aria-label="Chapters" data-show={active > 0}>
+      <SiteFooter />
+      <nav className="rail" aria-label="Chapters" data-show={active > 0 && inStory}>
         {CHAPTERS.map((label, k) => (
           <a key={label} href={`#c${k + 1}`} aria-current={active === k + 1 ? "step" : undefined}><span>{label}</span><i /></a>
         ))}

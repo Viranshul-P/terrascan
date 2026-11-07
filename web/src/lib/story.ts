@@ -84,3 +84,30 @@ export function pinFor(patches: Patch[], [y0, y1]: string[], t: Pick<Change, "fr
 // The checked squares for the waffle: real changes first, then unclear, then not real.
 const ORDER = { yes: 0, unclear: 1, no: 2 } as const;
 export const waffleOrder = (squares: Checks["squares"]) => [...squares].sort((a, b) => ORDER[a.verdict] - ORDER[b.verdict]);
+
+// ---------- Model cards (Europe) ----------
+export type ModelResult = StoryData["models"]["items"][number];
+
+// Names and what each model started from (words only; the numbers come from story.json).
+export const MODEL_INFO: Record<string, { name: string; start: string }> = {
+  small_cnn_v1: { name: "Small CNN, first try", start: "From scratch" },
+  small_cnn_v2: { name: "Small CNN", start: "From scratch (ours)" },
+  resnet18: { name: "ResNet-18", start: "Pretrained on photos (ImageNet)" },
+  efficientnet_b0: { name: "EfficientNet-B0", start: "Pretrained on photos (ImageNet)" },
+  resnet18_sat: { name: "ResNet-18, satellite", start: "Pretrained on Sentinel-2 images" },
+};
+export const fromScratch = (m: ModelResult) => m.name.startsWith("small_cnn");
+
+// Accuracy range = mean ± std over seeds. Overlapping ranges = "about the same" (CLAUDE.md: never claim one model
+// beats another when their ranges overlap; the same rule as results/comparison.md).
+export function compareAccuracy(a: ModelResult, b: ModelResult): "same" | "higher" | "lower" {
+  const lo = (m: ModelResult) => m.accuracy.mean - m.accuracy.std, hi = (m: ModelResult) => m.accuracy.mean + m.accuracy.std;
+  if (lo(a) > hi(b)) return "higher";
+  if (hi(a) < lo(b)) return "lower";
+  return "same";
+}
+
+// Our model for the comparison: the from-scratch model with several seeds and the best mean accuracy.
+export function ourModel(items: ModelResult[]) {
+  return items.filter((m) => fromScratch(m) && m.seeds.length > 1).sort((a, b) => b.accuracy.mean - a.accuracy.mean)[0] ?? null;
+}
