@@ -1,0 +1,4 @@
+.count { display: inline-grid; font-variant-numeric: tabular-nums; }
+.count-ghost, .count-live { grid-area: 1 / 1; }
+.count-ghost { visibility: hidden; }
+.count-live { text-align: right; }

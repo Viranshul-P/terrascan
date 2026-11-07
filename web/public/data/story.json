@@ -1,0 +1,150 @@
+{
+ "made_by": "src/web_story.py",
+ "ahmedabad": {
+  "source": "results/change_check.json",
+  "judged_by": "Claude first (blind to the model's classes), then reviewed by the user",
+  "n_pairs": 50,
+  "counts": {
+   "yes": 24,
+   "no": 23,
+   "unclear": 3
+  },
+  "real_rate": 0.5106,
+  "real_rate_95": [
+   0.3724,
+   0.6472
+  ],
+  "reported_changed_km2": 319.488,
+  "estimated_real_changed_km2": 163.1,
+  "estimated_real_changed_km2_95": [
+   119.0,
+   206.8
+  ]
+ },
+ "india": {
+  "source": "results/india_after.json",
+  "seeds": [
+   42,
+   43,
+   44
+  ],
+  "n_finetune_patches": 149,
+  "n_india_test_patches": 81,
+  "summary_mean_std_over_seeds": {
+   "india_test_accuracy_before": {
+    "mean": 0.44855967078189296,
+    "std": 0.007127781101106491
+   },
+   "india_test_accuracy_after": {
+    "mean": 0.6831275720164609,
+    "std": 0.031069277511402232
+   },
+   "eurosat_test_accuracy_before": {
+    "mean": 0.9869135802469136,
+    "std": 0.0013065438573158883
+   },
+   "eurosat_test_accuracy_after": {
+    "mean": 0.982798353909465,
+    "std": 0.0006213855502280353
+   }
+  }
+ },
+ "models": {
+  "note": "EuroSAT test split. CPU time: model only, batch size 1, 1 CPU thread, median of 200 runs, on the training laptop.",
+  "items": [
+   {
+    "name": "small_cnn_v1",
+    "source": "results/small_cnn_v1.json",
+    "seeds": [
+     42
+    ],
+    "image_size": 64,
+    "params": 175626,
+    "accuracy": {
+     "mean": 0.9614814814814815,
+     "std": 0.0
+    },
+    "cpu_ms_per_image": {
+     "mean": 2.0741000007546972,
+     "std": 0.0
+    }
+   },
+   {
+    "name": "small_cnn_v2",
+    "source": "results/small_cnn_v2.json",
+    "seeds": [
+     42,
+     43,
+     44
+    ],
+    "image_size": 64,
+    "params": 1311050,
+    "accuracy": {
+     "mean": 0.9874074074074074,
+     "std": 0.0007407407407407085
+    },
+    "cpu_ms_per_image": {
+     "mean": 11.816416667594845,
+     "std": 0.09754610944276879
+    }
+   },
+   {
+    "name": "resnet18",
+    "source": "results/resnet18.json",
+    "seeds": [
+     42,
+     43,
+     44
+    ],
+    "image_size": 128,
+    "params": 11181642,
+    "accuracy": {
+     "mean": 0.9854320987654321,
+     "std": 0.00024691358024692134
+    },
+    "cpu_ms_per_image": {
+     "mean": 14.532433333442896,
+     "std": 0.049854596065108336
+    }
+   },
+   {
+    "name": "efficientnet_b0",
+    "source": "results/efficientnet_b0.json",
+    "seeds": [
+     42,
+     43,
+     44
+    ],
+    "image_size": 128,
+    "params": 4020358,
+    "accuracy": {
+     "mean": 0.9869135802469136,
+     "std": 0.0013065438573158883
+    },
+    "cpu_ms_per_image": {
+     "mean": 7.572033333417494,
+     "std": 0.08004193102433824
+    }
+   },
+   {
+    "name": "resnet18_sat",
+    "source": "results/resnet18_sat.json",
+    "seeds": [
+     42,
+     43,
+     44
+    ],
+    "image_size": 128,
+    "params": 11181642,
+    "accuracy": {
+     "mean": 0.9851851851851852,
+     "std": 0.0010762713440840997
+    },
+    "cpu_ms_per_image": {
+     "mean": 14.349366666162192,
+     "std": 0.07137181503172958
+    }
+   }
+  ]
+ }
+}

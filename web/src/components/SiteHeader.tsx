@@ -1,5 +1,4 @@
 // The bar at the top of every page: logo, page links, GitHub, theme switch.
-// (The Story, Method and Limits pages come in step 5.3c; their links are added then.)
 import { ThemeToggle } from "./ThemeToggle";
 import "./SiteHeader.css";
 
@@ -16,11 +15,12 @@ export const Logo = () => (
   </svg>
 );
 
-export function SiteHeader({ page }: { page: "explorer" | "design" }) {
+export function SiteHeader({ page }: { page: "story" | "explorer" | "design" }) {
   return (
     <header className="site-nav">
-      <a className="brand" href="/explorer" aria-label="TerraScan home"><Logo /><span>TerraScan</span></a>
+      <a className="brand" href="/" aria-label="TerraScan home"><Logo /><span>TerraScan</span></a>
       <nav className="site-links" aria-label="Main">
+        <a href="/" aria-current={page === "story" ? "page" : undefined}>Story</a>
         <a href="/explorer" aria-current={page === "explorer" ? "page" : undefined}>Explorer</a>
         <a href="/design" aria-current={page === "design" ? "page" : undefined}>Design system</a>
       </nav>
