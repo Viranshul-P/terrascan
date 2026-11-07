@@ -1,4 +1,5 @@
-// The Explorer's opening: the globe turns gently, then the camera flies down to the city and tilts into 3D.
+// The Explorer's opening: the globe turns gently, then the camera flies down to the city and ends looking straight
+// down at it (the 3D button tilts it).
 // Any click, scroll, touch or key skips straight to the end. With reduced motion it starts at the end.
 import type { Map as MlMap, CameraOptions, PaddingOptions } from "maplibre-gl";
 import { reducedMotion } from "../lib/motion";
@@ -35,7 +36,7 @@ export function playOpening(map: MlMap, end: EndCamera, onDone: () => void) {
     if (t - t0 < SPIN_MS) raf = requestAnimationFrame(spin);
   };
   raf = requestAnimationFrame(spin);
-  // 2. Then a long, smooth flight down to the city, ending tilted.
+  // 2. Then a long, smooth flight down to the city.
   // (The turning stops first: one more turning step after the flight starts would cancel the flight.)
   timer = window.setTimeout(() => {
     if (done) return;

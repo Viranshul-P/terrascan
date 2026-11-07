@@ -10,6 +10,7 @@ import { LayersPanel, type Layers, type Pair } from "../explorer/LayersPanel";
 import { GLOBE, playOpening, type EndCamera } from "../explorer/opening";
 import { Toolbar } from "../explorer/Toolbar";
 import { useAreaMap } from "../explorer/useAreaMap";
+import { ViewControls } from "../explorer/ViewControls";
 import { cityBounds, DATA, loadCity } from "../lib/city";
 import { className } from "../lib/classes";
 import { getJson, pct, useJson } from "../lib/data";
@@ -92,13 +93,13 @@ function ExplorerView({ index }: { index: Index }) {
   const pad = useCallback(() => phone()
     ? { top: 40, bottom: Math.min(snapPx(sheetNow, stage.current?.clientHeight ?? 700), (stage.current?.clientHeight ?? 700) / 2) + 16, left: 16, right: 16 }
     : { top: 40, bottom: 70, left: panel ? 340 : 40, right: 360 }, [panel, sheetNow]);
-  const fitCam = useCallback((tilt: boolean): EndCamera => {
+  // The whole city, looking straight down, north up, in the middle of the space between the panels. (The 3D
+  // button in the zoom bar tilts it.)
+  const fitCam = useCallback((): EndCamera => {
     const m = tm.current!.map;
-    const pitch = tilt ? 50 : 0, bearing = tilt ? -14 : 0;
-    const cam = m.cameraForBounds(cityBounds(live.current.city!.summary), { padding: pad(), pitch, bearing });
-    // cameraForBounds already shifts the centre for the panels, so the camera itself gets no padding. A tilted
-    // fit comes out cautious (the far edge looks small), so the tilted end zooms in a little more.
-    return { center: cam?.center, zoom: (cam?.zoom ?? 10) + (tilt ? 0.35 : 0), pitch, bearing, padding: { top: 0, bottom: 0, left: 0, right: 0 } };
+    const cam = m.cameraForBounds(cityBounds(live.current.city!.summary), { padding: pad(), pitch: 0, bearing: 0 });
+    // cameraForBounds already shifts the centre for the panels, so the camera itself gets no padding.
+    return { center: cam?.center, zoom: cam?.zoom ?? 10, pitch: 0, bearing: 0, padding: { top: 0, bottom: 0, left: 0, right: 0 } };
   }, [pad]);
 
   // ---------- Create the map (once the first city is loaded) ----------
@@ -118,8 +119,8 @@ function ExplorerView({ index }: { index: Index }) {
         setReady(true);
         if (FRESH && !reducedMotion()) {
           setIntro(true);
-          playOpening(m, fitCam(true), () => setIntro(false));
-        } else m.jumpTo(fitCam(false));
+          playOpening(m, fitCam(), () => setIntro(false));
+        } else m.jumpTo(fitCam());
       });
       // Hover label: text and outline change only when the pointer moves to another square; the label is moved with
       // a transform once per frame.
@@ -207,6 +208,13 @@ function ExplorerView({ index }: { index: Index }) {
     if (m && (m.getPitch() || m.getBearing())) m.easeTo({ pitch: 0, bearing: 0, duration: reducedMotion() ? 0 : 500, essential: true });
     area.open();
   }, [area.open]);
+  // While the tool is open the map cannot be turned or tilted (a drawn box must stay a true lon/lat box).
+  useEffect(() => {
+    const m = tm.current?.map;
+    if (!ready || !m) return;
+    if (areaOpen) { m.dragRotate.disable(); m.touchZoomRotate.disableRotation(); m.touchPitch.disable(); m.keyboard.disableRotation(); }
+    else { m.dragRotate.enable(); m.touchZoomRotate.enableRotation(); m.touchPitch.enable(); m.keyboard.enableRotation(); }
+  }, [ready, areaOpen]);
   const toggleArea = () => (area.mode === "off" ? openArea() : area.close());
   const middleBox = useCallback(() => {
     // A box in the middle of the part of the map that can be seen (on a phone the sheet covers the bottom), 60% of
@@ -287,12 +295,12 @@ function ExplorerView({ index }: { index: Index }) {
       tm.current?.setCity(next.base, next.summary);
       tmB.current?.setCity(next.base, next.summary);
       live.current.city = next;
-      const cam = fitCam(false);
+      const cam = fitCam();
       reducedMotion() ? tm.current?.map.jumpTo(cam) : tm.current?.map.flyTo({ ...cam, duration: 2200, curve: 1.4, essential: true });
     } catch (e) { setError((e as Error).message); }
   }, [city, years, fitCam]);
 
-  const showToast = (msg: string) => { setToast(msg); window.setTimeout(() => setToast(null), 2200); };
+  const showToast = (msg: string, ms = 2200) => { setToast(msg); window.setTimeout(() => setToast(null), ms); };
   const copyLink = async () => {
     try { await navigator.clipboard.writeText(location.href); showToast("Link copied: it opens this exact view"); }
     catch { showToast("Copy failed: copy the address bar instead"); }
@@ -375,7 +383,9 @@ function ExplorerView({ index }: { index: Index }) {
           <div className="zoombar">
             <button type="button" aria-label="Zoom in" onClick={() => tm.current?.map.zoomIn()}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10" /></svg></button>
             <button type="button" aria-label="Zoom out" onClick={() => tm.current?.map.zoomOut()}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M3 8h10" /></svg></button>
-            <button type="button" aria-label="Fit the city, flat" onClick={() => tm.current?.map.flyTo({ ...fitCam(false), duration: reducedMotion() ? 0 : 1200, essential: true })}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10" /></svg></button>
+            <button type="button" aria-label="Fit the city, flat and north up" title="Fit the city, flat and north up" onClick={() => tm.current?.map.flyTo({ ...fitCam(), duration: reducedMotion() ? 0 : 1200, essential: true })}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10" /></svg></button>
+            <ViewControls map={ready ? tm.current?.map ?? null : null} disabled={areaOpen}
+              onTilt={(on) => on && showToast(phone() ? "Tip: drag with two fingers to turn and tilt" : "Tip: right-drag or Ctrl + drag to turn and tilt", 3500)} />
           </div>
         </div>
       </div>

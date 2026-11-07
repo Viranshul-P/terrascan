@@ -175,6 +175,12 @@
 .zoombar button + button { border-top: 1px solid var(--line); }
 .zoombar button:hover { background: var(--line); color: var(--ink); }
 .zoombar svg { width: 16px; height: 16px; }
+.zoombar button:disabled { opacity: 0.4; cursor: default; background: transparent; }
+/* Compass: the needle turns with the map and leans back when it is tilted */
+.zoombar .compass svg { width: 20px; height: 20px; transform-origin: 50% 50%; }
+/* 3D button: lit when the map is tilted */
+.zoombar .tilt { font: 700 11px var(--mono); letter-spacing: 0.02em; }
+.zoombar .tilt[aria-pressed="true"] { background: var(--accent-wash); color: var(--accent-strong); }
 .stage[data-inspect="true"] .zoombar { right: calc(320px + var(--s-4) * 2); }
 
 /* Hover label */

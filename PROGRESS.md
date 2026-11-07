@@ -10,15 +10,22 @@ waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-5.3b is built (both parts, two commits). Before it can be ticked, please do these on your laptop:
-1. Look at it on your phone and in your browser (`cd web && npm run dev`): phone bottom sheet, Compare chip, credits,
-   and "Map your own area" (the button is in the toolbar on desktop and in the Layers sheet header on a phone).
-2. Try "Map your own area" for real. Claude could NOT: the model file (models/efficientnet_b0_india/seed42/model.onnx)
-   and the internet to Sentinel-2 are not in Claude's cloud container. In one terminal from the repo root:
-   `uvicorn api.main:default_app --factory --port 8000`, then open the site (the dev server talks to
-   http://localhost:8000 by itself). Draw a ~3 km box over Ahmedabad and tell Claude what happens (time, any error).
-3. Everything is already on GitHub (branch claude/ig-5.3b-remaining-work-rcpfv1). On your laptop: `git fetch origin`,
-   then `git checkout claude/ig-5.3b-remaining-work-rcpfv1` (or `git pull` if you are already on it).
+5.3b is built (two commits from the cloud session, plus one round of map fixes on the laptop, 2026-11-07).
+Done on the laptop by Claude:
+- Checked "Map your own area" for real (the cloud session could not): API on port 8000, a ~3 km box over central
+  Ahmedabad, 2018 and 2026 both answered (about 20 s each), and a ~30 km box was refused. Only the API was called
+  directly (curl); the button on the page itself is part of your check below.
+- Your feedback ("globe sits low, the city stays slanted, turning the map is not clear") fixed:
+  the opening now lands flat (straight down, centred between the panels); a compass (turns with the map, click =
+  north up) and a 3D / 2D button in the zoom bar; a tip on how to turn by hand when 3D is switched on; mouse-wheel
+  zoom a little gentler; the map can't be turned or tilted while an area is being drawn.
+  New screenshots in reports/design/5.3b/ (opening-end-*, 3d-*).
+Please, on your laptop: `cd web && npm run dev`, and in another terminal from the repo root
+`.venv\Scripts\python -m uvicorn api.main:default_app --factory --port 8000`. Then:
+1. Look at the Explorer in the browser and on your phone: opening, compass, 3D button, bottom sheet, Compare.
+2. Press "Map your own area" and draw a small box over Ahmedabad (works on the laptop; on the phone it can't reach
+   the API until it is online in step 6.2).
+3. Branch: claude/ig-5.3b-remaining-work-rcpfv1 (the new commit is local; push it when you are happy).
 When you OK it, Claude ticks 5.3b and the next step is 5.3c.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.

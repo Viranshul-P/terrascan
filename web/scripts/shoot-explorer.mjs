@@ -22,11 +22,12 @@ for (const vp of [{ name: "desktop", width: 1440, height: 900, scale: 1 }, { nam
     page.on("console", (m) => m.type() === "error" && errors.push(`${tag}: ${m.text()}`));
     const shot = (n) => page.screenshot({ path: join(OUT, `${n}-${tag}.jpg`), ...JPG });
 
-    // A fresh visit: the globe opening (mid-flight), then where it lands (tilted).
+    // A fresh visit: the globe opening (mid-flight), then where it lands (flat, looking straight down).
     await page.goto(`${url}/explorer`);
     await page.waitForTimeout(3200);
     await shot("opening-mid");
-    await page.waitForTimeout(5500);
+    await page.waitForFunction(() => !document.querySelector(".skip"), null, { timeout: 30000 });
+    await page.waitForTimeout(2500);
     await shot("opening-end");
 
     // A shared link: opens straight on the city, flat.
@@ -37,6 +38,21 @@ for (const vp of [{ name: "desktop", width: 1440, height: 900, scale: 1 }, { nam
     await page.mouse.click(box.x + box.width * 0.55, box.y + box.height * 0.45);
     await page.waitForTimeout(1200);
     await shot("selected");
+
+    // The 3D button, then (desktop) turning the map with a right-drag: the compass follows.
+    await page.keyboard.press("Escape");
+    await page.getByRole("button", { name: "3D" }).click();
+    await page.waitForTimeout(900);
+    if (vp.name === "desktop") {
+      await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.35);
+      await page.mouse.down({ button: "right" });
+      await page.mouse.move(box.x + box.width * 0.52, box.y + box.height * 0.35, { steps: 10 });
+      await page.mouse.up({ button: "right" });
+    }
+    await page.waitForTimeout(1500);
+    await shot("3d");
+    await page.getByRole("button", { name: "Fit the city, flat and north up" }).click();
+    await page.waitForTimeout(1500);
     if (vp.name === "desktop") {
       await page.mouse.move(box.x + box.width * 0.45, box.y + box.height * 0.5);
       await page.waitForTimeout(400);

@@ -129,6 +129,9 @@ export class TerraMap {
       attributionControl: { compact: true, customAttribution: "City images: modified Copernicus Sentinel-2 data" },
       fadeDuration: 150,
     });
+    // A mouse wheel zooms a little gentler than MapLibre's default (1/450), so the globe and the city don't jump.
+    // It always zooms towards the pointer.
+    this.map.scrollZoom.setWheelZoomRate(1 / 600);
   }
 
   private landuseOpacity(y: string): number | ExpressionSpecification {
