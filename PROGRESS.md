@@ -17,7 +17,7 @@ Done on the laptop by Claude:
   directly (curl); the button on the page itself is part of your check below.
 - Your feedback ("globe sits low, the city stays slanted, turning the map is not clear") fixed:
   the opening now lands flat (straight down, centred between the panels); a compass (turns with the map, click =
-  north up) and a 3D / 2D button in the zoom bar; a tip on how to turn by hand when 3D is switched on; mouse-wheel
+  north up, drag it sideways = the map turns) and a 3D / 2D button in the zoom bar; a tip on how to turn by hand when 3D is switched on; mouse-wheel
   zoom a little gentler; the map can't be turned or tilted while an area is being drawn.
   New screenshots in reports/design/5.3b/ (opening-end-*, 3d-*).
 Please, on your laptop: `cd web && npm run dev`, and in another terminal from the repo root

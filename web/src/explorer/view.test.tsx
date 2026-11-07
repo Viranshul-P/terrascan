@@ -1,9 +1,9 @@
 // Tests for the compass and the 2D / 3D button (ViewControls). The real map needs WebGL, so a small fake map stands
 // in: it remembers its bearing and pitch, its listeners, and the last easeTo it was asked for.
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { needleTransform, TILT_3D, ViewControls, type ViewMap } from "./ViewControls";
+import { DEG_PER_PX, needleTransform, TILT_3D, ViewControls, type ViewMap } from "./ViewControls";
 
 function fakeMap(bearing = 0, pitch = 0) {
   const fns: Record<string, (() => void)[]> = {};
@@ -14,6 +14,7 @@ function fakeMap(bearing = 0, pitch = 0) {
     on: (t: string, fn: () => void) => { (fns[t] ??= []).push(fn); },
     off: (t: string, fn: () => void) => { fns[t] = (fns[t] ?? []).filter((f) => f !== fn); },
     easeTo: (o: { bearing?: number; pitch?: number }) => { m.last = o; },
+    jumpTo: (o: { bearing: number }) => { m.bearing = o.bearing; },
     // Moves the fake map the way a drag would, firing the same events as MapLibre.
     move: (b: number, p: number) => { m.bearing = b; m.pitch = p; act(() => { for (const t of ["rotate", "pitch", "pitchend"]) for (const f of fns[t] ?? []) f(); }); },
     listeners: () => Object.values(fns).flat().length,
@@ -42,6 +43,21 @@ describe("ViewControls", () => {
     m.move(40, 20);
     expect(needle.style.transform).toBe("rotateX(12deg) rotateZ(-40deg)");
     await userEvent.click(screen.getByRole("button", { name: "Point north" }));
+    expect(m.last).toMatchObject({ bearing: 0 });
+  });
+
+  it("dragging the compass sideways turns the map, and a drag is not a click", () => {
+    const m = fakeMap(10, 0);
+    render(<ViewControls map={m as unknown as ViewMap} disabled={false} />);
+    const c = screen.getByRole("button", { name: "Point north" });
+    fireEvent.pointerDown(c, { clientX: 100, pointerId: 1 });
+    fireEvent.pointerMove(c, { clientX: 120, pointerId: 1 });
+    expect(m.bearing).toBe(10 - 20 * DEG_PER_PX);
+    fireEvent.click(c); // the click that ends a drag
+    expect(m.last).toBeNull(); // ... does not snap back to north
+    fireEvent.pointerDown(c, { clientX: 100, pointerId: 1 });
+    fireEvent.pointerMove(c, { clientX: 101, pointerId: 1 }); // a wobble, still a click
+    fireEvent.click(c);
     expect(m.last).toMatchObject({ bearing: 0 });
   });
 

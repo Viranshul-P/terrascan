@@ -177,7 +177,8 @@
 .zoombar svg { width: 16px; height: 16px; }
 .zoombar button:disabled { opacity: 0.4; cursor: default; background: transparent; }
 /* Compass: the needle turns with the map and leans back when it is tilted */
-.zoombar .compass svg { width: 20px; height: 20px; transform-origin: 50% 50%; }
+.zoombar .compass { cursor: ew-resize; touch-action: none; }
+.zoombar .compass svg { width: 26px; height: 26px; transform-origin: 50% 50%; }
 /* 3D button: lit when the map is tilted */
 .zoombar .tilt { font: 700 11px var(--mono); letter-spacing: 0.02em; }
 .zoombar .tilt[aria-pressed="true"] { background: var(--accent-wash); color: var(--accent-strong); }

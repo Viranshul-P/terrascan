@@ -2,6 +2,6 @@
   "made_by": "web/scripts/shoot-explorer.mjs",
   "date": "2026-11-07",
   "note": "Explorer, production build on this laptop (local files, so no network delay), phone-sized window, CPU slowed 4x. Budget: LCP < 2500 ms, CLS < 0.1.",
-  "lcp_ms": 608,
+  "lcp_ms": 572,
   "cls": 0.008
 }
