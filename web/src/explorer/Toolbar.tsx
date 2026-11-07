@@ -18,6 +18,8 @@ type Props = {
   compare: boolean;
   onCompare: (on: boolean) => void;
   onCopy: () => void;
+  area: boolean; // is "Map your own area" open
+  onArea: () => void;
 };
 
 const Chevron = () => <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 4.5 3 3 3-3" /></svg>;
@@ -66,6 +68,10 @@ export function Toolbar(p: Props) {
         </button>
       </div>
       <div className="tb-group tb-right">
+        <button type="button" className="toggle-chip tb-hide-phone" aria-pressed={p.area} onClick={p.onArea} title="Map your own area" aria-label="Map your own area">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 3h10v10H3z" strokeDasharray="2.4 2" /><path d="M8 5.5v5M5.5 8h5" /></svg>
+          <span>Map your area</span>
+        </button>
         <div className="pop-anchor tb-hide-phone" ref={dl.ref}>
           <button type="button" className="toggle-chip" aria-expanded={dl.open} onClick={() => dl.setOpen(!dl.open)}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10" /></svg>

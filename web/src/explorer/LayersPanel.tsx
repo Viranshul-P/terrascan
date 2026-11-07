@@ -30,6 +30,7 @@ type Props = {
   summaryFile: string;
   hidden: boolean;
   onHide: () => void;
+  onArea: () => void; // open "Map your own area"
   snap: Snap; // phone bottom sheet height
   onSnap: (s: Snap) => void;
 };
@@ -42,11 +43,17 @@ export function LayersPanel(p: Props) {
       <SheetGrabber snap={p.snap} onSnap={p.onSnap} label="Layers and legend" />
       <div className="p-head">
         <h2>Layers</h2>
+        <button type="button" className="head-area" onClick={p.onArea}>Map your area</button>
         <button type="button" className="icon-btn" onClick={p.onHide} aria-label="Hide panel">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="m10 4-4 4 4 4" /></svg>
         </button>
       </div>
       <div className="p-body">
+        <div className="group">
+          <button type="button" className="area-entry" onClick={p.onArea}>
+            <b>Map your own area</b><span>Draw a box and the model maps it live. Tested in Gujarat only.</span>
+          </button>
+        </div>
         <div className="group">
           <Switch label="Satellite picture" checked={L.sat} onChange={(v) => set({ sat: v })} />
           <Switch label="Land use" checked={L.land} onChange={(v) => set({ land: v })} />

@@ -191,15 +191,57 @@
 .maplibregl-ctrl-attrib { background: var(--surface-glass) !important; font-family: var(--font); font-size: 11px; }
 .maplibregl-ctrl-attrib, .maplibregl-ctrl-attrib * { color: var(--ink-3) !important; }
 
+/* Map your own area: entry button, drawing layer, panel */
+.area-entry { display: grid; gap: 2px; width: 100%; padding: 10px 12px; border: 1px dashed var(--line-strong); border-radius: var(--r-md); background: var(--surface-2); text-align: left; cursor: pointer; transition: border-color var(--d-1), background-color var(--d-1); }
+.area-entry:hover { border-color: var(--ink-3); background: var(--accent-wash); }
+.area-entry b { font-size: var(--t-sm); }
+.area-entry span { font-size: 12px; color: var(--ink-3); }
+.head-area { display: none; align-items: center; height: 30px; padding: 0 12px; margin-left: auto; margin-right: var(--s-2); border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.head-area:hover { border-color: var(--ink-3); }
+.draw { position: absolute; inset: 0; z-index: 7; cursor: crosshair; touch-action: none; background: rgb(11 13 15 / 0.08); }
+.draw-hint { position: absolute; top: var(--s-4); left: 50%; transform: translateX(-50%); margin: 0; padding: 8px 14px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: var(--t-sm); font-weight: 600; box-shadow: var(--e2); pointer-events: none; white-space: nowrap; }
+.draw-rect { position: absolute; border: 2px dashed var(--accent-fill); background: rgb(255 178 36 / 0.16); pointer-events: none; }
+.draw-rect[data-over="true"] { border-color: #fff; background: rgb(11 13 15 / 0.35); }
+.draw-rect span { position: absolute; left: 0; bottom: 100%; margin-bottom: 4px; padding: 3px 8px; border-radius: var(--r-sm); background: var(--ink); color: var(--bg); font: 600 11px var(--mono); white-space: nowrap; }
+.area-step { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-3); padding-bottom: var(--s-3); }
+.area-step .insp-actions { flex-wrap: wrap; margin-top: var(--s-2); }
+.area-step .meta-list dd { overflow-wrap: anywhere; }
+.area-step p { margin: 0; font-size: var(--t-sm); color: var(--ink-2); line-height: 1.45; }
+.area-step p b { color: var(--ink); }
+.area-server { margin: 0 0 var(--s-3); padding: 8px 10px; border-radius: var(--r-md); background: var(--surface-2); font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+.area-server[data-state="waking"], .area-server[data-state="off"], .area-server[data-state="none"] { background: var(--accent-wash); color: var(--ink); }
+.area-problem { padding: 8px 10px; border-radius: var(--r-md); background: var(--accent-wash); color: var(--ink) !important; box-shadow: inset 3px 0 0 var(--accent-fill); }
+.area-field { display: grid; gap: var(--s-2); }
+.area-small { font-size: 12px !important; color: var(--ink-3) !important; }
+.area-limits { margin: var(--s-4) 0 0; padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-3); line-height: 1.45; }
+.area-picked { font-size: 12.5px !important; }
+.area-bars { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.area-bars li { position: relative; display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: center; min-height: 30px; padding: 3px 8px; border-radius: var(--r-sm); font-size: var(--t-sm); overflow: hidden; }
+.area-bars li::before { content: ""; position: absolute; inset: 0 auto 0 0; width: calc(var(--w) * 100%); background: var(--c); opacity: 0.16; border-radius: inherit; }
+.area-bars i { position: relative; width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+.area-bars span { position: relative; }
+.area-bars small { font: 500 10.5px var(--mono); color: var(--ink-3); }
+.progress { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.progress i { display: block; width: 35%; height: 100%; border-radius: inherit; background: var(--accent-fill); animation: slide 1.4s var(--ease-out) infinite; }
+@keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+@media (prefers-reduced-motion: reduce) { .progress i { animation: none; width: 100%; opacity: 0.6; } }
+
 /* Grabber: the handle of a phone bottom sheet (hidden on desktop) */
 .grabber { display: none; }
 
 /* Phone: the two panels become bottom sheets with three heights (peek, half, full; see src/lib/sheet.ts) */
 @media (max-width: 960px) {
   :root { --sheet-peek: 76px; }
-  .toolbar { gap: var(--s-2); padding: 0 var(--s-3); overflow-x: auto; }
+  .toolbar { gap: var(--s-2); padding: 0 var(--s-2); overflow-x: auto; }
   .tb-hide-phone, .tb-sep, .combo .sub, .combo .sw { display: none; }
   .combo { padding: 0 6px 0 8px; gap: 6px; }
+  .toolbar { gap: 6px; }
+  .tb-group { flex: none; }
+  .toolbar .toggle-chip { padding: 0 9px; flex: none; }
+  .seg button { padding: 0 9px; }
+  .combo { font-size: var(--t-sm); }
+  .toolbar .toggle-chip { gap: 6px; font-size: 13px; }
+  .head-area { display: inline-flex; } /* "Map your area" sits in the Layers sheet header, visible even when the sheet is down */
   .panel.left, .panel.right {
     background: var(--surface); /* solid: the map must not shine through the text */
     top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: none; height: var(--sheet-peek);

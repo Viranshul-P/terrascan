@@ -6,14 +6,20 @@ Claude updates this at the end of every step. Keep entries short.
 5.3b
 
 ## Status
-in progress
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Nothing right now. 5.3b is split in two (user OK'd 2026-11-07; map JS loads after the page; tilt without a terrain
-service). Part 1 (map, opening, swipe compare, hover/tap, side panel, inspector) is committed. Part 2 is done in two
-commits (user OK'd 2026-11-07): (A) phone bottom sheet - committed, please look at it on your phone; (B) "map your own
-area" (draw box, progress states, waking-up message) - next in this session.
+5.3b is built (both parts, two commits). Before it can be ticked, please do these on your laptop:
+1. Look at it on your phone and in your browser (`cd web && npm run dev`): phone bottom sheet, Compare chip, credits,
+   and "Map your own area" (the button is in the toolbar on desktop and in the Layers sheet header on a phone).
+2. Try "Map your own area" for real. Claude could NOT: the model file (models/efficientnet_b0_india/seed42/model.onnx)
+   and the internet to Sentinel-2 are not in Claude's cloud container. In one terminal from the repo root:
+   `uvicorn api.main:default_app --factory --port 8000`, then open the site (the dev server talks to
+   http://localhost:8000 by itself). Draw a ~3 km box over Ahmedabad and tell Claude what happens (time, any error).
+3. Push to GitHub: the push from Claude's container failed with 403 (Claude's GitHub app has no access to the repo).
+   Either reconnect GitHub for Claude at https://claude.ai/connect-github, or pull/push the two local commits yourself.
+When you OK it, Claude ticks 5.3b and the next step is 5.3c.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -87,6 +93,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.2b — api/main.py (FastAPI: GET /health, POST /predict) + src/live.py + api/Dockerfile (no PyTorch); torch-free helpers moved to src/composite.py, src/classes.py; container run locally, live 10x10 km box mapped (results/api_check.json); 15 API tests with saved tile + fake model
 - 5.3a — commits d93cf29 (prototype E) + step5.3a part 2 — directions A–E (user chose E, built by Claude); React design system in web/src (tokens, Button, Card, Stat, Switch, Segmented, Slider, Legend, SourceMarker), 10 web tests, CI web job; first-load JS 72 KB gz, LCP 0.30 s / CLS 0 (reports/design/5.3a/ds/load_metrics.json, local)
 - 5.3b part 2A — phone bottom sheet (Claude): the Layers panel and the square inspector are sheets with 3 heights (peek/half/full; drag, tap or arrow keys; src/lib/sheet.ts, SheetGrabber.tsx); map is fitted above the sheet; credits sit above it; Compare chip shows its label; 5 new tests (23 web tests pass); first-load JS 80.0 KB gz (npm run size)
+- 5.3b part 2B — "Map your own area" (Claude): draw a box (drag, or "use the middle of the screen"), box size checked against the server's limits (read from GET /health), year choice, Map this box -> progress state with seconds counter and the server's time limit, honest "server is waking up" note after 3 s without an answer, result on the map (picture, class squares, hover/tap a square) with km² per class, average confidence, GeoTIFF download, Cancel, Draw again. New: lib/api.ts, explorer/useAreaMap.ts, AreaPanel.tsx, DrawLayer.tsx, live layers in map/TerraMap.ts. 24 new web tests (47 pass; fake fetch, no network); first-load JS 83.8 KB gz (npm run size)
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
@@ -461,6 +468,15 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   half 337 px, full 615 px as designed. NASA/MapLibre demo tiles are blocked in this cloud container, so these checks had
   no globe imagery behind the city; the real phone look still needs your eyes. Known, not fixed: desktop zoom buttons
   overlap the map credits at the bottom right; no favicon (one 404 on every page load). Both go to 5.3d.
+- 5.3b part 2B: the API address is the build setting VITE_API_URL (default http://localhost:8000 only in `npm run dev`).
+  A production build without it shows "Live mapping is not switched on in this version of the site yet" and disables the
+  button (checked in a browser). Step 6.2 must set it to the deployed address when building the site.
+- 5.3b part 2B: checked in headless Chromium (desktop 1440x900, phone 390x844) against a MOCK API whose squares are made-up
+  test data (layout check only; those screenshots are not committed and show no real result). The phone toolbar fits at
+  360, 390 and 412 px wide. The real model + real server were not run (see Waiting on you). Lighthouse was not run.
+  Cancelling stops waiting only: the server may finish the job in the background (known from 5.2b).
+- 5.3b part 2B: a drawn box is a true lon/lat box only on a flat, north-up map, so opening the tool flattens the map;
+  opening Compare closes the tool and the tool turns Compare off (the second map would hide the live layers).
 ## Results so far (copied from results/ files only, with the file name)
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)

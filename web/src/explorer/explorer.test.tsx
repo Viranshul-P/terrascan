@@ -43,7 +43,7 @@ const panelProps = {
   active: null, onToggleClass: vi.fn(), onShowAll: vi.fn(), onPreview: vi.fn(),
   changes: [{ from: "AnnualCrop", to: "Industrial", patches: 98, km2: 40.1 }],
   changedPatches: 780, pair: null, onPair: vi.fn(), checksCount: 50,
-  summaryFile: "web/public/data/ahmedabad/summary.json", hidden: false, onHide: vi.fn(), snap: "peek" as const, onSnap: vi.fn(),
+  summaryFile: "web/public/data/ahmedabad/summary.json", hidden: false, onHide: vi.fn(), snap: "peek" as const, onSnap: vi.fn(), onArea: vi.fn(),
 };
 
 describe("LayersPanel", () => {

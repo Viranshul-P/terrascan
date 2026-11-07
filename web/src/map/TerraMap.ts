@@ -9,6 +9,8 @@
 //   changes    only the squares the model says changed
 //   checks     the 50 squares checked by eye (checks.json, Ahmedabad only)
 //   hit / hover / selected   invisible layer for the mouse, and outlines for the hovered and the chosen square
+//   livergb / livefill / livehit / livehover / livesel / livebox   "Map your own area": the box the person drew and,
+//                  once the server has answered, its picture, the model's classes, and the hover/chosen square
 import * as maplibregl from "maplibre-gl";
 import type { ExpressionSpecification, FilterSpecification, GeoJSONSource, ImageSource, LayerSpecification, SourceSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -24,6 +26,8 @@ export { maplibregl };
 const GIBS = "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg";
 const WORLD = "https://demotiles.maplibre.org/tiles/tiles.json";
 const FADE = { duration: 500, delay: 0 };
+type GeoJsonData = Parameters<GeoJSONSource["setData"]>[0];
+const EMPTY = { type: "FeatureCollection", features: [] } as const;
 const CHANGED: ExpressionSpecification = ["==", ["get", "changed"], true];
 // Layers that switch on and off fade in and out, and are switched off completely once hidden (a hidden layer at
 // opacity 0 still cost time on every frame; measured in step 5.3a).
@@ -66,9 +70,11 @@ export class TerraMap {
   private years: string[];
   private hideTimers: Record<string, number> = {};
   private landuse = { year: "", opacity: 0.6, on: true, classes: null as string[] | null, confidence: false };
+  private classes: ClassInfo[];
 
   constructor(container: HTMLElement, o: MapOptions) {
     this.years = o.years;
+    this.classes = o.classes;
     this.landuse.year = o.year;
     this.landuse.opacity = o.landuseOpacity ?? 0.6;
     const sources: Record<string, SourceSpecification> = {
@@ -76,6 +82,8 @@ export class TerraMap {
       world: { type: "vector", url: WORLD },
       patches: { type: "geojson", data: o.base + o.summary.files.patches_geojson, promoteId: "id" },
       checks: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
+      livepatches: { type: "geojson", data: EMPTY, promoteId: "id" },
+      livebox: { type: "geojson", data: EMPTY },
     };
     const layers: LayerSpecification[] = [
       { id: "space", type: "background", paint: { "background-color": isDark() ? "#05070a" : token("--space-bg") } },
@@ -103,6 +111,12 @@ export class TerraMap {
       { id: "hit", type: "fill", source: "patches", paint: { "fill-color": "#000000", "fill-opacity": 0 } },
       { id: "hover", type: "line", source: "patches", filter: ["==", ["id"], -1], paint: { "line-color": "#ffffff", "line-width": 1.5 } },
       { id: "selected", type: "line", source: "patches", filter: ["==", ["id"], -1], paint: { "line-color": "#ffb224", "line-width": 2.5 } },
+      // "Map your own area" (the picture, livergb, is added when a result arrives, just below livefill)
+      { id: "livefill", type: "fill", source: "livepatches", layout: { visibility: "none" }, paint: { "fill-color": "#000000", "fill-opacity": 0.6, "fill-antialias": false } },
+      { id: "livehit", type: "fill", source: "livepatches", layout: { visibility: "none" }, paint: { "fill-color": "#000000", "fill-opacity": 0 } },
+      { id: "livehover", type: "line", source: "livepatches", filter: ["==", ["id"], -1], paint: { "line-color": "#ffffff", "line-width": 1.5 } },
+      { id: "livesel", type: "line", source: "livepatches", filter: ["==", ["id"], -1], paint: { "line-color": "#ffb224", "line-width": 2.5 } },
+      { id: "livebox", type: "line", source: "livebox", paint: { "line-color": "#ffb224", "line-width": 2.5, "line-dasharray": [2, 1.5] } },
     );
     this.map = new maplibregl.Map({
       container,
@@ -181,6 +195,43 @@ export class TerraMap {
     const corners = summary.overlay_corners as [[number, number], [number, number], [number, number], [number, number]];
     for (const y of this.years) (this.map.getSource(`rgb${y}`) as ImageSource).updateImage({ url: base + summary.files.rgb[y], coordinates: corners });
     (this.map.getSource("patches") as GeoJSONSource).setData(base + summary.files.patches_geojson);
+  }
+
+  // ---------- Map your own area ----------
+  // The box the person drew (null = remove it).
+  setBox(b: [number, number, number, number] | null) {
+    const [w, so, e, n] = b ?? [0, 0, 0, 0];
+    (this.map.getSource("livebox") as GeoJSONSource).setData(b
+      ? { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[[w, so], [e, so], [e, n], [w, n], [w, so]]] } }
+      : EMPTY);
+  }
+
+  // Show the server's answer: its picture, the model's class for every square, and a mouse target for each square.
+  // While it is shown the showcase city's own mouse target is switched off, so hovering reads the live squares.
+  showLive(live: { corners: [number, number][]; rgbUrl: string; patches: { type: "FeatureCollection"; features: unknown[] }; year: string }) {
+    this.clearLive();
+    const corners = live.corners as [[number, number], [number, number], [number, number], [number, number]];
+    this.map.addSource("livergb", { type: "image", url: live.rgbUrl, coordinates: corners });
+    this.map.addLayer({ id: "livergb", type: "raster", source: "livergb", paint: { "raster-fade-duration": 0 } }, "livefill");
+    (this.map.getSource("livepatches") as GeoJSONSource).setData(live.patches as unknown as GeoJsonData);
+    this.map.setPaintProperty("livefill", "fill-color", classColour(this.classes, live.year));
+    this.map.setPaintProperty("livefill", "fill-opacity", this.landuse.opacity);
+    for (const l of ["livefill", "livehit"]) this.map.setLayoutProperty(l, "visibility", "visible");
+    this.map.setFilter("hit", ["==", ["id"], -1]);
+  }
+
+  clearLive() {
+    if (this.map.getLayer("livergb")) this.map.removeLayer("livergb");
+    if (this.map.getSource("livergb")) this.map.removeSource("livergb");
+    (this.map.getSource("livepatches") as GeoJSONSource).setData(EMPTY as unknown as GeoJsonData);
+    for (const l of ["livefill", "livehit"]) this.map.setLayoutProperty(l, "visibility", "none");
+    this.highlightLive("livehover", null);
+    this.highlightLive("livesel", null);
+    this.map.setFilter("hit", null);
+  }
+
+  highlightLive(layer: "livehover" | "livesel", id: number | null) {
+    this.map.setFilter(layer, ["==", ["id"], id ?? -1]);
   }
 
   applyTheme() {
