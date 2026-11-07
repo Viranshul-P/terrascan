@@ -3,22 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-5.3c
+5.3d
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-5.3c parts 1 and 2 are built and committed (Claude). Two things before it can be ticked:
-1. Look at it: `cd web && npm run dev`, open http://localhost:5173/ on the laptop and the phone (same Wi-Fi, the
-   Network address it prints). Scroll the whole story, try the model cards (Accuracy / Speed / Size), play the game,
-   point at / tap a city card.
-2. Decide on Lighthouse performance: 81 and 84 in two runs (budget 90+; accessibility 100, best practices 96;
-   reports/design/5.3c/lighthouse.json). What's left is the live 3D map starting up ~1.6 s after load and the
-   headline's word-by-word fade. Options: (A) show a still picture of the globe first and start the live map on the
-   first scroll; (B) make the headline appear faster; (C) leave it for the full performance pass in 5.3d.
-When you OK it (and pick A, B or C), Claude ticks 5.3c and the next step is 5.3d.
+(nothing)
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -53,7 +45,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 5.2b API + Docker
 - [x] 5.3a Design system and two design directions
 - [x] 5.3b The map experience
-- [ ] 5.3c The story sections
+- [x] 5.3c The story sections
 - [ ] 5.3d Polish, performance and real users
 - [ ] 6.1 Model on Hugging Face Hub
 - [ ] 6.2 Deploy the API and the website
@@ -96,6 +88,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3b part 3 (laptop, 2026-11-07, Claude; from the user's feedback) — commits 59f894b + d8b7671: opening lands flat and centred between the panels (was tilted and low); compass in the zoom bar (needle follows the map, drag sideways = turn, click = north up) and a 3D / 2D button (explorer/ViewControls.tsx); tip on how to turn by hand; gentler wheel zoom; no turning/tilting while drawing an area. 7 new web tests (54 pass). Live "map your own area" API checked on the laptop by Claude with curl (3 km Ahmedabad box, 2018 + 2026 answered, ~30 km box refused); screenshots + load check in reports/design/5.3b/ (LCP 608 ms, CLS 0.008, load_metrics.json). User OK'd 5.3b on 2026-11-07.
 - 5.3c part 1 (Claude, 2026-11-07, on medium effort at the user's request) — src/web_story.py writes web/public/data/story.json (Ahmedabad check, India 3-seed numbers, per-model EuroSAT results, each with its source file; 4 pytest tests); Story page at / in React from prototype E (web/src/pages/Story.tsx, story/Chapters.tsx, story/Story.css, lib/story.ts, components/CountUp.tsx): pinned map, hero with count-ups, chapters The city / What the model sees / What changed / How sure (319 -> 163 km² bar that shrinks, 50-square waffle) / Europe -> India (dots ± std) / Limits; header gets a Story link, Explorer stays at /explorer. 14 new web tests (68 pass), incl. one that renders every chapter with made-up numbers to prove nothing is typed in. Screenshots + load check: reports/design/5.3c/ (web/scripts/shoot-story.mjs).
 - 5.3c part 2 (Claude, 2026-11-07, medium effort) — under the story map: model cards (story/Models.tsx; Accuracy / Speed / Size switch, "Ours" = best multi-seed from-scratch model, sentence built from range overlaps AND from CPU speed so it also says EfficientNet-B0 is faster), the game ported from prototype E (story/Game.tsx, quiz.json), city cards that change year square by square (story/Cities.tsx, lib/pixelSwap.ts), How it works (4 drawn steps + links: GitHub, Indian dataset; model card and blog shown as "coming soon"), footer with data credits and a plain note that much of the work was done with Claude. Speed fixes after Lighthouse: map loads after the headline (1.6 s or first scroll/touch) and fades in; data files preloaded in index.html; GitHub header link named; footer headings fixed. 10 new web tests (78 pass). Screenshots: reports/design/5.3c/.
+- 5.3c — done (user looked at it on laptop/phone and OK'd it, 2026-11-07). Lighthouse performance 81/84 left for 5.3d (user's choice C).
 
 ## Decisions made
 - 5.3c part 2 (Claude): model cards compare by mean ± std ranges (overlap = about the same, the CLAUDE.md rule); the
@@ -361,7 +354,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
-- 5.3c: Lighthouse performance 81/84, under the 90 budget (reports/design/5.3c/lighthouse.json); waiting on the user's choice (see Waiting on you). The favicon 404 (from 5.3b) is the console error Lighthouse lists under best practices.
+- 5.3c -> 5.3d: Lighthouse performance 81/84, under the 90 budget (reports/design/5.3c/lighthouse.json). User chose to fix it in 5.3d (2026-11-07). Idea recommended by Claude: a still globe picture first, live 3D map on the first scroll. The favicon 404 (from 5.3b) is the console error Lighthouse lists under best practices.
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
 - scripts/compute_stats.py takes ~3 min (reads 18,900 images one by one). Only run once, so left simple.
 - In fast-dev-run, the 2 val batches are all AnnualCrop (val isn't shuffled), so fast-dev-run val accuracy means nothing. Only real runs count.
