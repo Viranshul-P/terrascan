@@ -3,30 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-5.3b
+5.3c
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-5.3b is built (two commits from the cloud session, plus one round of map fixes on the laptop, 2026-11-07).
-Done on the laptop by Claude:
-- Checked "Map your own area" for real (the cloud session could not): API on port 8000, a ~3 km box over central
-  Ahmedabad, 2018 and 2026 both answered (about 20 s each), and a ~30 km box was refused. Only the API was called
-  directly (curl); the button on the page itself is part of your check below.
-- Your feedback ("globe sits low, the city stays slanted, turning the map is not clear") fixed:
-  the opening now lands flat (straight down, centred between the panels); a compass (turns with the map, click =
-  north up, drag it sideways = the map turns) and a 3D / 2D button in the zoom bar; a tip on how to turn by hand when 3D is switched on; mouse-wheel
-  zoom a little gentler; the map can't be turned or tilted while an area is being drawn.
-  New screenshots in reports/design/5.3b/ (opening-end-*, 3d-*).
-Please, on your laptop: `cd web && npm run dev`, and in another terminal from the repo root
-`.venv\Scripts\python -m uvicorn api.main:default_app --factory --port 8000`. Then:
-1. Look at the Explorer in the browser and on your phone: opening, compass, 3D button, bottom sheet, Compare.
-2. Press "Map your own area" and draw a small box over Ahmedabad (works on the laptop; on the phone it can't reach
-   the API until it is online in step 6.2).
-3. Branch: claude/ig-5.3b-remaining-work-rcpfv1 (the new commit is local; push it when you are happy).
-When you OK it, Claude ticks 5.3b and the next step is 5.3c.
+Nothing. (5.3b commits are on branch claude/ig-5.3b-remaining-work-rcpfv1; the user pushes them.)
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -60,7 +44,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 5.2a Showcase static files
 - [x] 5.2b API + Docker
 - [x] 5.3a Design system and two design directions
-- [ ] 5.3b The map experience
+- [x] 5.3b The map experience
 - [ ] 5.3c The story sections
 - [ ] 5.3d Polish, performance and real users
 - [ ] 6.1 Model on Hugging Face Hub
@@ -101,6 +85,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3a — commits d93cf29 (prototype E) + step5.3a part 2 — directions A–E (user chose E, built by Claude); React design system in web/src (tokens, Button, Card, Stat, Switch, Segmented, Slider, Legend, SourceMarker), 10 web tests, CI web job; first-load JS 72 KB gz, LCP 0.30 s / CLS 0 (reports/design/5.3a/ds/load_metrics.json, local)
 - 5.3b part 2A — phone bottom sheet (Claude): the Layers panel and the square inspector are sheets with 3 heights (peek/half/full; drag, tap or arrow keys; src/lib/sheet.ts, SheetGrabber.tsx); map is fitted above the sheet; credits sit above it; Compare chip shows its label; 5 new tests (23 web tests pass); first-load JS 80.0 KB gz (npm run size)
 - 5.3b part 2B — "Map your own area" (Claude): draw a box (drag, or "use the middle of the screen"), box size checked against the server's limits (read from GET /health), year choice, Map this box -> progress state with seconds counter and the server's time limit, honest "server is waking up" note after 3 s without an answer, result on the map (picture, class squares, hover/tap a square) with km² per class, average confidence, GeoTIFF download, Cancel, Draw again. New: lib/api.ts, explorer/useAreaMap.ts, AreaPanel.tsx, DrawLayer.tsx, live layers in map/TerraMap.ts. 24 new web tests (47 pass; fake fetch, no network); first-load JS 83.8 KB gz (npm run size)
+- 5.3b part 3 (laptop, 2026-11-07, Claude; from the user's feedback) — commits 59f894b + d8b7671: opening lands flat and centred between the panels (was tilted and low); compass in the zoom bar (needle follows the map, drag sideways = turn, click = north up) and a 3D / 2D button (explorer/ViewControls.tsx); tip on how to turn by hand; gentler wheel zoom; no turning/tilting while drawing an area. 7 new web tests (54 pass). Live "map your own area" API checked on the laptop by Claude with curl (3 km Ahmedabad box, 2018 + 2026 answered, ~30 km box refused); screenshots + load check in reports/design/5.3b/ (LCP 608 ms, CLS 0.008, load_metrics.json). User OK'd 5.3b on 2026-11-07.
 
 ## Decisions made
 <!-- e.g. Pretrained models use 128×128 input (upscaled). Reason: ... -->
