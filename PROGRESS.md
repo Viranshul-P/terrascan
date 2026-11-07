@@ -10,7 +10,7 @@ not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-Nothing. (5.3b commits are on branch claude/ig-5.3b-remaining-work-rcpfv1; the user pushes them.)
+Nothing. (5.3b is merged into main.)
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
