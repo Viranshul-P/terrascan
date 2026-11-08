@@ -10,7 +10,6 @@
     "test": "vitest run",
     "typecheck": "tsc",
     "size": "node scripts/js-size.mjs",
-    "shots:ds": "node scripts/shoot-ds.mjs",
     "shots:prototypes": "node scripts/shoot-prototypes.mjs",
     "shots:c": "node scripts/shoot-direction-c.mjs",
     "shots:d": "node scripts/shoot-d.mjs",

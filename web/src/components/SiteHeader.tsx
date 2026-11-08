@@ -1,4 +1,4 @@
-// The bar at the top of every page: logo, page links, GitHub, theme switch.
+// The bar at the top of every page: logo on the left, page links in the middle, GitHub and the theme switch on the right.
 import { ThemeToggle } from "./ThemeToggle";
 import "./SiteHeader.css";
 
@@ -15,14 +15,14 @@ export const Logo = () => (
   </svg>
 );
 
-export function SiteHeader({ page }: { page: "story" | "explorer" | "design" }) {
+export function SiteHeader({ page }: { page: "story" | "explorer" | "about" }) {
   return (
     <header className="site-nav">
       <a className="brand" href="/" aria-label="TerraScan home"><Logo /><span>TerraScan</span></a>
       <nav className="site-links" aria-label="Main">
         <a href="/" aria-current={page === "story" ? "page" : undefined}>Story</a>
         <a href="/explorer" aria-current={page === "explorer" ? "page" : undefined}>Explorer</a>
-        <a href="/design" aria-current={page === "design" ? "page" : undefined}>Design system</a>
+        <a href="/about" aria-current={page === "about" ? "page" : undefined}>About</a>
       </nav>
       <div className="site-tools">
         <a className="site-gh" href={REPO} rel="noopener" aria-label="GitHub">
