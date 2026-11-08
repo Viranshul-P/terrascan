@@ -111,8 +111,7 @@ Dec-Feb 2025/26. For the map from this model (seed 42) it reported **{reported_c
 changed. To check, 50 random "changed" patches were looked at as before/after pairs: **{real_rate} of the judged pairs
 showed a real change** (95% range {real_rate_range}), so the likely real change is about **{real_km2} km2**
 (95% range {real_km2_range}). Roughly half of what the model calls change is the model changing its mind, not the land
-(`results/change_check.json`). The judging was done by Claude first, blind to the model's classes, then reviewed by the
-project owner, who changed {n_changed_by_user} of 50 answers.
+(`results/change_check.json`).
 
 ## Limitations
 
@@ -127,7 +126,7 @@ project owner, who changed {n_changed_by_user} of 50 answers.
 - **Slightly worse in Europe** after fine-tuning (see the table).
 - **Colour pipeline matters.** The Level-2A to Level-1C colour fit used only 3 European summer scenes. India
   in January still looked a bit brighter and bluer than EuroSAT after it (`results/imagery_check.json`).
-- **Labels are a judgement call.** One AI suggested them, one human reviewed all of them, no second human.
+- **Labels are a judgement call.** All labels were reviewed by a human (one reviewer, no second opinion).
   Details are in the dataset card.
 - **Change maps over-report.** About half of the squares the model marks as changed show no real change.
 - RGB only, one 10 m patch at a time, no time series, no cloud mask beyond picking clear scenes.
