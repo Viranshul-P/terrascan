@@ -6,7 +6,7 @@ Claude updates this at the end of every step. Keep entries short.
 8.2
 
 ## Status
-not started
+in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
@@ -123,6 +123,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 8.1 (Claude, 2026-11-08, medium effort) — src/error_audit.py + src/error_audit_report.py (+ src/error_audit_causes.md, configs/error_audit.yaml, tests/test_error_audit.py, 13 tests) -> results/error_audit.md/.json, results/error_audit_predictions.csv, patch pictures in reports/error_audit/. Only the 3 fine-tune areas (149 patches) are used; EuroSAT-only EfficientNet-B0 and leave-one-area-out (LOAO) fine-tunes (4.4 recipe unchanged), seeds 42/43/44. Ranked causes: (1) EuroSAT classes don't fit (wide muddy Narmada called SeaLake; Residential<->Industrial both ways; mixed patches), (2) Indian AnnualCrop looks unlike EuroSAT's (1 of 150 right before, 71 of 150 after LOAO), (3) few uneven local labels, (4) label/mixed-patch doubts (one example), (5) global brightness error unlikely. Live-site 'Sabarmati as crop' mostly NOT reproduced (22 of 29 water squares are River, 1 AnnualCrop). 151 pytest, ruff clean.
 
 ## Decisions made
+- **8.2 (user's decision, 2026-11-08: "just do everything"):** Claude judges the blind pair quiz instead of the user. This changes the rule's wording from "the user cannot tell them apart" to "Claude, judging blind from the 64x64 patches, cannot tell them apart"; it is written into configs/classes_india.yaml before any quiz result exists. Claude's eyes are not the user's, so results/class_scheme.md says so and the user can re-judge the same numbered sheets later (reports/class_scheme/) with `--answers`. Default is conservative: classes stay separate unless the judge is clearly unable (<=70%).
 - **8.1 (Claude, user OK'd the plan 2026-11-08):** leave-one-area-out fine-tunes use the 4.4 recipe unchanged (configs/india_finetune.yaml), all 3 seeds, no forgetting check (nothing is published from them; models in models/efficientnet_b0_india_loao_<area>/, git-ignored). Failure cases are picked by a rule in configs/error_audit.yaml (top 6 mistakes of LOAO seed 42, most confident wrong patch each, plus up to 4 wrong River patches), not by eye. The cause text (src/error_audit_causes.md) is hand-written by Claude; its numbers are filled in by code and a test checks the template. ESA WorldCover 2021 v200 (tier 2, noisy) is used only to describe class occurrence and to find the live-site squares that are water / built-up; the water threshold is 20% of a square because a first try at 50% found only 1 square (the Sabarmati is narrower than a 640 m patch).
 - **New direction (user's decision, 2026-11-08): Phase 8 comes BEFORE the README.** TerraScan is now a background research project,
   not a flagship app. Claude does all the work; the user approves plans and does only the unavoidable parts (sign-ups, pushing to

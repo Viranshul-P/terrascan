@@ -1,0 +1,110 @@
+# Step 8.2: class scheme for Indian land, and how every label source maps onto it.
+#   python -m src.class_scheme make-quiz   --config configs/classes_india.yaml
+#   python -m src.class_scheme score       --config configs/classes_india.yaml
+#
+# DECISION RULE (written 2026-11-08, BEFORE any quiz was made or judged; committed first):
+#   1. Screen. A pair of classes goes to the quiz only if (a) each class has at least `min_patches_per_class`
+#      user-labelled patches in the Indian FINE-TUNE areas (labels = final_label) and (b) in at least one of
+#      the two 8.1 confusion matrices (results/error_audit.json, EuroSAT-only or leave-one-area-out) the
+#      pair is confused in BOTH directions (each direction at least once). The screen only limits who is
+#      tested; the quiz decides.
+#   2. Quiz. `sample_per_class` random patches of each class of the pair (fine-tune areas only, seed
+#      `sample_seed`), shuffled, shown with no label, area or file name, at the size the model sees
+#      (64 x 64 px at 10 m, enlarged with sharp pixels). The judge says A or B for each.
+#      Judge: Claude, blind (the user asked Claude to do everything, 2026-11-08). The sheets are numbered and kept in
+#      reports/class_scheme/ so the user can re-judge them; the rule then uses the user's answers instead.
+#   3. Decide. Judge right <= merge_if_accuracy_at_most  -> the two classes are merged.
+#              Judge right >= keep_separate_if_accuracy_at_least -> kept separate.
+#              In between -> kept separate (merging needs clear evidence).
+#   4. A merge is never justified by a higher accuracy: merging raises accuracy by construction, so no accuracy
+#      number is used anywhere in this decision except the judge's score on the blind quiz.
+#   5. Classes with fewer than `min_patches_per_class` labelled patches (Pasture 0, SeaLake 0, PermanentCrop 2,
+#      Forest 1, HerbaceousVegetation 1) cannot be tested, so they are never merged by this rule.
+rule:
+  min_patches_per_class: 5
+  sample_per_class: 10
+  sample_seed: 42
+  merge_if_accuracy_at_most: 0.70
+  keep_separate_if_accuracy_at_least: 0.80
+  judge: claude_blind
+  patches_dir: data/india/patches
+  reviewed_csv: data/india/labels_reviewed.csv
+  eval_config: configs/india_eval.yaml        # which areas are fine-tune areas (TEST areas never used)
+  audit_json: results/error_audit.json
+  india_after_json: results/india_after.json   # only quoted in the report, never used in the decision
+  sheet_dir: reports/class_scheme             # numbered sheets, no answers on them
+  key_path: results/class_quiz_key.csv        # which patch is which; not opened by the judge until answers are saved
+  answers_path: results/class_quiz_answers.csv
+  picture_scale: 4
+
+# The merges chosen by the rule. Empty = "keep the 10 EuroSAT classes". Filled in after the quiz is scored
+# (format: {Built-up: [Residential, Industrial]}). Every mapping below is derived from this, so "keep 10" and
+# any merged scheme are both valid.
+chosen_merges: {}
+
+# The 10 EuroSAT classes (alphabetical = class numbers 0-9, as in src/data.py).
+base_classes: [AnnualCrop, Forest, HerbaceousVegetation, Highway, Industrial, Pasture, PermanentCrop,
+               Residential, River, SeaLake]
+
+# One entry per source class: the set of EuroSAT classes it can mean ("could be"). Under a scheme, a source class
+# maps to the ONE scheme class that covers its whole set; if the set spans more than one scheme class (or is
+# empty) it maps to `ignore` and is not used as a label. So every source class maps to exactly one scheme class
+# or `ignore`, by construction, and nothing is guessed.
+sources:
+  eurosat:
+    tier: "EuroSAT's own labels (Europe)"
+    note: "Identity mapping."
+    classes: &ten
+      AnnualCrop: [AnnualCrop]
+      Forest: [Forest]
+      HerbaceousVegetation: [HerbaceousVegetation]
+      Highway: [Highway]
+      Industrial: [Industrial]
+      Pasture: [Pasture]
+      PermanentCrop: [PermanentCrop]
+      Residential: [Residential]
+      River: [River]
+      SeaLake: [SeaLake]
+  hand_labels:
+    tier: "1 (human gold: the user's final_label in data/india/labels_reviewed.csv; Claude suggested, the user reviewed all)"
+    note: "Identity mapping. Used for evaluation. Never merged away silently: a merge relabels them and the 10-class numbers stay reported."
+    classes: *ten
+  worldcover:
+    tier: "2 (noisy reference)"
+    source: "ESA WorldCover 10 m v200 (2021), class list read from the Planetary Computer item metadata (classification:classes) on 2026-11-08"
+    note: >
+      Built-up cannot separate Residential from Industrial (and roads inside built-up areas look like Highway). Cropland cannot separate
+      AnnualCrop from PermanentCrop. Shrubland and Grassland both fit HerbaceousVegetation and Pasture. Water cannot separate River
+      from SeaLake. Under "keep 10" all of these are `ignore`; 8.4 decides whether to use them with a coarser label.
+    classes:
+      "Tree cover (10)": [Forest]
+      "Shrubland (20)": [HerbaceousVegetation, Pasture]
+      "Grassland (30)": [HerbaceousVegetation, Pasture]
+      "Cropland (40)": [AnnualCrop, PermanentCrop]
+      "Built-up (50)": [Residential, Industrial]
+      "Bare / sparse vegetation (60)": []
+      "Snow and ice (70)": []
+      "Permanent water bodies (80)": [River, SeaLake]
+      "Herbaceous wetland (90)": []
+      "Mangroves (95)": [Forest]
+      "Moss and lichen (100)": []
+  dynamic_world:
+    tier: "2 (noisy reference)"
+    source: "Dynamic World V1 label band, class table on the Earth Engine catalogue page (developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1), read 2026-11-08. CC-BY 4.0 with attribution. Needs a Google Earth Engine account to download: not used for data yet."
+    note: "Same logic as WorldCover. flooded_vegetation and bare have no EuroSAT class."
+    classes:
+      "water (0)": [River, SeaLake]
+      "trees (1)": [Forest]
+      "grass (2)": [HerbaceousVegetation, Pasture]
+      "flooded_vegetation (3)": []
+      "crops (4)": [AnnualCrop, PermanentCrop]
+      "shrub_and_scrub (5)": [HerbaceousVegetation, Pasture]
+      "built (6)": [Residential, Industrial]
+      "bare (7)": []
+      "snow_and_ice (8)": []
+  pseudo_labels:
+    tier: "3 (model-assisted; flagged in the data; training only)"
+    note: "A pseudo-label is a class the model predicted, so it is already one of the scheme's classes. Identity mapping; under a merge the predicted class is merged the same way."
+    classes: *ten
+
+output_path: results/class_scheme.md
