@@ -133,12 +133,6 @@ project owner, who changed {n_changed_by_user} of 50 answers.
 - RGB only, one 10 m patch at a time, no time series, no cloud mask beyond picking clear scenes.
 - Not for decisions about land, property, safety or policy.
 
-## Who did what
-
-The project owner chose the project, the areas and the settings, and reviewed every Indian label and the change
-check. Claude (an AI assistant) wrote the code, suggested the first Indian labels and the first answers of the change
-check, and drafted this card. Every number in this card is filled in by code from the result files of the repo, not typed by hand.
-
 ## Credits and licence
 
 Model files and this card: {license_upper}. Start weights: timm `efficientnet_b0.ra_in1k`, Apache-2.0 (ImageNet-1k
