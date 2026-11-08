@@ -10,7 +10,16 @@ in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing blocks 8.3b.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
+**8.3b is IN PROGRESS and was paused on purpose (user shut the laptop down, 2026-11-09 ~00:05).** To resume, run from
+the repo root (this one command does ALL remaining runs of both arms in order and skips every finished piece, so it is
+safe to run again after any stop; a model that was cut off mid-training starts again from epoch 1, losing at most ~15 min):
+`.venv\Scripts\python.exe -u -m src.bands_train --config configs/bands_compare.yaml --runs rgb rgb_nir rgb_nir_swir rgb_indices all_bands sat_rgb sat_all > logs\bands_resume.log 2>&1`
+(expected: about 4 hours; the earlier waiter that would have started arm B automatically dies with the shutdown).
+Done at the pause: arm A `rgb` all 3 seeds (base models in models/bands_rgb/, LOAO files results/bands_runs/rgb_calibrated_seed{42,43,44}.csv);
+`rgb_nir` seed 42 was mid-training (epoch ~31 of 50) and will restart. Code + decision rule committed (7048ab8), scaling check
+for the 13-band satellite weights committed (f4a0be6, results/bands_sat_scaling_check.txt). After all runs: `python -m
+src.bands_report --config configs/bands_compare.yaml`, then pytest + ruff, PROGRESS/learn notes, commit.
+(nothing else blocks 8.3b.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
 the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
