@@ -10,6 +10,8 @@ import type { Index } from "../lib/types";
 
 // The Indian dataset published in step 4.5 (PROGRESS.md log).
 export const DATASET = "https://huggingface.co/datasets/viranshul/terrascan-india-gujarat";
+// The model published in step 6.1 (PROGRESS.md log).
+export const MODEL = "https://huggingface.co/viranshul/terrascan-efficientnet-b0-india";
 
 const svg = (children: ReactNode) => <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>;
 const ART = {
@@ -48,7 +50,7 @@ export function HowItWorks({ index, story }: { index: Index; story: StoryData })
         <ul className="how-links">
           <li><a href={REPO} rel="noopener"><b>Source code</b><span>GitHub</span></a></li>
           <li><a href={DATASET} rel="noopener"><b>Indian dataset</b><span>Hugging Face</span></a></li>
-          <li><span className="soon"><b>Model card</b><span>Coming soon</span></span></li>
+          <li><a href={MODEL} rel="noopener"><b>Model card</b><span>Hugging Face</span></a></li>
           <li><span className="soon"><b>Blog post</b><span>Coming soon</span></span></li>
         </ul>
       </div>

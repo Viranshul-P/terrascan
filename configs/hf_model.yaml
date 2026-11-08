@@ -1,0 +1,23 @@
+# Step 6.1: build the Hugging Face model folder (weights + model card).
+#   python -m src.hf_model --config configs/hf_model.yaml
+#
+# Every number in the card is read from the results files below by code (nothing typed by hand).
+repo_id: viranshul/terrascan-efficientnet-b0-india
+license: apache-2.0   # timm efficientnet_b0.ra_in1k weights are Apache-2.0 (Hub README, checked 2026-11-08)
+license_name: Apache-2.0   # how the card text writes it
+dataset_repo: viranshul/terrascan-india-gujarat
+
+# The uploaded model: seed 42 (the one behind the website maps, step 5.1).
+model_dir: models/efficientnet_b0_india/seed42
+files: [model.onnx, best.pt, config.yaml, onnx_info.json]
+card_template: src/model_card.md
+out_dir: data/hf_model   # git-ignored; this whole folder is what gets uploaded
+
+results:
+  india_after: results/india_after.json
+  base_eval: results/efficientnet_b0.json
+  change_check: results/change_check.json
+  onnx_check: results/onnx_check.json
+  india_dataset: results/india_dataset.json
+  change: results/change_2018_2026.json
+seed: 42

@@ -3,14 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-6.1
+6.2
 
 ## Status
 not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing blocks 6.1.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
+(nothing blocks 6.2.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
 the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
@@ -48,7 +48,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 5.3b The map experience
 - [x] 5.3c The story sections
 - [ ] 5.3d Polish, performance and real users  <!-- part 1 done 2026-11-08; friends test + top-3 fixes DEFERRED by the user, see Known issues -->
-- [ ] 6.1 Model on Hugging Face Hub
+- [x] 6.1 Model on Hugging Face Hub
 - [ ] 6.2 Deploy the API and the website
 - [ ] 6.3 README
 - [ ] 6.4 Blog post
@@ -102,8 +102,13 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   360x740 phone the live globe covered the headline (now a fixed 250 px band for the globe; hero grows taller on short phones).
   Tests: 80 web tests, 130 pytest, ruff clean. New scripts in web/scripts: lighthouse.mjs, load-check.mjs, check-poster.mjs,
   audit-small.mjs, make-globe-poster.mjs (+ globe_poster.py, needs Pillow, which comes with matplotlib).
+- 6.1 — src/hf_model.py + src/model_card.md + configs/hf_model.yaml build data/hf_model/ (model.onnx, best.pt, config.yaml, onnx_info.json, README.md = card; seed 42); every number in the card is filled in by code from results/india_after.json, efficientnet_b0.json, change_check.json, change_2018_2026.json, onnx_check.json, india_dataset.json and models/efficientnet_b0_india_nomix/*/metrics.json (tests/test_hf_model.py, 6 tests, incl. "before" = the 3-seed 0.4486 ± 0.0071 and non-overlap claims). Claude created the public repo and uploaded it with the user's already-logged-in `hf` CLI (user asked for this): https://huggingface.co/viranshul/terrascan-efficientnet-b0-india (commit c8cd4ce; README on the Hub is byte-identical to the local card; the card's usage snippet ran from the Hub files; page opened in Chrome). Site: "Model card" is now a link in How it works and the footer (80 web tests pass, first-load JS 96.6 KB gz). 136 pytest, ruff clean.
 
 ## Decisions made
+- 6.1 (user OK'd, 2026-11-08): repo `viranshul/terrascan-efficientnet-b0-india`; licence Apache-2.0 (the timm starting weights
+  `efficientnet_b0.ra_in1k` are Apache-2.0, read from their Hub README on 2026-11-08; EuroSAT is MIT, from its GitHub LICENSE);
+  upload model.onnx + best.pt (seed 42), config, onnx_info. **Exception to "pushing stays with the user":** the user asked
+  Claude to do the Hugging Face upload too, through the user's own logged-in Chrome. Recorded here on purpose.
 - 5.3d (Claude, user OK'd the plan 2026-11-08): still globe first, live map on first interaction (recommended by Claude, user said OK).
   Because the lab test (Lighthouse) never scrolls, it measures the page WITHOUT the map; the cost of starting the map is measured
   separately (reports/design/5.3d/load_metrics.json). The user's answers after the Impeccable critique: fix all five findings;
@@ -372,6 +377,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
 ## Known issues / things to revisit
+- 6.1: the card was checked by Claude (code + tests), NOT read line by line by the user (PLAN's "You do: review every number" was done by Claude at the user's request). The user should read it once: https://huggingface.co/viranshul/terrascan-efficientnet-b0-india . To change it: edit src/model_card.md, run `python -m src.hf_model --config configs/hf_model.yaml`, then `.venv\Scripts\hf.exe upload viranshul/terrascan-efficientnet-b0-india data/hf_model .`. The card's usage snippet was run only on an all-black patch (proves it loads and runs, not that predictions are right); it also needs the repo cloned for `src/onnx_predict.py`. Card says "Claude drafted this card"; the Hub page's model-tree link to timm's base model is set by `base_model:` in the card header (not checked on the page).
 - **5.3d is NOT finished: the friends test (3 people, no explaining: "find what changed in Ahmedabad", "map your own area") and the top-3 fixes from it are still to do (user's decision 2026-11-08: later).** Everything else in 5.3d is done and committed (e43bc52). To do it: run `docker run --rm -p 8000:8000 terrascan-api` and, in web/, `npm run dev`, then tell Claude `/next 5.3d`. Do it before the launch (7.2) at the latest; the site is not yet checked with real people.
 <!-- e.g. Download from X was flaky, used mirror Y -->
 - 5.3c -> 5.3d: Lighthouse performance 81/84 (reports/design/5.3c/lighthouse.json) -> fixed in 5.3d: 93-95 (reports/design/5.3d/lighthouse.json). The favicon 404 is fixed. NOTE: the same 5.3c build scored 92/93/93 when re-run on 2026-11-08 (reports/design/5.3d/lighthouse_before.json), so Lighthouse scores on this laptop swing by about 10 points with machine load; judge by the 5-run spread, not one run.

@@ -97,13 +97,13 @@ describe("pixelSwap order", () => {
 });
 
 describe("How it works and the footer", () => {
-  it("steps read their numbers from the data; unfinished links are not links", () => {
+  it("steps read their numbers from the data; the model card is a link, unfinished links are not", () => {
     render(<HowItWorks index={INDEX} story={STORY} />);
     expect(screen.getByText(/one of 7 land-use classes/)).toBeInTheDocument();
     expect(screen.getAllByText(/321/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/37/).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: /Source code/ })).toHaveAttribute("href", "https://github.com/Viranshul-P/terrascan");
-    expect(screen.queryByRole("link", { name: /Model card/ })).toBeNull();
+    expect(screen.getByRole("link", { name: /Model card/ })).toHaveAttribute("href", "https://huggingface.co/viranshul/terrascan-efficientnet-b0-india");
     expect(screen.queryByRole("link", { name: /Blog post/ })).toBeNull();
   });
 
