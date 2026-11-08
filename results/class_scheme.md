@@ -2,7 +2,7 @@
 
 Decision rule (written and committed before the quiz, see `configs/classes_india.yaml`): merge two classes only if they are confused in both directions in the 8.1 audit AND a blind judge cannot tell them apart on a random sample (right 70% or less). Right 80% or more keeps them separate; anything in between also keeps them separate. Accuracy of the model is never a reason to merge.
 
-**Who judged:** Claude, blind (user's decision 2026-11-08, "just do everything"). Claude saw only the numbered sheets, never the key, when answering. The user has not judged this sample; their eyes may differ from Claude's, so the sheets are kept and the user can re-judge them (`--answers`).
+**Who judged:** Claude, blind (user's decision 2026-11-08, 'just do everything'). Claude saw only the numbered sheets, never the key, when answering. The user has not judged this sample; their eyes may differ from Claude's, so the sheets are kept and the user can re-judge them (`--answers <csv> --judge user`).
 
 ## 1. Screen (from `results/error_audit.json`, fine-tune areas only)
 
@@ -14,7 +14,7 @@ Both classes need at least 5 labelled fine-tune-area patches, and the pair must 
 | Highway / Industrial | loao | 1 | 4 |
 | Industrial / Residential | eurosat | 7 | 49 |
 
-Not tested (too few labelled patches, so the rule cannot merge them): Pasture 0, SeaLake 0, PermanentCrop 2, Forest 1, HerbaceousVegetation 1. So the rule says nothing about River versus SeaLake (SeaLake has no Indian label) or AnnualCrop versus PermanentCrop.
+Not tested (fewer than 5 labelled fine-tune-area patches, so the rule cannot merge them): Forest 1, HerbaceousVegetation 1, Pasture 0, PermanentCrop 2, SeaLake 0. The rule says nothing about any pair that includes one of these classes.
 
 ## 2. The blind quiz
 
@@ -39,15 +39,16 @@ Not tested (too few labelled patches, so the rule cannot merge them): Pasture 0,
 | Industrial_vs_Residential | Industrial | ankleshwar_industrial 8, ahmedabad_city 2 |
 | Industrial_vs_Residential | Residential | ahmedabad_city 8, ankleshwar_industrial 1, narmada_bharuch 1 |
 
-  When the two classes come mostly from different areas, a judge can lean on the scene (brightness, haze, building style) instead of on the land use. So a high score here shows the classes look different in these patches, not that they would be told apart in a new city.
+  Pairs whose two classes come mostly from different areas: Highway_vs_Industrial, Industrial_vs_Residential. Pairs whose classes come mostly from the same area: AnnualCrop_vs_Highway. Where the areas differ, a judge can lean on the scene (brightness, haze, building style) instead of on the land use. So a high score there shows the classes look different in these patches, not that they would be told apart in a new city.
 - **The judge is Claude, not the user.** The sheets are kept so the user can re-judge them.
 - **Blindness is by procedure.** Claude answered from the numbered sheets only and saved the answers (committed) before opening the key, but it is the same assistant that built the quiz and earlier suggested labels for these patches (step 4.2).
-- **Small sample.** 20 patches per pair (Highway has 11 in the fine-tune areas, so 10 of 11 were used). One answer more or fewer changes the accuracy by 5 points.
+
+- **Small sample.** 20 patches per pair. Patches used out of all labelled in the fine-tune areas: AnnualCrop 10 of 50, Highway 10 of 11, Industrial 10 of 11, Residential 10 of 65. One answer more or fewer changes the accuracy by 5 points.
 - **Untestable classes** (see the screen) are not covered.
 
 ## 3. Chosen scheme
 
-**Keep the 10 EuroSAT classes** (`chosen_merges: {}`).
+**Keep the 10 EuroSAT classes** (`chosen_merges: {}`). The rule found no evidence for merging. The test was weak (see the caveats: some pairs come from different areas, and the judge was Claude), so this is the safe default, not a proof that the 10 classes fit India.
 
 The 10-class numbers (3 seeds, Indian TEST areas, accuracy 0.4486 ± 0.0071 before, 0.6831 ± 0.0311 after fine-tuning, `results/india_after.json`) stay as they are. Accuracy on a merged class set would not be comparable to them, and any write-up that shows both must say so.
 
@@ -148,5 +149,8 @@ A pseudo-label is a class the model predicted, so it is already one of the schem
 
 - Tier-2 maps (WorldCover, Dynamic World) cannot give a single EuroSAT class for Cropland/crops, Built-up/built, Water, or Grassland/Shrubland under the 10-class scheme, so those labels map to `ignore`. Step 8.4 must decide how to use them (for example with a coarser training label that is kept apart from the 10-class evaluation); this step does not.
 - Hand labels (tier 1) stay in the 10 classes, so every earlier number remains valid.
-- Step 8.1 listed 'the classes do not fit' as cause 1, including Residential versus Industrial. This quiz does not support merging those two (see the caveats above for how far to trust that). Because the two classes in the sample mostly come from different areas, it is weak evidence about telling them apart inside one scene; a same-area sample would test that, and the rule does not require it. Still open: the water naming (Narmada called SeaLake) and crops versus PermanentCrop, which the rule cannot test because SeaLake and PermanentCrop have too few Indian labels. More labels come in 8.4 to 8.7.
+
+- Step 8.1 listed 'the classes do not fit' as cause 1, including Residential versus Industrial. In this quiz the judge got 95% right, so by the rule they stay separate. The two classes in the sample came mostly from different areas, so it is weak evidence about telling them apart inside one scene; a same-area sample would test that, and the rule does not require it.
+
+- Still open: the water naming (Narmada called SeaLake) and crops versus PermanentCrop are not covered by the rule when SeaLake and PermanentCrop have too few Indian labels. More labels come in 8.4 to 8.7.
 

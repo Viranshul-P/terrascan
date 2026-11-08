@@ -418,6 +418,7 @@ merge is never justified by a higher accuracy (merging raises accuracy by constr
 (decision, evidence, the sample the user judged) exist; a test checks that every source class maps to exactly one class
 of the chosen scheme and that "keep 10" is a valid, tested choice too.
 **You check:** look at the 20–30 patch pairs used for the decision. Do you agree you can (or can't) tell the classes apart?
+*Change 2026-11-08 (user: "just do everything"): Claude judged the blind quiz instead of the user, so read "the user" above as "the judge"; the report names who judged. The user's re-judge is optional (`--answers <csv> --judge user`). Result: keep the 10 classes; the test was weak (class pairs came from different areas), so this is the safe default, not a proof.*
 
 ### 8.3 More spectral bands
 **Effort: high**

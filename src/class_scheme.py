@@ -80,6 +80,12 @@ def derive_all(cfg, merges=None):
 # ---------- screening and the quiz ----------
 
 
+def class_counts(audit):
+    """Labelled patches per class in the fine-tune areas, from the 8.1 audit result."""
+    areas = audit["finetune_areas"]
+    return {c: sum(audit["class_counts_finetune_areas"][a][c] for a in areas) for c in CLASSES}
+
+
 def screen_pairs(audit, min_patches):
     """Pairs that go to the quiz: both classes have >= min_patches labelled fine-tune-area patches,
     and in
@@ -87,10 +93,7 @@ def screen_pairs(audit, min_patches):
     Returns [(class A, class B, which matrix, A->B count, B->A count)], A before B
     alphabetically."""
     classes = list(CLASSES)  # the audit's matrices use this class order
-    counts = {
-        c: sum(audit["class_counts_finetune_areas"][a][c] for a in audit["finetune_areas"])
-        for c in classes
-    }
+    counts = class_counts(audit)
     pairs = []
     for i, a in enumerate(classes):
         for j in range(i + 1, len(classes)):
@@ -207,11 +210,24 @@ def decide(accuracy, rule):
 
 
 def score_quiz(answers, key):
-    """Per pair: number right, number judged, accuracy. answers: pair, number, answer (A/B)."""
+    """Per pair: number right, number judged, accuracy. answers: pair, number, answer (A/B).
+    Stops on anything that could silently move the decision: an answer that is not A or B,
+    a duplicated or unknown item, or a missing answer."""
+    answers = answers.assign(answer=answers["answer"].astype(str).str.strip().str.upper())
+    bad = answers[~answers["answer"].isin(["A", "B"])]
+    if len(bad):
+        raise ValueError(f"answers must be A or B, got: {sorted(set(bad['answer']))}")
+    if answers.duplicated(["pair", "number"]).any():
+        raise ValueError("an item has more than one answer")
+    check = answers.merge(
+        key[["pair", "number"]], on=["pair", "number"], how="left", indicator=True
+    )
+    if (check["_merge"] == "left_only").any():
+        raise ValueError("answers for items that are not in the key")
     merged = key.merge(answers, on=["pair", "number"], how="left")
     if merged["answer"].isna().any():
         raise ValueError("some quiz items have no answer")
-    merged["right"] = merged["answer"].str.upper() == merged["true_letter"]
+    merged["right"] = merged["answer"] == merged["true_letter"]
     out = {}
     for pair, group in merged.groupby("pair"):
         out[pair] = {
@@ -236,7 +252,18 @@ def merges_from_decisions(decisions):
     return {"+".join(sorted(g)): sorted(g) for g in groups}
 
 
-def render_report(cfg, pairs, results, decisions, merges, judge_note, mix):
+JUDGE_NOTES = {
+    "claude_blind": (
+        "Claude, blind (user's decision 2026-11-08, 'just do everything'). Claude saw only the "
+        "numbered sheets, never the key, when answering. The user has not judged this sample; "
+        "their eyes may differ from Claude's, so the sheets are kept and the user can re-judge "
+        "them (`--answers <csv> --judge user`)."
+    ),
+    "user": "The user, from their own answers file (`--judge user`).",
+}
+
+
+def render_report(cfg, pairs, results, decisions, merges, judge_note, mix, counts):
     rule = cfg["rule"]
     lines = ["# Step 8.2: class scheme for Indian land", ""]
     lines.append(
@@ -259,12 +286,11 @@ def render_report(cfg, pairs, results, decisions, merges, judge_note, mix):
     )
     rows = [f"| {a} / {b} | {kind} | {ab} | {ba} |" for a, b, kind, ab, ba in pairs]
     lines += ["| pair | matrix | A -> B | B -> A |", "|---|---|---|---|"] + rows + [""]
+    few = [f"{c} {n}" for c, n in counts.items() if n < rule["min_patches_per_class"]]
     lines.append(
-        "Not tested (too few labelled patches, so the rule cannot merge them): Pasture 0, "
-        "SeaLake 0, "
-        "PermanentCrop 2, Forest 1, HerbaceousVegetation 1. So the rule says nothing about River "
-        "versus "
-        "SeaLake (SeaLake has no Indian label) or AnnualCrop versus PermanentCrop.\n"
+        f"Not tested (fewer than {rule['min_patches_per_class']} labelled fine-tune-area patches, "
+        "so the rule cannot merge them): " + ", ".join(few) + ". The rule says nothing about "
+        "any pair that includes one of these classes.\n"
     )
     lines.append("## 2. The blind quiz\n")
     lines.append(
@@ -283,22 +309,37 @@ def render_report(cfg, pairs, results, decisions, merges, judge_note, mix):
     lines.append("### Caveats on the quiz\n")
     lines.append("- **Area confound.** Where the sample patches come from (counts per area):\n")
     lines += ["| pair | class | patches per area |", "|---|---|---|"]
-    for (pair, cls), counts in mix.items():
-        per_area = ", ".join(f"{a} {n}" for a, n in counts.items())
+    for (pair, cls), area_counts in mix.items():
+        per_area = ", ".join(f"{a} {n}" for a, n in area_counts.items())
         lines.append(f"| {pair} | {cls} | {per_area} |")
     lines.append("")
+    top_area = {}
+    for (pair, cls), per_area in mix.items():
+        top_area.setdefault(pair, {})[cls] = max(per_area, key=per_area.get)
+    different = [p for p, d in top_area.items() if len(set(d.values())) == len(d)]
+    same = [p for p in top_area if p not in different]
+    area_text = "  Pairs whose two classes come mostly from different areas: "
+    area_text += (", ".join(different) or "none") + ". Pairs whose classes come mostly from the "
+    area_text += "same area: " + (", ".join(same) or "none") + ". "
     lines.append(
-        "  When the two classes come mostly from different areas, a judge can lean on the scene "
-        "(brightness, haze, building style) instead of on the land use. So a high score here "
-        "shows the classes look different in these patches, not that they would be told apart "
-        "in a new city.\n"
+        area_text + "Where the areas differ, a judge can lean on the scene (brightness, haze, "
+        "building style) instead of on the land use. So a high score there shows the classes "
+        "look different in these patches, not that they would be told apart in a new city.\n"
         "- **The judge is Claude, not the user.** The sheets are kept so the user can re-judge "
         "them.\n"
         "- **Blindness is by procedure.** Claude answered from the numbered sheets only and saved "
         "the answers (committed) before opening the key, but it is the same assistant that built "
         "the quiz and earlier suggested labels for these patches (step 4.2).\n"
-        "- **Small sample.** 20 patches per pair (Highway has 11 in the fine-tune areas, so 10 of "
-        "11 were used). One answer more or fewer changes the accuracy by 5 points.\n"
+    )
+    used = {}
+    for (pair, cls), per_area in mix.items():
+        used[cls] = sum(per_area.values())
+    sizes = sorted({r["n"] for r in results.values()})
+    lines.append(
+        f"- **Small sample.** {', '.join(str(n) for n in sizes)} patches per pair. Patches used "
+        "out of all labelled in the fine-tune areas: "
+        + ", ".join(f"{c} {used[c]} of {counts[c]}" for c in used)
+        + f". One answer more or fewer changes the accuracy by {100 / min(sizes):.0f} points.\n"
         "- **Untestable classes** (see the screen) are not covered.\n"
     )
     lines.append("## 3. Chosen scheme\n")
@@ -307,7 +348,12 @@ def render_report(cfg, pairs, results, decisions, merges, judge_note, mix):
             "Merges: " + "; ".join(f"{k} = {' + '.join(v)}" for k, v in merges.items()) + ".\n"
         )
     else:
-        lines.append("**Keep the 10 EuroSAT classes** (`chosen_merges: {}`).\n")
+        lines.append(
+            "**Keep the 10 EuroSAT classes** (`chosen_merges: {}`). The rule found no evidence "
+            "for merging. The test was weak (see the caveats: some pairs come from different "
+            "areas, and the judge was Claude), so this is the safe default, not a proof that the "
+            "10 classes fit India.\n"
+        )
     summary = json.loads(Path(cfg["rule"]["india_after_json"]).read_text(encoding="utf-8"))
     summary = summary["summary_mean_std_over_seeds"]
     before = summary["india_test_accuracy_before"]
@@ -345,20 +391,40 @@ def render_report(cfg, pairs, results, decisions, merges, judge_note, mix):
         "label that is "
         "kept apart from the 10-class evaluation); this step does not.\n"
         "- Hand labels (tier 1) stay in the 10 classes, so every earlier number remains valid.\n"
-        "- Step 8.1 listed 'the classes do not fit' as cause 1, including Residential versus "
-        "Industrial. This quiz does not support merging those two (see the caveats above for how "
-        "far to trust that). Because the two classes in the sample mostly come from different "
-        "areas, it is weak evidence about telling them apart inside one scene; a same-area "
-        "sample would test that, and the rule does not require it. Still open: the water "
-        "naming (Narmada called SeaLake) and crops versus "
-        "PermanentCrop, which the rule cannot test because SeaLake and PermanentCrop have too few "
-        "Indian labels. More labels come in 8.4 to 8.7.\n"
+    )
+    pair = "Industrial_vs_Residential"
+    if pair in decisions:
+        acc = results[pair]["accuracy"]
+        where = "different areas" if pair in different else "the same area"
+        if decisions[pair] == "merge":
+            verdict = f"the judge got {acc:.0%} right, so by the rule they are merged"
+        else:
+            verdict = f"the judge got {acc:.0%} right, so by the rule they stay separate"
+        lines.append(
+            "- Step 8.1 listed 'the classes do not fit' as cause 1, including Residential "
+            f"versus Industrial. In this quiz {verdict}. The two classes in the sample came "
+            f"mostly from {where}"
+            + (
+                ", so it is weak evidence about telling them apart inside one scene; a "
+                "same-area sample would test that, and the rule does not require it"
+                if pair in different
+                else ""
+            )
+            + ".\n"
+        )
+    lines.append(
+        "- Still open: the water naming (Narmada called SeaLake) and crops versus PermanentCrop "
+        "are not covered by the rule when SeaLake and PermanentCrop have too few Indian labels. "
+        "More labels come in 8.4 to 8.7.\n"
     )
     return "\n".join(lines) + "\n"
 
 
-def score(cfg, answers_path=None, judge_note=None):
+def score(cfg, answers_path=None, judge=None):
     rule = cfg["rule"]
+    judge = judge or rule["judge"]
+    if judge not in JUDGE_NOTES:
+        raise ValueError(f"judge must be one of {sorted(JUDGE_NOTES)}")
     audit = json.loads(Path(rule["audit_json"]).read_text(encoding="utf-8"))
     pairs = screen_pairs(audit, rule["min_patches_per_class"])
     key = pd.read_csv(rule["key_path"])
@@ -366,15 +432,10 @@ def score(cfg, answers_path=None, judge_note=None):
     results = score_quiz(answers, key)
     decisions = {pair: decide(r["accuracy"], rule) for pair, r in results.items()}
     merges = merges_from_decisions(decisions)
-    note = judge_note or (
-        'Claude, blind (user\'s decision 2026-11-08, "just do everything"). Claude saw only the '
-        "numbered "
-        "sheets, never the key, when answering. The user has not judged this sample; their eyes "
-        "may differ "
-        "from Claude's, so the sheets are kept and the user can re-judge them (`--answers`)."
-    )
     mix = area_mix(key, fine_tune_labels(rule))
-    report = render_report(cfg, pairs, results, decisions, merges, note, mix)
+    report = render_report(
+        cfg, pairs, results, decisions, merges, JUDGE_NOTES[judge], mix, class_counts(audit)
+    )
     Path(cfg["output_path"]).write_text(report, encoding="utf-8")
     print(json.dumps({"results": results, "decisions": decisions, "merges": merges}, indent=1))
     print(f"Saved {cfg['output_path']}")
@@ -385,14 +446,16 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("stage", choices=["make-quiz", "score"])
     parser.add_argument("--config", required=True)
-    parser.add_argument("--answers", help="a different answers CSV (e.g. the user's own)")
+    parser.add_argument("--answers", help="a different answers CSV (needs --judge)")
+    parser.add_argument("--judge", choices=sorted(JUDGE_NOTES), help="who wrote the answers")
     args = parser.parse_args(argv)
+    if args.answers and not args.judge:
+        parser.error("--answers needs --judge, so the report says who really judged")
     cfg = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
     if args.stage == "make-quiz":
         make_quiz(cfg)
     else:
-        note = "the user (own answers file)" if args.answers else None
-        score(cfg, args.answers, note)
+        score(cfg, args.answers, args.judge)
 
 
 if __name__ == "__main__":

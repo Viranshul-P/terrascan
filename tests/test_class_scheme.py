@@ -191,3 +191,50 @@ def test_saved_quiz_reproduces_the_chosen_merges_in_the_config():
     results = score_quiz(pd.read_csv(ANSWERS), pd.read_csv(KEY))
     decisions = {pair: decide(r["accuracy"], CONFIG["rule"]) for pair, r in results.items()}
     assert merges_from_decisions(decisions) == CONFIG["chosen_merges"]
+
+
+def quiz_key():
+    return pd.DataFrame({"pair": ["P"] * 2, "number": [1, 2], "true_letter": ["A", "B"]})
+
+
+@pytest.mark.parametrize(
+    "answers",
+    [
+        {"pair": ["P", "P"], "number": [1, 2], "answer": ["A", "C"]},  # not A or B
+        {"pair": ["P", "P", "P"], "number": [1, 2, 2], "answer": ["A", "B", "B"]},  # duplicate
+        {"pair": ["P", "P", "Q"], "number": [1, 2, 1], "answer": ["A", "B", "A"]},  # unknown pair
+        {"pair": ["P"], "number": [1], "answer": ["A"]},  # missing answer
+    ],
+)
+def test_score_quiz_stops_on_answers_that_could_move_the_decision(answers):
+    from src.class_scheme import score_quiz
+
+    with pytest.raises(ValueError):
+        score_quiz(pd.DataFrame(answers), quiz_key())
+
+
+def test_score_quiz_accepts_spaces_and_lower_case():
+    from src.class_scheme import score_quiz
+
+    answers = pd.DataFrame({"pair": ["P", "P"], "number": [1, 2], "answer": [" a", "b "]})
+    assert score_quiz(answers, quiz_key())["P"]["right"] == 2
+
+
+def test_answers_file_needs_an_explicit_judge():
+    from src.class_scheme import main
+
+    with pytest.raises(SystemExit):
+        main(["score", "--config", "configs/classes_india.yaml", "--answers", "x.csv"])
+
+
+def test_class_counts_sums_the_fine_tune_areas():
+    from src.class_scheme import class_counts
+
+    audit = {
+        "finetune_areas": ["a", "b"],
+        "class_counts_finetune_areas": {
+            "a": {c: 1 for c in CLASSES},
+            "b": {c: 2 for c in CLASSES},
+        },
+    }
+    assert class_counts(audit) == {c: 3 for c in CLASSES}
