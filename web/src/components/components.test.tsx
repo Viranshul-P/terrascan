@@ -70,7 +70,7 @@ describe("Legend", () => {
   it("shows the plain name, and the original name only when it differs", () => {
     render(<Legend items={items} format={String} />);
     expect(screen.getByText("Farmland")).toBeInTheDocument();
-    expect(screen.getByText("AnnualCrop")).toBeInTheDocument();
+    expect(screen.getByTitle("Model class: AnnualCrop")).toBeInTheDocument();
     expect(screen.getAllByText("Forest")).toHaveLength(1);
     expect(screen.getByText("−94")).toBeInTheDocument();
   });

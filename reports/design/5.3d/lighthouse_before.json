@@ -1,0 +1,78 @@
+{
+  "url": "http://localhost:4320/",
+  "chrome": "Playwright Chromium",
+  "runs": [
+    {
+      "fetched": "2026-11-08T09:16:12.719Z",
+      "scores": {
+        "performance": 92,
+        "accessibility": 100,
+        "best-practices": 96
+      },
+      "lcp_s": 2.63,
+      "tbt_ms": 159,
+      "cls": 0,
+      "fcp_s": 2.11,
+      "failed": [
+        "first-contentful-paint (0.81)",
+        "largest-contentful-paint (0.87)",
+        "max-potential-fid (0.71)",
+        "errors-in-console (0)",
+        "interactive (0.67)",
+        "mainthread-work-breakdown (0)",
+        "bootup-time (0)",
+        "valid-source-maps (0)",
+        "unused-javascript (0)",
+        "dom-size (0.5)"
+      ]
+    },
+    {
+      "fetched": "2026-11-08T09:16:26.203Z",
+      "scores": {
+        "performance": 93,
+        "accessibility": 100,
+        "best-practices": 96
+      },
+      "lcp_s": 2.71,
+      "tbt_ms": 167,
+      "cls": 0,
+      "fcp_s": 1.8,
+      "failed": [
+        "first-contentful-paint (0.89)",
+        "largest-contentful-paint (0.85)",
+        "max-potential-fid (0.7)",
+        "errors-in-console (0)",
+        "interactive (0.66)",
+        "mainthread-work-breakdown (0)",
+        "bootup-time (0)",
+        "valid-source-maps (0)",
+        "unused-javascript (0)",
+        "dom-size (0.5)"
+      ]
+    },
+    {
+      "fetched": "2026-11-08T09:16:39.980Z",
+      "scores": {
+        "performance": 93,
+        "accessibility": 100,
+        "best-practices": 96
+      },
+      "lcp_s": 2.71,
+      "tbt_ms": 142,
+      "cls": 0,
+      "fcp_s": 1.8,
+      "failed": [
+        "first-contentful-paint (0.89)",
+        "largest-contentful-paint (0.85)",
+        "max-potential-fid (0.67)",
+        "errors-in-console (0)",
+        "interactive (0.67)",
+        "mainthread-work-breakdown (0)",
+        "bootup-time (0)",
+        "valid-source-maps (0)",
+        "unused-javascript (0)",
+        "dom-size (0.5)"
+      ]
+    }
+  ]
+}

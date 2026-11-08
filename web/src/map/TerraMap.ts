@@ -132,6 +132,10 @@ export class TerraMap {
     // A mouse wheel zooms a little gentler than MapLibre's default (1/450), so the globe and the city don't jump.
     // It always zooms towards the pointer.
     this.map.scrollZoom.setWheelZoomRate(1 / 600);
+    // Phones: show the map credits folded into their "i" button (MapLibre leaves them open until the first touch).
+    this.map.once("load", () => {
+      if (innerWidth <= 960) this.map.getContainer().querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show");
+    });
   }
 
   private landuseOpacity(y: string): number | ExpressionSpecification {

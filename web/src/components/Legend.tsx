@@ -1,5 +1,5 @@
 // Legend: one row per land-use class. Each row is also a small bar chart (a faint bar of the class colour, sized to
-// the biggest class) and a filter button. Shows the plain name, with the original EuroSAT name in small text.
+// the biggest class) and a filter button. Shows the plain name; the original EuroSAT name is in the row's tooltip.
 import type { CSSProperties } from "react";
 import { className } from "../lib/classes";
 import "./Legend.css";
@@ -25,10 +25,11 @@ export function Legend({ items, format, active = null, onToggle, onPreview }: Pr
         return (
           <button key={it.key} type="button" className="leg" aria-pressed={on}
             style={{ "--c": it.colour, "--w": it.value / max } as CSSProperties}
+            title={name.original ? `Model class: ${name.original}` : undefined}
             onClick={() => onToggle?.(it.key)} onPointerEnter={() => onPreview?.(it.key)}
             onFocus={() => onPreview?.(it.key)}>
             <i aria-hidden="true" />
-            <span className="leg-name">{name.plain}{name.original && <small>{name.original}</small>}</span>
+            <span className="leg-name">{name.plain}</span>
             <span className="leg-v">{format(it.value)}{d !== undefined && <em>{d > 0.5 ? "+" : d < -0.5 ? "−" : "±"}{format(Math.abs(d))}</em>}</span>
           </button>
         );

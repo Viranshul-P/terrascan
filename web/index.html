@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <title>TerraScan: how much of Ahmedabad really changed?</title>
   <meta name="description" content="A land-use model mapped Ahmedabad from space in two years, then its work was checked square by square.">
   <!-- Pick the theme before the first paint, so a dark-mode visitor never sees a white flash. -->
@@ -16,6 +17,9 @@
   <!-- The Story (and the Explorer's first city) need these small data files before the headline can show. Fetching
        them alongside the JavaScript, instead of one after another once it has run, saves several round trips on a
        slow phone connection (Lighthouse, step 5.3c). The page reads them with fetch(), so as="fetch". -->
+  <!-- The still globe the hero shows until the live map starts (matches the visitor's colour scheme). -->
+  <link rel="preload" href="/globe-light.webp" as="image" media="(prefers-color-scheme: light)">
+  <link rel="preload" href="/globe-dark.webp" as="image" media="(prefers-color-scheme: dark)">
   <link rel="preload" href="/data/index.json" as="fetch" crossorigin>
   <link rel="preload" href="/data/story.json" as="fetch" crossorigin>
   <link rel="preload" href="/data/ahmedabad/summary.json" as="fetch" crossorigin>

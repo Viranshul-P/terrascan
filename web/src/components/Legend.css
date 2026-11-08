@@ -12,9 +12,8 @@
 }
 .leg:hover::before { opacity: 0.26; }
 .leg i { width: 12px; height: 12px; border-radius: 3px; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); }
-/* Plain name on top, the original EuroSAT name on a small second line */
+/* The plain name; the original EuroSAT name is in the row's tooltip (title) */
 .leg-name { display: grid; min-width: 0; line-height: 1.25; }
-.leg-name small { font: 500 10.5px var(--mono); color: var(--ink-3); overflow-wrap: anywhere; }
 .leg-v { font: 500 12px var(--mono); color: var(--ink-2); white-space: nowrap; }
 .leg-v em { font-style: normal; color: var(--ink-3); margin-left: 6px; }
 .legend[data-filtered] .leg[aria-pressed="false"] { opacity: 0.38; }

@@ -25,7 +25,7 @@ export function Cities({ index }: { index: Index }) {
       <div className="wrap">
         <div className="sec-head">
           <div><span className="eyebrow">More cities</span><h2 id="citiesTitle">{index.cities.length} cities, two winters.</h2></div>
-          <p>Maps made ahead of time, so they open instantly. Point at a city to watch it change from {y0} to {y1}, square by square.</p>
+          <p>Maps made ahead of time, so they open instantly. Watch each city change from {y0} to {y1}, square by square.</p>
         </div>
         <div className="city-cards">
           {(sums ?? []).map((s, n) => <CityCard key={s.id} s={s} n={n} years={index.years} />)}

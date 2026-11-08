@@ -2,7 +2,7 @@
 // (ported from prototype E). Each chapter moves the map (camera, layers). Under the map: the model cards, the game,
 // the city cards and How it works (part 2). The map code (TerraMap + maplibre-gl) is
 // downloaded after the page shows, so the page itself stays small.
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
 import { cityBounds, DATA, loadCity } from "../lib/city";
@@ -22,6 +22,14 @@ import "../story/Story.css";
 
 const phone = () => innerWidth <= 960;
 const GLOBE = { center: [62, 16] as [number, number], zoom: () => (phone() ? 0.35 : 1.75) };
+// The still picture of the hero globe (public/globe-light.webp, globe-dark.webp; made by scripts/make-globe-poster.mjs).
+// It was photographed from the live map on a desktop window: the globe is 473 px wide inside a 770 px square. The live
+// globe is 198.5 px wide on a phone (measured in scripts/check-poster.mjs photos; it is not exactly twice as wide per
+// zoom step), so there the picture is scaled by 198.5 / 473.
+const POSTER = { side: 770, disc: 473, discPhone: 198.5 };
+// Phones: the globe gets the top 250 px of the map; the hero text starts below (.hero padding in Story.css). A fixed
+// band, not a share of the screen height, so the globe never lands on the headline on short phones (step 5.3d).
+const PHONE_GLOBE_ROOM = 250;
 
 export function Story() {
   const index = useJson<Index>(`${DATA}index.json`);
@@ -60,6 +68,8 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
   const [ready, setReady] = useState(false); // map loaded
   const [inStory, setInStory] = useState(true); // the chapters (not the sections below them) are on screen
   const mapEl = useRef<HTMLDivElement>(null);
+  const stageEl = useRef<HTMLDivElement>(null);
+  const posterEl = useRef<HTMLDivElement>(null);
   const stepsEl = useRef<HTMLDivElement>(null);
   const tm = useRef<TerraMap | null>(null);
   const pins = useRef<{ addTo: (m: unknown) => void; remove: () => void }[]>([]);
@@ -68,8 +78,22 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
   // ---------- Camera ----------
   // The hero's globe sits to the right of the text (desktop) or above it (phone); chapters fit the city into the
   // part of the screen the cards don't cover.
-  const heroPad = () => (phone() ? { top: 40, bottom: Math.round(innerHeight * 0.62), left: 0, right: 0 } : { left: Math.round(innerWidth * 0.42), right: 0, top: 0, bottom: 0 });
+  const heroPad = () => (phone() ? { top: 40, bottom: Math.max(0, (stageEl.current?.clientHeight ?? innerHeight - 60) - PHONE_GLOBE_ROOM), left: 0, right: 0 } : { left: Math.round(innerWidth * 0.42), right: 0, top: 0, bottom: 0 });
   const cardPad = () => (phone() ? { top: 70, bottom: Math.round(innerHeight * 0.5), left: 12, right: 12 } : { top: 90, bottom: 60, left: Math.min(560, Math.round(innerWidth * 0.4)), right: 80 });
+  // The still globe sits exactly where the live globe will be: the middle of the part of the screen the hero text leaves free.
+  useLayoutEffect(() => {
+    const place = () => {
+      const stage = stageEl.current, poster = posterEl.current;
+      if (!stage || !poster) return;
+      const hp = heroPad(), pad = { left: hp.left, right: hp.right, top: hp.top, bottom: hp.bottom };
+      const side = POSTER.side * (phone() ? POSTER.discPhone : POSTER.disc) / POSTER.disc;
+      const cx = (pad.left + stage.clientWidth - pad.right) / 2, cy = (pad.top + stage.clientHeight - pad.bottom) / 2;
+      Object.assign(poster.style, { width: `${side}px`, height: `${side}px`, left: `${cx - side / 2}px`, top: `${cy - side / 2}px` });
+    };
+    place();
+    addEventListener("resize", place);
+    return () => removeEventListener("resize", place);
+  }, []);
   const camFor = useCallback((sc: Scene) => {
     const m = tm.current!.map;
     if (sc.cam === "globe") return { center: GLOBE.center, zoom: GLOBE.zoom(), pitch: 0, bearing: 0, padding: heroPad() };
@@ -82,16 +106,16 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
   }, [city]);
 
   // ---------- Make the map (once) ----------
-  // The map (its code, the city pictures and the squares, about 2 MB) starts loading only after the headline is on
-  // screen, or as soon as the visitor scrolls or touches the page. Loading it at once made the headline wait behind
-  // it on a slow phone connection (Lighthouse, step 5.3c).
+  // Until the visitor first scrolls, touches, presses a key or moves the mouse, the page shows a still picture of the
+  // globe and the map (its code, the city pictures and the squares, about 2 MB) is not downloaded. Starting it by
+  // itself, even a moment after the headline, kept a slow phone busy while the page was still settling (Lighthouse,
+  // steps 5.3c and 5.3d).
   const [mapGo, setMapGo] = useState(false);
   useEffect(() => {
     const go = () => setMapGo(true);
-    const timer = window.setTimeout(go, 1600);
-    const events = ["scroll", "pointerdown", "keydown", "touchstart"];
+    const events = ["scroll", "wheel", "pointerdown", "pointermove", "keydown", "touchstart"];
     events.forEach((e) => addEventListener(e, go, { once: true, passive: true }));
-    return () => { clearTimeout(timer); events.forEach((e) => removeEventListener(e, go)); };
+    return () => events.forEach((e) => removeEventListener(e, go));
   }, []);
   useEffect(() => {
     if (!mapGo) return;
@@ -118,9 +142,6 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
       t.map.on("load", () => {
         t.setChecks(checks.squares);
         setReady(true);
-        // Phones: show the map credits folded into their "i" button (MapLibre folds them after the first touch, but
-        // this map can't be touched). One tap opens them.
-        if (phone()) mapEl.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show");
       });
     });
     return () => { cancelled = true; tm.current?.remove(); tm.current = null; };
@@ -221,7 +242,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
       <div className="progress" ref={progress} aria-hidden="true" />
       <main>
         <section className="story" aria-label="Story">
-          <div className="story-map" data-ready={ready}><div className="map" ref={mapEl} role="img" aria-label="Map that follows the story: globe, then Ahmedabad and its land use" /></div>
+          <div className="story-map" data-ready={ready} ref={stageEl}><div className="poster" ref={posterEl} aria-hidden="true" /><div className="map" ref={mapEl} role="img" aria-label="Map that follows the story: globe, then Ahmedabad and its land use" /></div>
           <div className="steps" ref={stepsEl}>
             <Hero ctx={ctx} />
             <TheCity ctx={ctx} />

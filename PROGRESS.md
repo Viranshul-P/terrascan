@@ -6,11 +6,24 @@ Claude updates this at the end of every step. Keep entries short.
 5.3d
 
 ## Status
-not started
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+**5.3d, the friends test (yours: it needs real people).** Part 1 (performance, accessibility, polish) is done and
+committed. What's left is the test with 3 friends, then Claude fixes the top 3 problems.
+1. Start the site on your laptop (two terminals):
+   - `docker run --rm -p 8000:8000 terrascan-api` (the live "map your own area" server; Docker Desktop must be open)
+   - in `web/`: `npm run dev` and open http://localhost:5173/ (the site finds the server at localhost:8000)
+2. Sit with each of 3 friends (laptop first; one of them on your phone if you can: the site must be reachable from the
+   phone, which needs `npm run dev -- --host` and your laptop's Wi-Fi address plus `VITE_API_URL=http://<that address>:8000`;
+   skip the phone if that is a hassle and say so in your notes). Do NOT explain the site. Say only:
+   (1) "Find what changed in Ahmedabad." (2) "Now map your own area." Watch; don't help unless they are stuck for a minute.
+3. Write down for each friend: what they clicked first, where they hesitated or got stuck, what they said out loud,
+   how long each task took, and whether they could tell the numbers are only partly right.
+4. Save the notes as `reports/design/5.3d/friends_test.md` (rough is fine; write who was a friend, not names) and tell
+   Claude: `/next`. Claude will pick the top 3 problems from your notes, plan the fixes (you OK the plan), fix them,
+   re-check, and tick 5.3d.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -89,8 +102,26 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3c part 1 (Claude, 2026-11-07, on medium effort at the user's request) — src/web_story.py writes web/public/data/story.json (Ahmedabad check, India 3-seed numbers, per-model EuroSAT results, each with its source file; 4 pytest tests); Story page at / in React from prototype E (web/src/pages/Story.tsx, story/Chapters.tsx, story/Story.css, lib/story.ts, components/CountUp.tsx): pinned map, hero with count-ups, chapters The city / What the model sees / What changed / How sure (319 -> 163 km² bar that shrinks, 50-square waffle) / Europe -> India (dots ± std) / Limits; header gets a Story link, Explorer stays at /explorer. 14 new web tests (68 pass), incl. one that renders every chapter with made-up numbers to prove nothing is typed in. Screenshots + load check: reports/design/5.3c/ (web/scripts/shoot-story.mjs).
 - 5.3c part 2 (Claude, 2026-11-07, medium effort) — under the story map: model cards (story/Models.tsx; Accuracy / Speed / Size switch, "Ours" = best multi-seed from-scratch model, sentence built from range overlaps AND from CPU speed so it also says EfficientNet-B0 is faster), the game ported from prototype E (story/Game.tsx, quiz.json), city cards that change year square by square (story/Cities.tsx, lib/pixelSwap.ts), How it works (4 drawn steps + links: GitHub, Indian dataset; model card and blog shown as "coming soon"), footer with data credits and a plain note that much of the work was done with Claude. Speed fixes after Lighthouse: map loads after the headline (1.6 s or first scroll/touch) and fades in; data files preloaded in index.html; GitHub header link named; footer headings fixed. 10 new web tests (78 pass). Screenshots: reports/design/5.3c/.
 - 5.3c — done (user looked at it on laptop/phone and OK'd it, 2026-11-07). Lighthouse performance 81/84 left for 5.3d (user's choice C).
+- 5.3d part 1 (Claude, 2026-11-08, high effort) — performance, accessibility and polish; friends test + top-3 fixes still to do (you).
+  Speed: the Story shows a still picture of the globe (web/public/globe-light.webp, globe-dark.webp, 45 KB each, made by
+  web/scripts/make-globe-poster.mjs + globe_poster.py from the live map) and starts the live map only on the first scroll,
+  touch, key or mouse move (the 1.6 s timer is gone); chapter 2's tiles no longer download the 680 KB city picture at load;
+  favicon added (the 404); source maps on. Lighthouse (mobile, 5 runs, reports/design/5.3d/lighthouse.json): performance 93-95,
+  accessibility 100, best practices 100. Impeccable critique (29/40) + detector, then 5 fixes: phone header keeps Story and
+  Explorer links; Explorer drops `tile 43QBF` and class code names from the main view (now in tooltips); Cities text no longer says
+  "point at"; model sentence says "ResNet-18 (satellite)"; Explorer's credits fold into "i" on phones, +/- hidden on touch, zoom bar
+  lifted above credits on desktop; error box has a full outline instead of a side stripe. Audit found and fixed a real bug: on a
+  360x740 phone the live globe covered the headline (now a fixed 250 px band for the globe; hero grows taller on short phones).
+  Tests: 80 web tests, 130 pytest, ruff clean. New scripts in web/scripts: lighthouse.mjs, load-check.mjs, check-poster.mjs,
+  audit-small.mjs, make-globe-poster.mjs (+ globe_poster.py, needs Pillow, which comes with matplotlib).
 
 ## Decisions made
+- 5.3d (Claude, user OK'd the plan 2026-11-08): still globe first, live map on first interaction (recommended by Claude, user said OK).
+  Because the lab test (Lighthouse) never scrolls, it measures the page WITHOUT the map; the cost of starting the map is measured
+  separately (reports/design/5.3d/load_metrics.json). The user's answers after the Impeccable critique: fix all five findings;
+  move Explorer's tile and class code names into tooltips. Impeccable's "bounce easing" findings (spring easing with 1.4
+  overshoot) are kept: PLAN asks for a spring feel and the brief wins. The Story's small kicker labels ("Europe", "More cities")
+  and chapter numbers ("04 / 06") stay as approved in prototype E; Impeccable's floor would drop kickers. User may say if they want them out.
 - 5.3c part 2 (Claude): model cards compare by mean ± std ranges (overlap = about the same, the CLAUDE.md rule); the
   sentence is built from the data and also names faster models, so the page doesn't only show what flatters ours.
   A one-seed model shows "1 seed" instead of "± 0". The game's final line uses quiz.json's model_accuracy (seed 42,
@@ -354,7 +385,10 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 
 ## Known issues / things to revisit
 <!-- e.g. Download from X was flaky, used mirror Y -->
-- 5.3c -> 5.3d: Lighthouse performance 81/84, under the 90 budget (reports/design/5.3c/lighthouse.json). User chose to fix it in 5.3d (2026-11-07). Idea recommended by Claude: a still globe picture first, live 3D map on the first scroll. The favicon 404 (from 5.3b) is the console error Lighthouse lists under best practices.
+- 5.3c -> 5.3d: Lighthouse performance 81/84 (reports/design/5.3c/lighthouse.json) -> fixed in 5.3d: 93-95 (reports/design/5.3d/lighthouse.json). The favicon 404 is fixed. NOTE: the same 5.3c build scored 92/93/93 when re-run on 2026-11-08 (reports/design/5.3d/lighthouse_before.json), so Lighthouse scores on this laptop swing by about 10 points with machine load; judge by the 5-run spread, not one run.
+- 5.3d: Lighthouse's simulated LCP is 2.72-2.82 s (reports/design/5.3d/lighthouse.json), over the 2.5 s budget. Before today's changes it was 2.63-2.71 s; the still-globe picture added about 0.15 s. Our own check (CPU 4x slower, local files, no network delay) gives 444-648 ms (load_metrics.json). Lighthouse uses a simulated slow-4G connection, so the two disagree; the 2.5 s budget is not met on Lighthouse's measure. The floor is FCP 1.8 s (React must run before anything shows). Not fixed: would need a pre-rendered hero in index.html.
+- 5.3d: not done / not checked: the live "map your own area" was not re-run against the real server in the browser this step (the friends test does that); real-phone checks are still yours; the Impeccable critique ran in one context, not as two isolated sub-agents (this plan only spawns agents on request), and its browser overlay was not run.
+- 5.3d: the still globe's phone size (198.5 px) was measured from a photo, because the live globe is not exactly 2x wider per zoom step (web/src/pages/Story.tsx POSTER). If the globe zoom or the hero layout changes, run `node scripts/make-globe-poster.mjs` again and check with `node scripts/check-poster.mjs`.
 - torchvision 0.29 warns that `torchvision.io.decode_image` is deprecated (moving to torchcodec). Works for now. If we switch decoders later, recompute data/stats.json.
 - scripts/compute_stats.py takes ~3 min (reads 18,900 images one by one). Only run once, so left simple.
 - In fast-dev-run, the 2 val batches are all AnnualCrop (val isn't shuffled), so fast-dev-run val accuracy means nothing. Only real runs count.
@@ -492,6 +526,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3b part 2B: a drawn box is a true lon/lat box only on a flat, north-up map, so opening the tool flattens the map;
   opening Compare closes the tool and the tool turns Compare off (the second map would hide the live layers).
 ## Results so far (copied from results/ files only, with the file name)
+- 5.3d Story page, final build (reports/design/5.3d/lighthouse.json, 5 runs of Lighthouse 12.0.0 mobile; reports/design/5.3d/load_metrics.json): performance 93, 93, 94, 95, 95; accessibility 100 all runs; best practices 100 all runs; CLS 0; simulated LCP 2.72-2.82 s (over the 2.5 s budget); TBT 62-131 ms. Own load check (phone window, CPU 4x, 3 runs): LCP 444-648 ms, CLS 0; main-thread blocking over 50 ms per task while settling 183-185 ms, and 14-25 ms in the 6 s after the first scroll (when the map starts). First-load JS 96.6 KB gzipped (npm run size, not saved to a file); the map code and worker (433.8 KB gzipped) load only after the first interaction.
 - 5.3c Story page (final build of part 2): own load check, phone size, CPU 4x slower, local: LCP 1820 ms, CLS 0 (reports/design/5.3c/load_metrics.json). Lighthouse 12.0.0 mobile, 2 runs: performance 81 / 84 (FAILS the 90 budget), accessibility 100 / 100, best practices 96 / 96, simulated LCP 2.72 s, TBT 531 / 447 ms, CLS 0 (reports/design/5.3c/lighthouse.json). First-load JS 96.3 KB gzipped (npm run size output, not saved to a file).
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->
 - SmallCNN v1, seed 42 (one seed, VAL split, not test): best val acc 0.9565, best val loss 0.1266 at epoch 30 of 30, 175,626 params, 724 s training (models/small_cnn_v1/seed42/metrics.json)

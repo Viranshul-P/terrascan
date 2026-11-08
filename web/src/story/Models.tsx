@@ -32,7 +32,9 @@ export function verdict(items: ModelResult[]) {
   const ours = ourModel(items);
   if (!ours) return null;
   const others = items.filter((m) => !fromScratch(m));
-  const by = (r: string) => others.filter((m) => compareAccuracy(ours, m) === r).map(name);
+  // "ResNet-18, satellite" inside a list reads as two names, so in the sentence it becomes "ResNet-18 (satellite)".
+  const inList = (m: ModelResult) => name(m).replace(/, (.+)$/, " ($1)");
+  const by = (r: string) => others.filter((m) => compareAccuracy(ours, m) === r).map(inList);
   const list = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
   const parts = [
     by("same").length && `about as accurate as ${list(by("same"))}`,
@@ -40,7 +42,7 @@ export function verdict(items: ModelResult[]) {
     by("lower").length && `less accurate than ${list(by("lower"))}`,
   ].filter(Boolean);
   // Speed too, so the page doesn't only say what flatters our model.
-  const faster = others.filter((m) => m.cpu_ms_per_image.mean < ours.cpu_ms_per_image.mean).map(name);
+  const faster = others.filter((m) => m.cpu_ms_per_image.mean < ours.cpu_ms_per_image.mean).map(inList);
   const speed = faster.length ? ` It is not the fastest: ${list(faster)} ${faster.length > 1 ? "run" : "runs"} faster on a laptop CPU.` : "";
   return { ours, text: `${name(ours)}, trained from scratch, is ${list(parts as string[])}.${speed}` };
 }

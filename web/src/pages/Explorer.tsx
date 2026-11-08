@@ -379,7 +379,7 @@ function ExplorerView({ index }: { index: Index }) {
 
           <AreaPanel area={area} years={years} classes={index.classes} picked={picked} hidden={intro || !areaOpen} snap={areaSnap} onSnap={setAreaSnap} onMiddle={middleBox} />
 
-          <div className="status"><span ref={cursor}>—</span><span>zoom <b ref={zoomVal}>—</b></span><span>{s.tile} · 10 m Sentinel-2</span></div>
+          <div className="status"><span ref={cursor}>—</span><span>zoom <b ref={zoomVal}>—</b></span><span title={`Sentinel-2 tile ${s.tile}`}>10 m Sentinel-2</span></div>
           <div className="zoombar">
             <button type="button" aria-label="Zoom in" onClick={() => tm.current?.map.zoomIn()}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10" /></svg></button>
             <button type="button" aria-label="Zoom out" onClick={() => tm.current?.map.zoomOut()}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M3 8h10" /></svg></button>

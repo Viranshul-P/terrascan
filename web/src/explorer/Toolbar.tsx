@@ -35,9 +35,9 @@ export function Toolbar(p: Props) {
   return (
     <div className="toolbar" role="toolbar" aria-label="Map tools">
       <div className="tb-group pop-anchor" ref={picker.ref}>
-        <button type="button" className="combo" aria-haspopup="listbox" aria-expanded={picker.open} onClick={() => picker.setOpen(!picker.open)}>
+        <button type="button" className="combo" title={`Sentinel-2 tile ${p.city.tile}`} aria-haspopup="listbox" aria-expanded={picker.open} onClick={() => picker.setOpen(!picker.open)}>
           <span className="sw" style={{ backgroundImage: `url(${base}${p.city.files.overlay[y1]})` }} />
-          <span>{p.city.name}</span><span className="sub">tile {p.city.tile}</span><Chevron />
+          <span>{p.city.name}</span><Chevron />
         </button>
         <div className="pop" data-open={picker.open} role="dialog" aria-label="Choose a city">
           <input type="search" placeholder="Find a city" aria-label="Find a city" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />

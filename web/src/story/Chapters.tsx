@@ -81,7 +81,9 @@ export function WhatItSees({ ctx }: { ctx: Ctx }) {
   const { city, years, colour } = ctx, s = city.summary, y1 = years[1];
   const best = mostSure(city.patches, y1, s.grid_cols);
   const picked = SHEET.filter((k) => best[k]);
-  const rgb = city.base + s.files.rgb[y1];
+  // The city picture is 680 KB. These tiles sit far below the headline, so they ask for it only once the visitor has
+  // reached the chapter before (or this one); the map downloads the same file, so it is fetched once (step 5.3d).
+  const rgb = ctx.seen(1) || ctx.seen(2) ? `url(${city.base + s.files.rgb[y1]})` : undefined;
   return (
     <Step n={2} ctx={ctx}>
       <h2>Every 640&nbsp;m square gets a name.</h2>
@@ -93,7 +95,7 @@ export function WhatItSees({ ctx }: { ctx: Ctx }) {
             <button type="button" className="tile" key={k} style={{ "--n": n } as CSSProperties}
               onPointerEnter={() => ctx.onSquare(b.id)} onFocus={() => ctx.onSquare(b.id)} onBlur={() => ctx.onSquare(null)}
               aria-label={`${plain(k)}, ${pct(b.conf, 0)}% sure: show on the map`}>
-              <span className="px" style={{ "--c": colour[k], backgroundImage: `url(${rgb})`, backgroundSize: `${s.grid_cols * 100}% ${s.grid_rows * 100}%`, backgroundPosition: `${(b.col / (s.grid_cols - 1)) * 100}% ${(b.row / (s.grid_rows - 1)) * 100}%` } as CSSProperties}><span className="scan" /></span>
+              <span className="px" style={{ "--c": colour[k], backgroundImage: rgb, backgroundSize: `${s.grid_cols * 100}% ${s.grid_rows * 100}%`, backgroundPosition: `${(b.col / (s.grid_cols - 1)) * 100}% ${(b.row / (s.grid_rows - 1)) * 100}%` } as CSSProperties}><span className="scan" /></span>
               <span className="tl">{plain(k)}<small>{pct(b.conf, 0)}% sure</small></span>
               <i className="conf" style={{ "--w": b.conf, "--c": colour[k] } as CSSProperties} />
             </button>

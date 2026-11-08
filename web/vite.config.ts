@@ -5,6 +5,8 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   build: {
+    // Source maps are written next to the files (visitors don't download them); Lighthouse flags a big file without one.
+    sourcemap: true,
     // Only the real site (index.html) is built; the design prototypes in prototypes/ are not.
     rollupOptions: { input: "index.html" },
   },

@@ -7,6 +7,10 @@
 .story-map { position: sticky; top: var(--nav-h); height: calc(100svh - var(--nav-h)); overflow: hidden; background: var(--space-bg); }
 :root[data-theme="dark"] .story-map { background: #05070a; }
 .story-map .map { position: absolute; inset: 0; }
+/* the still globe, shown until the live map is ready (step 5.3d); Story.tsx sets its size and place */
+.story-map .poster { position: absolute; pointer-events: none; background: url("/globe-light.webp") center / 100% 100% no-repeat; }
+:root[data-theme="dark"] .story-map .poster { background-image: url("/globe-dark.webp"); }
+.story-map[data-ready="true"] .poster { visibility: hidden; transition: visibility 0s 1000ms; }
 /* the map loads a moment after the headline, then fades in */
 .motion .story-map .map { opacity: 0; transition: opacity 900ms var(--ease-out); }
 .motion .story-map[data-ready="true"] .map { opacity: 1; }
@@ -197,7 +201,9 @@
   .rail { display: none; }
   .progress { display: block; }
   .step { align-items: flex-end; padding: 0 var(--s-3) var(--s-6); }
-  .hero { padding: 0 var(--margin) var(--s-10); }
+  /* The top PHONE_GLOBE_ROOM px of the map (pages/Story.tsx) belong to the globe; the headline starts below them, so
+     on a short phone the hero grows taller than the screen instead of sliding under the globe. */
+  .hero { padding: 262px var(--margin) var(--s-10); }
   .card { padding: var(--s-6); width: 100%; }
 }
 @media (max-width: 520px) {

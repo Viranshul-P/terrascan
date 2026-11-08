@@ -6,7 +6,7 @@ import { preview } from "vite";
 import { chromium } from "playwright";
 
 const ROOT = resolve(import.meta.dirname, "..", "..");
-const OUT = join(ROOT, "reports", "design", "5.3c");
+const OUT = join(ROOT, "reports", "design", process.argv[2] ?? "5.3c"); // npm run shots:story -- 5.3d
 await mkdir(OUT, { recursive: true });
 const server = await preview({ root: resolve(import.meta.dirname, ".."), preview: { port: 4319, strictPort: true } });
 const url = "http://localhost:4319/";

@@ -1,0 +1,40 @@
+{
+  "made_by": "web/scripts/load-check.mjs",
+  "date": "2026-11-08",
+  "note": "Story page, production build on this laptop (local files, no network delay), phone-sized window, CPU slowed 4x, 3 runs. Budget: LCP < 2500 ms, CLS < 0.1. blocked_ms = time over 50 ms summed over long tasks.",
+  "runs": [
+    {
+      "while_settling": {
+        "lcp_ms": 648,
+        "cls": 0,
+        "blocked_ms": 183
+      },
+      "six_seconds_after_first_scroll": {
+        "blocked_ms": 25,
+        "cls": 0
+      }
+    },
+    {
+      "while_settling": {
+        "lcp_ms": 456,
+        "cls": 0,
+        "blocked_ms": 184
+      },
+      "six_seconds_after_first_scroll": {
+        "blocked_ms": 15,
+        "cls": 0
+      }
+    },
+    {
+      "while_settling": {
+        "lcp_ms": 444,
+        "cls": 0,
+        "blocked_ms": 185
+      },
+      "six_seconds_after_first_scroll": {
+        "blocked_ms": 14,
+        "cls": 0
+      }
+    }
+  ]
+}

@@ -16,7 +16,14 @@
 .site-gh { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: var(--r-sm); font-size: var(--t-sm); font-weight: 500; color: var(--ink-2); text-decoration: none; }
 .site-gh:hover { color: var(--ink); background: var(--line); }
 .site-gh svg { width: 16px; height: 16px; }
+/* Phones: Story and Explorer both stay in the bar (a visitor must be able to get from one to the other); the design-system
+   page and the word "GitHub" are dropped; under 420 px the logo mark stands for the name too (it has an aria-label). */
 @media (max-width: 640px) {
   .site-nav { gap: var(--s-3); }
-  .site-gh span, .site-links a:not([aria-current]) { display: none; }
+  .site-gh span, .site-links a[href="/design"] { display: none; }
+}
+@media (max-width: 420px) {
+  .site-nav .brand span { display: none; }
+  .site-links a { padding: 0 10px; }
+  .site-links a[aria-current="page"]::after { left: 10px; right: 10px; }
 }

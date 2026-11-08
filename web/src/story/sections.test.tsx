@@ -35,6 +35,11 @@ describe("model comparison", () => {
     expect(compareAccuracy(ITEMS[2], ITEMS[1])).toBe("lower");
   });
 
+  it("a model name with a comma stays readable inside the sentence's list", () => {
+    const sat = { ...model("resnet18_sat", 0.9444, 0.001, 14.3, 11000000) };
+    expect(verdict([...ITEMS, sat])?.text).toContain("more accurate than ResNet-18 and ResNet-18 (satellite).");
+  });
+
   it("our model is the best from-scratch model with several seeds (not the one-seed first try)", () => {
     expect(ourModel(ITEMS)?.name).toBe("small_cnn_v2");
   });
