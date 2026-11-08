@@ -1,0 +1,108 @@
+# Step 8.3b: do more spectral bands help? Comparison + decision.
+#   python -m src.bands_train --config configs/bands_compare.yaml --fast-dev-run
+#   python -m src.bands_train --config configs/bands_compare.yaml                 # everything (hours)
+#   python -m src.bands_train --config configs/bands_compare.yaml --runs rgb --stage base
+#   python -m src.bands_report --config configs/bands_compare.yaml                # table + decision
+#
+# THE DECISION RULE (written and committed BEFORE any run, as in 8.2). The numbers are decided by code in
+# src/bands_report.py; this text is what the code implements.
+#  1. Primary metric = Indian leave-one-area-out (LOAO) accuracy on the 3 fine-tune areas (149 patches pooled),
+#     mean +- std (sample std) over seeds 42/43/44. The two Indian TEST areas are never used in this step.
+#  2. A variant counts as better than its RGB reference only if its mean beats the reference's mean by MORE than
+#     the two stds added together (the mean +- std ranges do not overlap; the CLAUDE.md "ranges overlap" rule).
+#  3. The gain must hold with the extra bands calibrated AND uncalibrated on the Indian side (8.3a known issue).
+#     If it holds in only one of the two, the variant is called "fragile" and is not kept.
+#  4. EuroSAT val accuracy must not be clearly worse than the reference (reference mean minus variant mean not
+#     larger than the two stds added together).
+#  5. If several variants pass, take the one with the fewest channels among those whose LOAO ranges overlap the
+#     best one's. If none passes, RGB stays (it is also what the website and the ONNX model use).
+#  6. Macro-F1 and per-area accuracy are reported but do not decide. Indian macro-F1 averages over classes that
+#     are present in the true labels only (as in 4.3).
+#  7. Arm A (EfficientNet-B0) and arm B (satellite ResNet-18) are decided separately; the final decision is the
+#     arm-A one unless arm B's best variant beats arm A's best by the same rule (it would then be a model change,
+#     not a band change, and is reported to 8.5/8.6 instead of being adopted here).
+
+bands_config: configs/bands.yaml
+india_finetune_config: configs/india_finetune.yaml      # the 4.4 recipe, used UNCHANGED for LOAO
+india_eval_config: configs/india_eval.yaml
+seeds: [42, 43, 44]
+
+# EuroSAT training: the shared recipe (2.2c, 2.4). 50 epochs, keep the lowest-val-loss epoch.
+train:
+  epochs: 50
+  lr: 0.001
+  weight_decay: 0.05
+  label_smoothing: 0.1
+  patience: 50
+  batch_size: 64
+  num_workers: 4
+image_size: 128          # same rule as 2.3: upscale 64 -> 128, bilinear (done on the GPU, inside the model)
+# Augmentation: random flips and 90-degree turns only (colour jitter does not make sense on 13 channels, so
+# no variant gets it; the retrained RGB model therefore differs from the 2.4 model).
+
+# Where results go (one CSV per run/calibration/seed, so a long job can be resumed)
+runs_dir: results/bands_runs
+output_md: results/bands_comparison.md
+output_json: results/bands_comparison.json
+loao_models_prefix: bands
+
+calibrations: [calibrated, uncalibrated]   # uncalibrated = the extra bands keep gain 1, shift 0 (RGB keeps the 4.1 fit)
+
+# Input scalings
+imagenet: {mean: [0.485, 0.456, 0.406], std: [0.229, 0.224, 0.225]}      # R, G, B (as configs/efficientnet_b0.yaml)
+jpeg_stats_path: data/stats.json                                         # as configs/resnet18_sat.yaml (2.4b)
+# SSL4EO-S12 per-band mean / std in raw digital numbers (torchgeo 0.10.1 models/resnet.py _mean_s2 / _std_s2,
+# order = torchgeo _sentinel2_toa_bands). Used to rescale inputs for the satellite weights (rule from 2.4b).
+ssl4eo_stats:
+  B01: [1612.9, 791.0]
+  B02: [1397.6, 854.3]
+  B03: [1322.3, 878.7]
+  B04: [1373.1, 1144.9]
+  B05: [1561.0, 1127.5]
+  B06: [2108.4, 1164.2]
+  B07: [2390.7, 1276.0]
+  B08: [2318.7, 1249.5]
+  B8A: [2581.0, 1345.9]
+  B09: [837.7, 577.5]
+  B10: [22.0, 47.5]
+  B11: [2195.2, 1340.0]
+  B12: [1537.4, 1142.9]
+
+# The runs. `variant` = a name in configs/bands.yaml `variants`; or give `channels` explicitly.
+# arm A: EfficientNet-B0 (ImageNet weights, same as 2.4). The first layer is widened: the pretrained red/green/blue
+#   filters are copied to B04/B03/B02, every extra channel starts with all-zero filters (so a new model starts out
+#   exactly like the RGB model and learns to use the extra channels). timm's own rule (repeat the RGB filters over
+#   the extra channels) was NOT used: it would feed NIR through the red filter.
+# arm B: ResNet-18 with the satellite weights of torchgeo (SSL4EO-S12, MoCo). sat_all uses SENTINEL2_ALL_MOCO
+#   (13 bands in torchgeo order, B8A after B08), sat_rgb uses SENTINEL2_RGB_MOCO as in 2.4b.
+runs:
+  rgb:
+    arm: A
+    variant: rgb
+    model: {kind: efficientnet_b0, weights: efficientnet_b0.ra_in1k}
+  rgb_nir:
+    arm: A
+    variant: rgb_nir
+    model: {kind: efficientnet_b0, weights: efficientnet_b0.ra_in1k}
+  rgb_nir_swir:
+    arm: A
+    variant: rgb_nir_swir
+    model: {kind: efficientnet_b0, weights: efficientnet_b0.ra_in1k}
+  rgb_indices:
+    arm: A
+    variant: rgb_indices
+    model: {kind: efficientnet_b0, weights: efficientnet_b0.ra_in1k}
+  all_bands:
+    arm: A
+    variant: all_bands
+    model: {kind: efficientnet_b0, weights: efficientnet_b0.ra_in1k}
+  sat_rgb:
+    arm: B
+    channels: [B04, B03, B02]
+    model: {kind: resnet18_sat, weights: SENTINEL2_RGB_MOCO}
+  sat_all:
+    arm: B
+    channels: [B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B10, B11, B12]   # = ssl4eo_s12_band_order
+    model: {kind: resnet18_sat, weights: SENTINEL2_ALL_MOCO}
+# which run each variant is compared against
+references: {A: rgb, B: sat_rgb}

@@ -11,6 +11,8 @@ configs/bands.yaml. RGB channels are stretched exactly like the baseline (0..275
 clipping). Indices use the raw values.
 """
 
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import torch
@@ -102,7 +104,9 @@ def channel_stats(raw_batches, cfg):
 class EuroSATMS(Dataset):
     """EuroSAT multispectral images of one split, as the channels of a variant.
 
-    array: the (N, 13, 64, 64) uint16 memmap; index: DataFrame (path, label, split, row);
+    array: the (N, 13, 64, 64) uint16 array, OR the path of the .npy file. A path is opened as a
+    memmap the first time an image is read, inside each DataLoader worker (pickling a 2.9 GB
+    memmap to every worker would copy it all). index: DataFrame (path, label, split, row);
     returns (tensor (C, 64, 64), label number).
     """
 
@@ -116,6 +120,8 @@ class EuroSATMS(Dataset):
         return len(self.rows)
 
     def __getitem__(self, i):
+        if isinstance(self.array, (str, Path)):
+            self.array = np.load(self.array, mmap_mode="r")
         raw = np.asarray(self.array[self.rows[i]])
         stack = channel_stack(raw, self.names, self.cfg)
         return torch.from_numpy(
