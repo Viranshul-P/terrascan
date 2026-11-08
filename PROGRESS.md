@@ -6,11 +6,12 @@ Claude updates this at the end of every step. Keep entries short.
 6.2
 
 ## Status
-in progress
+waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing blocks 6.2.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
+6.2: pick where the API runs, because free Docker Spaces on Hugging Face need PRO (see Known issues). Also: push `main` to GitHub yourself (Vercel imports from it).
+(Older note:) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
 the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
@@ -388,6 +389,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
 ## Known issues / things to revisit
+- **6.2 BLOCKER (2026-11-08): free Docker Spaces on Hugging Face now need a PRO subscription.** `hf repos create viranshul/terrascan-api --type space --space-sdk docker` answered: "hosting Gradio and Docker Spaces on free cpu-basic requires a PRO subscription" (nothing was created). CLAUDE.md: never add a paid service without asking, so the step stopped. Done so far (commit 891b720): `CORS_ORIGINS` env var in api/main.py (+2 tests), src/hf_space.py + api/Dockerfile.space + configs/hf_space.yaml build `data/hf_space/` (a Dockerfile that downloads the model from the Hub repo, pinned to commit 4bd73b3); the image was built and run locally as user 1000: /health ok, another website's CORS request refused, a 5x5 km /predict answered 200 in 26 s. Any Docker host can use that folder. Render's free web service (docs read 2026-11-08): free, sleeps after 15 min idle, about 1 min to wake, 750 free hours/month; RAM and card requirement NOT checked.
 - 6.1: the card was checked by Claude (code + tests), NOT read line by line by the user (PLAN's "You do: review every number" was done by Claude at the user's request). The user should read it once: https://huggingface.co/viranshul/terrascan-efficientnet-b0-india . To change it: edit src/model_card.md, run `python -m src.hf_model --config configs/hf_model.yaml`, then `.venv\Scripts\hf.exe upload viranshul/terrascan-efficientnet-b0-india data/hf_model .`. The card's usage snippet was run only on an all-black patch (proves it loads and runs, not that predictions are right); it also needs the repo cloned for `src/onnx_predict.py`. The Hub page's model-tree link to timm's base model is set by `base_model:` in the card header (not checked on the page).
 - **5.3d is NOT finished: the friends test (3 people, no explaining: "find what changed in Ahmedabad", "map your own area") and the top-3 fixes from it are still to do (user's decision 2026-11-08: later).** Everything else in 5.3d is done and committed (e43bc52). To do it: run `docker run --rm -p 8000:8000 terrascan-api` and, in web/, `npm run dev`, then tell Claude `/next 5.3d`. Do it before the launch (7.2) at the latest; the site is not yet checked with real people.
 <!-- e.g. Download from X was flaky, used mirror Y -->
