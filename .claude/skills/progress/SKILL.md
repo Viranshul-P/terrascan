@@ -12,7 +12,7 @@ Do not change any file.
 
 Reply in this shape, short and plain:
 
-- **Done:** N of 32 steps (current phase name)
+- **Done:** N of M steps, counting the checkboxes in the Steps list of PROGRESS.md (current phase name)
 - **Current step:** X.Y — title — status
 - **Waiting on you:** the text from PROGRESS.md, or "nothing"
 - **Last 3 steps finished:** from the Log

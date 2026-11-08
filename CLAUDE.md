@@ -2,8 +2,14 @@
 
 Files that drive this project:
 - `SPEC.md` — what we're building
-- `PLAN.md` — the numbered steps (0.1, 0.2, 1.1, 2.2a … 7.2). Where SPEC and PLAN disagree, PLAN wins.
+- `PLAN.md` — the numbered steps (0.1, 0.2, 1.1, 2.2a … 7.2, plus Phase 8 and the optional 9.1). Where SPEC and PLAN
+  disagree, PLAN wins. Order since 2026-11-08: 8.1–8.12 run BEFORE 6.3, 6.4, 7.1 and 7.2.
 - `PROGRESS.md` — where we are. The single source of truth for "what's next".
+- `learn/` (git-ignored) — plain-English notes for the user to study later. Every step ends by adding to them.
+
+**Direction (user's decision, 2026-11-08):** TerraScan is a background research project, not a flagship. Claude does all
+the work; the user approves each plan and does only the unavoidable parts (sign-ups, pushing to Hugging Face). Main goal:
+clearly better detection on Indian land. Second goal: a multi-city India evaluation study.
 
 The user drives work with three commands:
 - `/next` — do the next step in PROGRESS.md
@@ -30,9 +36,20 @@ The user drives work with three commands:
   Always say which file it came from.
 - Never claim something works without running it. "Should work" is not done.
 - If a training run, download or test fails, say so plainly. Don't hide it or quietly work around it.
-- Indian patch labels (4.2) and the change check (4.8): NOT decided yet. When the step comes, ask the user whether
-  they or Claude will do it; don't start either way before they answer. Whoever does it, labelling happens blind to
-  the model's predictions, and the dataset card, README and blog say who labelled (the user by hand, or Claude).
+- **Label tiers (Indian data, from 2026-11-08; replaces the old "ask who labels" rule):**
+  - Tier 1 = the user's existing hand labels (`data/india/labels_reviewed.csv`, final labels). The only human gold.
+    Used for evaluation. New tier-1 labels (for example in other cities, 8.7) are made only the way 4.2 did it: the
+    labeller works blind to the model's predictions and the user reviews every patch; ask the user how at that step.
+  - Tier 2 = public land-cover products (ESA WorldCover, Dynamic World): "noisy reference", for training or comparison,
+    with the class mapping documented (8.2).
+  - Tier 3 = model-assisted labels (pseudo-labels): flagged in the data, for training only.
+  - Never call tier 2 or tier 3 labels ground truth, and never evaluate on them as if they were.
+  - Every choice (classes, bands, models, settings, thresholds) is made on val or fine-tune data only. The Indian TEST
+    areas and the held-out city are scored once, in 8.8. The TEST areas were already scored in 4.3/4.4, so say that
+    wherever their results appear.
+  - No claim of "novel" or "first" without a literature check the user can verify (sources actually opened).
+  - In-distribution EuroSAT accuracy is reported as "consistent with published results", never as beating the state of
+    the art.
 - Don't make up download URLs, API fields or library functions. If unsure, check the installed
   library (`python -c "import x; help(x.y)"`) or ask.
 

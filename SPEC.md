@@ -18,6 +18,24 @@
 
 ---
 
+## Direction since 2026-11-08 (user's decision)
+
+TerraScan is now a background research project, not a flagship app. Claude does all the work; the user approves plans and
+does only the unavoidable parts (sign-ups, pushing to Hugging Face). Goals, in priority order:
+1. **Main goal: clearly better detection on Indian land.** Known errors seen on the live site (reported by the user, to be
+   reproduced with real patch IDs in 8.1): the Sabarmati river predicted as crop, residential predicted as industrial,
+   city areas predicted as other classes. The current Indian accuracy is in `results/india_after.json` (3 seeds: about 0.45
+   before and about 0.68 after fine-tuning). Push it as high as honestly possible.
+2. **A multi-city India evaluation study:** *"How well do EuroSAT-trained CNNs, satellite foundation models and global
+   land-cover maps work across Indian cities, and how many local labels does it take to fix them?"*
+
+EuroSAT RGB is saturated (published results are about 98–99%), so in-distribution accuracy is reported as "consistent with
+published results", never as beating the state of the art. The research value is the Indian transfer study. Labels come in
+three tiers (user's hand labels = the only gold; public land-cover products = noisy reference; pseudo-labels = training only,
+flagged). See CLAUDE.md and PLAN.md Phase 8.
+
+---
+
 ## Stack
 
 | Part | Choice |
@@ -75,11 +93,19 @@
 - Hover a patch for class + confidence; km² per class, biggest changes, downloads (GeoTIFF, PNG, CSV), limitations note.
 - Calm, quick feel with only purposeful motion; accessible and mobile-friendly; tested on 3 real people.
 
-### Phase 6 — Deploy + README
-- Push the model to Hugging Face Hub with a model card (data, metrics, limitations, domain-shift result).
-- Deploy the API on a Hugging Face Space and the website on free static hosting.
-- README: pitch, live demo link, GIF of the map overlay, model comparison table, Grad-CAM figure, domain-shift results, Ahmedabad change finding, how to reproduce training.
-- Write one short blog post (DEV, Medium or Hashnode) on the domain-shift result and the Ahmedabad finding. Link it from the README.
+### Phase 8 — India accuracy and the multi-city study (added 2026-11-08; runs before the README)
+- 8.1 error audit (real failure cases, missing classes, brightness/scaling), 8.2 class scheme, 8.3 more spectral bands,
+  8.4 noisy labels at scale (WorldCover / Dynamic World), 8.5 satellite foundation model (if it fits 8 GB), 8.6 other ways
+  to improve (context, seasons, pseudo-labels, test-time augmentation, ensemble), 8.7 multi-city imagery, 8.8 final
+  evaluation (label-efficiency curves, per-city/per-class, 3 seeds, bootstrap ranges, comparison with land-cover maps),
+  8.9 optional extension (surface temperature), 8.10 website update, 8.11 technical report, 8.12 run-it-yourself CLI.
+- Every choice on fine-tune/val data only; the Indian test areas and one held-out city are scored once, in 8.8.
+
+### Phase 6 — Deploy + README (README and write-up now come after Phase 8)
+- Push the model to Hugging Face Hub with a model card (data, metrics, limitations, domain-shift result). *(6.1, done)*
+- Deploy the website on free static hosting. *(6.2, done: https://terrascan-five.vercel.app; the live API is optional, last, Phase 9.)*
+- README (6.3): opens with the research question and the honest results; live demo link, GIF of the map overlay, model comparison table, Grad-CAM figure, domain-shift results, multi-city results, Ahmedabad change finding, how to reproduce training.
+- A short technical write-up (6.4, DEV, Medium or Hashnode) of the Indian transfer study instead of a casual blog post. Link it from the README.
 
 ### Phase 7 — Open-source polish + launch
 - Licence, citation file, contributing guide, good-first-issues, badges.

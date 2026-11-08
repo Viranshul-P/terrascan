@@ -41,3 +41,6 @@ venv/
 
 # Design review videos (5.3a): about 4 MB each, made again by `npm run shots:c` in web/
 reports/design/**/*.webm
+
+# Plain-English study notes for the user (kept local)
+learn/

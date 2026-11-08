@@ -3,7 +3,7 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-6.3
+8.1
 
 ## Status
 not started
@@ -50,10 +50,23 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [ ] 5.3d Polish, performance and real users  <!-- part 1 done 2026-11-08; friends test + top-3 fixes DEFERRED by the user, see Known issues -->
 - [x] 6.1 Model on Hugging Face Hub
 - [x] 6.2 Deploy the API and the website (website live; live API deferred, see Known issues)
-- [ ] 6.3 README
-- [ ] 6.4 Blog post
+- [ ] 8.1 Error audit (effort: medium)
+- [ ] 8.2 Class scheme (medium)
+- [ ] 8.3 More spectral bands (HIGH)
+- [ ] 8.4 Noisy labels at scale (medium)
+- [ ] 8.5 Satellite foundation model (HIGH)
+- [ ] 8.6 Other ways to improve accuracy (medium)
+- [ ] 8.7 Multi-city imagery (medium)
+- [ ] 8.8 Final evaluation (HIGH)
+- [ ] 8.9 Optional extension: surface temperature (medium)
+- [ ] 8.10 Website update (medium)
+- [ ] 8.11 Technical report draft (medium)
+- [ ] 8.12 Run it on a new area (CLI or notebook) (medium)
+- [ ] 6.3 README (now after Phase 8)
+- [ ] 6.4 Short technical write-up (now after Phase 8)
 - [ ] 7.1 Open-source polish
 - [ ] 7.2 Launch
+- [ ] 9.1 Optional, last: live "Map your own area" API
 
 ## Log
 <!-- One line per finished step: - 0.1 — commit abc1234 — short note -->
@@ -108,6 +121,20 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 6.2 — done: user tested the live site on their phone on mobile data (2026-11-08): "all fine". Site https://terrascan-five.vercel.app; live API deferred (see Known issues).
 
 ## Decisions made
+- **New direction (user's decision, 2026-11-08): Phase 8 comes BEFORE the README.** TerraScan is now a background research project,
+  not a flagship app. Claude does all the work; the user approves plans and does only the unavoidable parts (sign-ups, pushing to
+  Hugging Face). Main goal: clearly better detection on Indian land (user saw on the live site: the Sabarmati river predicted as
+  crop, residential as industrial, city areas as other classes; not yet reproduced with patch IDs, that is 8.1). Second goal: a
+  multi-city India evaluation study. New order: 8.1-8.12, then 6.3 README (opens with the research question), 6.4 short technical
+  write-up, 7.1, 7.2; 9.1 (live API) optional and last. Numbers to beat (3 seeds, Indian TEST areas, results/india_after.json):
+  0.4486 +- 0.0071 before, 0.6831 +- 0.0311 after fine-tuning. Docs changed this session: SPEC.md, PLAN.md, CLAUDE.md (label-tier
+  rule replaces "ask who labels"), PROGRESS.md, learn/ (git-ignored), the /next and /progress skills. No code written.
+- **Label tiers** (CLAUDE.md): tier 1 = the user's hand labels (only human gold, for evaluation); tier 2 = public land-cover products,
+  "noisy reference"; tier 3 = model-assisted pseudo-labels, flagged, training only. Tier 2/3 are never ground truth. All choices
+  on val or fine-tune data only; Indian TEST areas + one held-out city scored once, in 8.8 (the TEST areas were already scored in
+  4.3/4.4, which every write-up must say). New gold labels in other cities (8.7) need a way agreed with the user at that step.
+- Phase 8 step added beyond the user's list: 8.12 (CLI/notebook to run the model on a new area), because the user asked for one.
+  9.1 holds the optional live API (see Known issues for why it is not deployed).
 - Wording (user's decision, 2026-11-08, for the resume): attribution sentences that are not needed to read the results were cut or
   made neutral, as long as they stay true. Done: model card (no who-did-what), dataset card ("Every patch was reviewed by the
   project owner, who made every final call"; limits line "reviewed by one person"), website footer (Claude line removed),
@@ -391,6 +418,12 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
 ## Known issues / things to revisit
+- 2026-11-08: the old SPEC line "Labelling rules: done by hand by me (not by an AI)" (Phase 4) is out of date; PLAN/CLAUDE.md win
+  (4.2 used Claude's first labels with the user's review). CLAUDE.md still says to record who did what in READMEs and cards; the
+  user separately asked for no "who did what" section in public text (model card and dataset card were reworded to say the labels
+  were reviewed by a human). Not settled in CLAUDE.md; ask the user before writing authorship text in the 6.3 README.
+- Phase 8 risk: the Indian gold labels cover only 5 Gujarat areas (230 patches; River 8, SeaLake 0, Pasture 1 in total:
+  results/india_dataset.json). Evaluating in other cities needs new tier-1 labels (8.7).
 - 6.2: live "Map your own area" is not deployed. Free options checked 2026-11-08: Hugging Face Docker Spaces need PRO; Render free = 0.1 CPU/512 MB and a local run with exactly that cap timed out (HTTP 504 at 60 s) even for a 2 x 2 km box (5 x 5 km takes 26 s uncapped). To add it later: host the image from api/Dockerfile.render (Render Blueprint render.yaml), set CORS_ORIGINS=https://terrascan-five.vercel.app on it, set VITE_API_URL to its address in the Vercel project settings, redeploy. Untested idea: fewer scenes (max_scenes 5) and a smaller max box so a weak free CPU copes. Vercel Hobby is meant for personal, non-commercial use; fine for a portfolio, check their terms if this ever earns money.
 - **6.2 BLOCKER (2026-11-08): no free host found that runs the live API well.** (1) Hugging Face: free Docker Spaces now need PRO ("hosting Gradio and Docker Spaces on free cpu-basic requires a PRO subscription"; nothing was created). (2) Render free plan = 0.1 CPU, 512 MB, sleeps after 15 min (render.com/docs/compute-plans and /free, read 2026-11-08). I ran the real image (api/Dockerfile.render, model downloaded from the Hub repo at commit 4bd73b3) locally with `docker run --cpus 0.1 -m 512m`: /health fine, memory about 260 MB (no out-of-memory), BUT a 2 x 2 km box and a 5 x 5 km box both hit the 60 s limit (HTTP 504, about 60 s each). The same 5 x 5 km box took 26 s with no CPU cap. So on 0.1 CPU the live map would mostly time out. Not measured on Render itself (a Docker cap may differ from Render's 0.1 CPU share). Done and kept (commits 891b720 + this one): `CORS_ORIGINS` env var in api/main.py (+2 tests), api/Dockerfile.render, render.yaml (Render Blueprint: free plan, health check /health, CORS_ORIGINS asked at creation). The earlier Hugging Face Space builder was removed (unused).
 - 6.1: the card was checked by Claude (code + tests), NOT read line by line by the user (PLAN's "You do: review every number" was done by Claude at the user's request). The user should read it once: https://huggingface.co/viranshul/terrascan-efficientnet-b0-india . To change it: edit src/model_card.md, run `python -m src.hf_model --config configs/hf_model.yaml`, then `.venv\Scripts\hf.exe upload viranshul/terrascan-efficientnet-b0-india data/hf_model .`. The card's usage snippet was run only on an all-black patch (proves it loads and runs, not that predictions are right); it also needs the repo cloned for `src/onnx_predict.py`. The Hub page's model-tree link to timm's base model is set by `base_model:` in the card header (not checked on the page).

@@ -80,6 +80,17 @@ Update PROGRESS.md:
 - Add any **Decisions made**, **Known issues**, and **Results so far** (with source file names).
 - Set **Current step** to the next step id, **Status** to `not started`, "Waiting on you" to `(nothing)`.
 
+Update the `learn/` notes (plain-English notes for the user to study in a few months; the folder is git-ignored, so it
+is not committed). For every finished step add, in simple words and without ML jargon unless it is explained:
+- `learn/00-overview.md`: a short entry for this step: what was done, why, and what it means for the project.
+- `learn/01-architecture.md`: only if files or the way parts connect changed.
+- `learn/02-concepts.md`: each new idea the step used (one paragraph each, with a small example).
+- `learn/03-results.md`: new numbers, each with the file it came from.
+- `learn/04-interview-qa.md`: one or two questions this step could raise, with short honest answers.
+- `learn/glossary.md`: new terms.
+- `learn/failure-cases.md`: anything that failed or went wrong, with real patch or file names, and what it means.
+Notes follow the same honesty rule as everything else: numbers only from `results/` or `models/`, with the file named.
+
 Commit only the files for this step (`git add <paths>`, not `git add -A` blindly), message `stepX.Y: <short summary>`.
 
 ## 8. Finish
@@ -87,7 +98,7 @@ End with a short message:
 1. What was built (2–4 lines).
 2. The step's **You check** items, as a checklist for the user.
 3. One question the user should be able to answer about this step in an interview (don't answer it unless asked).
-4. If the step was 2.2b, 2.2c, 2.4b, 2.5, 4.1, 4.3, 4.4, 4.7, 4.8, 5.3a, 5.3b, 5.3c, 5.3d or 6.3: recommend running `/review-step` before moving on.
+4. If the step was 2.2b, 2.2c, 2.4b, 2.5, 4.1, 4.3, 4.4, 4.7, 4.8, 5.3a, 5.3b, 5.3c, 5.3d, 6.3, 8.2, 8.3, 8.4, 8.5, 8.8 or 8.10: recommend running `/review-step` before moving on.
 5. Effort for the next step, from PLAN.md:
    - next step has **Effort: high** → "Next: type `/clear`, then `/effort high`, then `/next`."
    - otherwise, if the current effort is `high` → "Next: type `/clear`, then `/effort medium` (saves usage), then `/next`."
