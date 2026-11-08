@@ -3,14 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-8.2
+8.3
 
 ## Status
-in progress
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing blocks 8.2.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
+(nothing blocks 8.3.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
 the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
@@ -51,7 +51,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 6.1 Model on Hugging Face Hub
 - [x] 6.2 Deploy the API and the website (website live; live API deferred, see Known issues)
 - [x] 8.1 Error audit (effort: medium)
-- [ ] 8.2 Class scheme (medium)
+- [x] 8.2 Class scheme (medium)
 - [ ] 8.3 More spectral bands (HIGH)
 - [ ] 8.4 Noisy labels at scale (medium)
 - [ ] 8.5 Satellite foundation model (HIGH)
@@ -122,7 +122,10 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 
 - 8.1 (Claude, 2026-11-08, medium effort) — src/error_audit.py + src/error_audit_report.py (+ src/error_audit_causes.md, configs/error_audit.yaml, tests/test_error_audit.py, 13 tests) -> results/error_audit.md/.json, results/error_audit_predictions.csv, patch pictures in reports/error_audit/. Only the 3 fine-tune areas (149 patches) are used; EuroSAT-only EfficientNet-B0 and leave-one-area-out (LOAO) fine-tunes (4.4 recipe unchanged), seeds 42/43/44. Ranked causes: (1) EuroSAT classes don't fit (wide muddy Narmada called SeaLake; Residential<->Industrial both ways; mixed patches), (2) Indian AnnualCrop looks unlike EuroSAT's (1 of 150 right before, 71 of 150 after LOAO), (3) few uneven local labels, (4) label/mixed-patch doubts (one example), (5) global brightness error unlikely. Live-site 'Sabarmati as crop' mostly NOT reproduced (22 of 29 water squares are River, 1 AnnualCrop). 151 pytest, ruff clean.
 
+- 8.2 (Claude, 2026-11-08, medium effort; user said "just do everything", so Claude judged the quiz) — configs/classes_india.yaml (decision rule committed BEFORE the quiz, commit 6415203; base classes; one mapping per label source: EuroSAT, hand labels, WorldCover, Dynamic World, pseudo-labels; `chosen_merges: {}`), src/class_scheme.py, tests/test_class_scheme.py (20 tests), results/class_scheme.md, results/class_quiz_answers.csv (committed before the key was opened, commit 47603e2), results/class_quiz_key.csv, numbered sheets in reports/class_scheme/. Screen from 8.1 gave 3 pairs: AnnualCrop/Highway, Highway/Industrial, Industrial/Residential. Claude, blind, got 20/20, 19/20 and 19/20 right -> all kept separate -> **keep the 10 EuroSAT classes**. Big caveat (in the report): the two classes of each pair mostly come from different areas (Industrial 8 of 10 from ankleshwar_industrial, Residential 8 of 10 from ahmedabad_city), so the judge may have used scene brightness; the user has not judged the sample. 171 pytest, ruff clean.
+
 ## Decisions made
+- **8.2 result:** keep the 10 EuroSAT classes (results/class_scheme.md). The rule could not test River vs SeaLake (SeaLake has 0 Indian labels) or AnnualCrop vs PermanentCrop (PermanentCrop has 2), so it says nothing about them. Source mappings use "could mean" sets: a source class maps to a scheme class only if all its possible EuroSAT classes land in one scheme class, else `ignore` (so WorldCover Cropland, Built-up, Water, Grassland and Shrubland are `ignore` under keep-10; Tree cover -> Forest). Dynamic World classes were read from the official Earth Engine catalogue page on 2026-11-08 (CC-BY 4.0; needs a Google Earth Engine account to download, so no data was fetched). 8.4 must decide how to use the ambiguous tier-2 classes.
 - **8.2 (user's decision, 2026-11-08: "just do everything"):** Claude judges the blind pair quiz instead of the user. This changes the rule's wording from "the user cannot tell them apart" to "Claude, judging blind from the 64x64 patches, cannot tell them apart"; it is written into configs/classes_india.yaml before any quiz result exists. Claude's eyes are not the user's, so results/class_scheme.md says so and the user can re-judge the same numbered sheets later (reports/class_scheme/) with `--answers`. Default is conservative: classes stay separate unless the judge is clearly unable (<=70%).
 - **8.1 (Claude, user OK'd the plan 2026-11-08):** leave-one-area-out fine-tunes use the 4.4 recipe unchanged (configs/india_finetune.yaml), all 3 seeds, no forgetting check (nothing is published from them; models in models/efficientnet_b0_india_loao_<area>/, git-ignored). Failure cases are picked by a rule in configs/error_audit.yaml (top 6 mistakes of LOAO seed 42, most confident wrong patch each, plus up to 4 wrong River patches), not by eye. The cause text (src/error_audit_causes.md) is hand-written by Claude; its numbers are filled in by code and a test checks the template. ESA WorldCover 2021 v200 (tier 2, noisy) is used only to describe class occurrence and to find the live-site squares that are water / built-up; the water threshold is 20% of a square because a first try at 50% found only 1 square (the Sabarmati is narrower than a 640 m patch).
 - **New direction (user's decision, 2026-11-08): Phase 8 comes BEFORE the README.** TerraScan is now a background research project,
@@ -422,6 +425,8 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
 ## Known issues / things to revisit
+- **8.2 for the user (optional):** open reports/class_scheme/quiz_*.png (numbered sheets, no answers on them) and judge them yourself; then `python -m src.class_scheme score --config configs/classes_india.yaml --answers <your csv with columns pair,number,answer>`. A same-area sample (Residential vs Industrial within one scene) would be a fairer test; the rule does not require it. Claude is the same assistant that suggested the first labels for these patches (4.2), so its blindness is by procedure only.
+- 8.2: the keep-10 decision means the Narmada river will still be called SeaLake by the model unless more water labels or a naming fix come in 8.4-8.7; the 8.1 audit's cause 1 (Residential vs Industrial) is only weakly supported by this quiz.
 - **8.1 for the user to look at:** `narmada_bharuch_r0512_c0640.png` is labelled AnnualCrop but looks to Claude like a town with a diagonal road (judged by eye; the label was NOT changed, it is the user's). Claude's other picture readings (Narmada = wide muddy water, Sabarmati patches = river with bridges and city on both banks) are also by eye. The user's report 'Sabarmati predicted as crop' was not reproduced on the live map; if they saw it somewhere specific, the square or a screenshot is needed.
 - 8.1 limits: three seeds share the same 149 patches (± is training noise only); matrix counts add up 3 seeds, so patches are counted 3 times; rare-class rows (3-6 rows) mean little; LOAO models see only 2 areas, so their accuracy is not comparable to the 4.4 test number; the Narmada area holds most of the River and crop labels, so it drives the main errors; brightness per class uses 300 EuroSAT train images per class (seeded). The 'winter crops' reason for the crop colour gap is a guess, not tested.
 - 2026-11-08: the old SPEC line "Labelling rules: done by hand by me (not by an AI)" (Phase 4) is out of date; PLAN/CLAUDE.md win
@@ -576,6 +581,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3b part 2B: a drawn box is a true lon/lat box only on a flat, north-up map, so opening the tool flattens the map;
   opening Compare closes the tool and the tool turns Compare off (the second map would hide the live layers).
 ## Results so far (copied from results/ files only, with the file name)
+- **Class scheme quiz (8.2, results/class_scheme.md, judge = Claude, blind, fine-tune areas only, 20 patches per pair):** AnnualCrop vs Highway 20/20 right; Highway vs Industrial 19/20; Industrial vs Residential 19/20. Rule: merge if <= 70% right, keep if >= 80%. All kept separate. Decision: keep the 10 classes. The area mix of the sample confounds this (see Known issues).
 - **Error audit (8.1, results/error_audit.json; fine-tune areas only, 149 patches, mean ± std over seeds 42/43/44):** accuracy EuroSAT-only 0.4653 ± 0.0495; leave-one-area-out fine-tuned 0.6555 ± 0.0169. Per held-out area (EuroSAT-only / LOAO): ahmedabad_city 0.736 / 0.862, narmada_bharuch 0.220 / 0.452, ankleshwar_industrial 0.448 / 0.678. Most frequent mistakes (EuroSAT-only, patch x seed rows): AnnualCrop -> PermanentCrop 109, Residential -> Industrial 49, AnnualCrop -> Pasture 30, River -> SeaLake 12. LOAO: AnnualCrop right 71 of 150, River right 3 of 24, Residential -> Industrial 17, Industrial -> Residential 14. Mean red of AnnualCrop: Indian 0.257 vs EuroSAT sample 0.523; Residential 0.493 vs 0.399; overall gap 0.16/0.15/0.18 EuroSAT std. Live Ahmedabad map vs WorldCover: 22 of 29 water squares River, 1 AnnualCrop; 681 built-up squares: Residential 491, Industrial 165, Highway 20.
 - 5.3d Story page, final build (reports/design/5.3d/lighthouse.json, 5 runs of Lighthouse 12.0.0 mobile; reports/design/5.3d/load_metrics.json): performance 93, 93, 94, 95, 95; accessibility 100 all runs; best practices 100 all runs; CLS 0; simulated LCP 2.72-2.82 s (over the 2.5 s budget); TBT 62-131 ms. Own load check (phone window, CPU 4x, 3 runs): LCP 444-648 ms, CLS 0; main-thread blocking over 50 ms per task while settling 183-185 ms, and 14-25 ms in the 6 s after the first scroll (when the map starts). First-load JS 96.6 KB gzipped (npm run size, not saved to a file); the map code and worker (433.8 KB gzipped) load only after the first interaction.
 - 5.3c Story page (final build of part 2): own load check, phone size, CPU 4x slower, local: LCP 1820 ms, CLS 0 (reports/design/5.3c/load_metrics.json). Lighthouse 12.0.0 mobile, 2 runs: performance 81 / 84 (FAILS the 90 budget), accessibility 100 / 100, best practices 96 / 96, simulated LCP 2.72 s, TBT 531 / 447 ms, CLS 0 (reports/design/5.3c/lighthouse.json). First-load JS 96.3 KB gzipped (npm run size output, not saved to a file).

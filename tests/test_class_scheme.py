@@ -178,3 +178,16 @@ def test_sheet_has_the_right_size_and_no_text_but_numbers(tmp_path):
         files.append(f"p{i}.png")
     sheet = make_sheet(files, tmp_path, scale=2, columns=4)
     assert sheet.size == (4 * (128 + 6), 2 * (128 + 18 + 6))
+
+
+KEY = Path("results/class_quiz_key.csv")
+ANSWERS = Path("results/class_quiz_answers.csv")
+
+
+@pytest.mark.skipif(not (KEY.exists() and ANSWERS.exists()), reason="needs the saved quiz")
+def test_saved_quiz_reproduces_the_chosen_merges_in_the_config():
+    from src.class_scheme import decide, merges_from_decisions, score_quiz
+
+    results = score_quiz(pd.read_csv(ANSWERS), pd.read_csv(KEY))
+    decisions = {pair: decide(r["accuracy"], CONFIG["rule"]) for pair, r in results.items()}
+    assert merges_from_decisions(decisions) == CONFIG["chosen_merges"]

@@ -185,6 +185,18 @@ def make_quiz(cfg):
 # ---------- scoring and the decision ----------
 
 
+def area_mix(key, labels):
+    """For each pair and class in the quiz, how many sample patches come from each area.
+    A judge could use the scene (its brightness, its haze) instead of the land use, so this
+    is shown."""
+    areas = labels.set_index("file")["area"]
+    table = key.assign(area=key["file"].map(areas))
+    return {
+        (pair, cls): group["area"].value_counts().to_dict()
+        for (pair, cls), group in table.groupby(["pair", "true_class"])
+    }
+
+
 def decide(accuracy, rule):
     """'merge', 'keep separate (clear)' or 'keep separate (unclear)' from the judge's accuracy."""
     if accuracy <= rule["merge_if_accuracy_at_most"]:
@@ -224,7 +236,7 @@ def merges_from_decisions(decisions):
     return {"+".join(sorted(g)): sorted(g) for g in groups}
 
 
-def render_report(cfg, pairs, results, decisions, merges, judge_note):
+def render_report(cfg, pairs, results, decisions, merges, judge_note, mix):
     rule = cfg["rule"]
     lines = ["# Step 8.2: class scheme for Indian land", ""]
     lines.append(
@@ -268,6 +280,27 @@ def render_report(cfg, pairs, results, decisions, merges, judge_note):
             f"| {pair} | {r['right']} | {r['n']} | {r['accuracy']:.2f} | {decisions[pair]} |"
         )
     lines.append("")
+    lines.append("### Caveats on the quiz\n")
+    lines.append("- **Area confound.** Where the sample patches come from (counts per area):\n")
+    lines += ["| pair | class | patches per area |", "|---|---|---|"]
+    for (pair, cls), counts in mix.items():
+        per_area = ", ".join(f"{a} {n}" for a, n in counts.items())
+        lines.append(f"| {pair} | {cls} | {per_area} |")
+    lines.append("")
+    lines.append(
+        "  When the two classes come mostly from different areas, a judge can lean on the scene "
+        "(brightness, haze, building style) instead of on the land use. So a high score here "
+        "shows the classes look different in these patches, not that they would be told apart "
+        "in a new city.\n"
+        "- **The judge is Claude, not the user.** The sheets are kept so the user can re-judge "
+        "them.\n"
+        "- **Blindness is by procedure.** Claude answered from the numbered sheets only and saved "
+        "the answers (committed) before opening the key, but it is the same assistant that built "
+        "the quiz and earlier suggested labels for these patches (step 4.2).\n"
+        "- **Small sample.** 20 patches per pair (Highway has 11 in the fine-tune areas, so 10 of "
+        "11 were used). One answer more or fewer changes the accuracy by 5 points.\n"
+        "- **Untestable classes** (see the screen) are not covered.\n"
+    )
     lines.append("## 3. Chosen scheme\n")
     if merges:
         lines.append(
@@ -312,6 +345,14 @@ def render_report(cfg, pairs, results, decisions, merges, judge_note):
         "label that is "
         "kept apart from the 10-class evaluation); this step does not.\n"
         "- Hand labels (tier 1) stay in the 10 classes, so every earlier number remains valid.\n"
+        "- Step 8.1 listed 'the classes do not fit' as cause 1, including Residential versus "
+        "Industrial. This quiz does not support merging those two (see the caveats above for how "
+        "far to trust that). Because the two classes in the sample mostly come from different "
+        "areas, it is weak evidence about telling them apart inside one scene; a same-area "
+        "sample would test that, and the rule does not require it. Still open: the water "
+        "naming (Narmada called SeaLake) and crops versus "
+        "PermanentCrop, which the rule cannot test because SeaLake and PermanentCrop have too few "
+        "Indian labels. More labels come in 8.4 to 8.7.\n"
     )
     return "\n".join(lines) + "\n"
 
@@ -332,7 +373,8 @@ def score(cfg, answers_path=None, judge_note=None):
         "may differ "
         "from Claude's, so the sheets are kept and the user can re-judge them (`--answers`)."
     )
-    report = render_report(cfg, pairs, results, decisions, merges, note)
+    mix = area_mix(key, fine_tune_labels(rule))
+    report = render_report(cfg, pairs, results, decisions, merges, note, mix)
     Path(cfg["output_path"]).write_text(report, encoding="utf-8")
     print(json.dumps({"results": results, "decisions": decisions, "merges": merges}, indent=1))
     print(f"Saved {cfg['output_path']}")
