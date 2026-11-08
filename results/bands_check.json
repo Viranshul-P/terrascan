@@ -1,0 +1,442 @@
+{
+  "india_reads": {
+    "resampling": "bilinear",
+    "bands": [
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B09",
+      "B11",
+      "B12",
+      "B8A"
+    ],
+    "areas": {
+      "ahmedabad_city": {
+        "scene_id": "S2B_MSIL2A_20260121T054039_R005_T43QBF_20260121T091302",
+        "baseline": "05.11",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1197,
+          "B02": 1126,
+          "B03": 1089,
+          "B04": 1062,
+          "B05": 1285,
+          "B06": 1125,
+          "B07": 1121,
+          "B08": 1088,
+          "B09": 996,
+          "B11": 1093,
+          "B12": 1087,
+          "B8A": 1044
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "india"
+      },
+      "vadodara_outskirts": {
+        "scene_id": "S2C_MSIL2A_20260215T053921_R005_T43QCE_20260215T085810",
+        "baseline": "05.12",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1056,
+          "B02": 1,
+          "B03": 734,
+          "B04": 1039,
+          "B05": 1093,
+          "B06": 1077,
+          "B07": 1071,
+          "B08": 1044,
+          "B09": 1256,
+          "B11": 1173,
+          "B12": 1106,
+          "B8A": 1089
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "india"
+      },
+      "sanand_farmland": {
+        "scene_id": "S2B_MSIL2A_20260121T054039_R005_T43QBF_20260121T091302",
+        "baseline": "05.11",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1242,
+          "B02": 1315,
+          "B03": 1342,
+          "B04": 1260,
+          "B05": 1320,
+          "B06": 1289,
+          "B07": 1257,
+          "B08": 1227,
+          "B09": 1097,
+          "B11": 1133,
+          "B12": 1100,
+          "B8A": 1193
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "india"
+      },
+      "narmada_bharuch": {
+        "scene_id": "S2C_MSIL2A_20260116T054201_R005_T43QBE_20260116T091409",
+        "baseline": "05.11",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1092,
+          "B02": 732,
+          "B03": 1056,
+          "B04": 1135,
+          "B05": 1141,
+          "B06": 1111,
+          "B07": 1107,
+          "B08": 1069,
+          "B09": 965,
+          "B11": 1081,
+          "B12": 1046,
+          "B8A": 1098
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "india"
+      },
+      "ankleshwar_industrial": {
+        "scene_id": "S2C_MSIL2A_20260116T054201_R005_T43QBD_20260116T091409",
+        "baseline": "05.11",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1061,
+          "B02": 1033,
+          "B03": 1149,
+          "B04": 1152,
+          "B05": 1152,
+          "B06": 1098,
+          "B07": 1100,
+          "B08": 1095,
+          "B09": 978,
+          "B11": 1090,
+          "B12": 1063,
+          "B8A": 1074
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "india"
+      },
+      "lyon": {
+        "scene_id": "S2B_MSIL2A_20260819T103619_R008_T31TFL_20260819T143522",
+        "baseline": "05.12",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1099,
+          "B02": 1,
+          "B03": 901,
+          "B04": 1052,
+          "B05": 1044,
+          "B06": 918,
+          "B07": 1023,
+          "B08": 1021,
+          "B09": 960,
+          "B11": 1032,
+          "B12": 1016,
+          "B8A": 907
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "fit"
+      },
+      "poznan": {
+        "scene_id": "S2A_MSIL2A_20260814T100041_R122_T33UXU_20260814T151116",
+        "baseline": "05.12",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1115,
+          "B02": 514,
+          "B03": 1026,
+          "B04": 881,
+          "B05": 1066,
+          "B06": 1034,
+          "B07": 1015,
+          "B08": 1065,
+          "B09": 1025,
+          "B11": 1053,
+          "B12": 1028,
+          "B8A": 976
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "fit"
+      },
+      "utrecht": {
+        "scene_id": "S2C_MSIL2A_20260625T103621_R008_T31UFT_20260625T140409",
+        "baseline": "05.12",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1186,
+          "B02": 843,
+          "B03": 1102,
+          "B04": 958,
+          "B05": 1108,
+          "B06": 686,
+          "B07": 727,
+          "B08": 805,
+          "B09": 1214,
+          "B11": 1118,
+          "B12": 1031,
+          "B8A": 1081
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "fit"
+      },
+      "munich": {
+        "scene_id": "S2C_MSIL2A_20260815T101021_R022_T32UPU_20260815T152913",
+        "baseline": "05.12",
+        "offset_removed": true,
+        "min_nonzero_raw_value_per_band": {
+          "B01": 1133,
+          "B02": 1,
+          "B03": 465,
+          "B04": 646,
+          "B05": 993,
+          "B06": 976,
+          "B07": 986,
+          "B08": 1039,
+          "B09": 1059,
+          "B11": 1107,
+          "B12": 1082,
+          "B8A": 993
+        },
+        "rgb_equals_existing_read": true,
+        "kind": "check"
+      }
+    }
+  },
+  "eurosat": {
+    "md5": {
+      "expected": "091174add3c8e680a49244acf185b9f0",
+      "got": "091174add3c8e680a49244acf185b9f0",
+      "ok": true
+    },
+    "match": {
+      "images_in_splits": 27000,
+      "images_in_ms_zip": 27000,
+      "in_splits_not_in_zip": 0,
+      "in_zip_not_in_splits": 0,
+      "label_equals_folder": true,
+      "per_class_equal": true,
+      "classes_equal_project_classes": true
+    },
+    "tif": {
+      "dtype": "uint16",
+      "band_descriptions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "order_in_array": "train.csv rows, then val.csv, then test.csv (index CSV has the row)",
+    "band_order": {
+      "sample_images": 300,
+      "best_matching_band_for_red_green_blue": [
+        "B04",
+        "B03",
+        "B02"
+      ],
+      "expected_red_green_blue": [
+        "B04",
+        "B03",
+        "B02"
+      ],
+      "band_order_confirmed": true,
+      "correlation_red_green_blue_with_expected_band": [
+        0.9736636847551735,
+        0.9661842295232476,
+        0.9576030202723906
+      ],
+      "mean_abs_pixel_difference_after_our_stretch_red_green_blue": [
+        1.8485457356770834,
+        0.9341585286458334,
+        1.8024422200520833
+      ],
+      "note": "JPEGs are lossy, so a small difference is expected; not zero."
+    },
+    "band_order_full": {
+      "torchgeo_all_band_names": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B8A"
+      ],
+      "config_equals_torchgeo_order": true,
+      "mean_raw_value_per_band": {
+        "B01": 1355.3570380859376,
+        "B02": 1119.298625,
+        "B03": 1044.5204910888672,
+        "B04": 949.7739033203125,
+        "B05": 1206.7818520507813,
+        "B06": 2021.0252794189453,
+        "B07": 2397.6571462402344,
+        "B08": 2323.919829345703,
+        "B09": 738.7149378662109,
+        "B10": 12.048833251953125,
+        "B11": 1831.333598022461,
+        "B12": 1124.6160451660157,
+        "B8A": 2625.3685537109377
+      },
+      "cirrus_B10_is_nearly_dark": true,
+      "corr_B8A_B07": 0.9955316216562901,
+      "corr_B8A_B08": 0.9775492089085239,
+      "B8A_corr_with_B07_B08_above_0.95": true,
+      "SWIR1_B11_brighter_than_SWIR2_B12": true,
+      "corr_B11_B12": 0.9423972737594107,
+      "all_signatures_hold": true
+    },
+    "resampling": {
+      "B01": {
+        "equal_neighbour_share": 0.2477095734126984
+      },
+      "B02": {
+        "equal_neighbour_share": 0.03575768849206349
+      },
+      "B03": {
+        "equal_neighbour_share": 0.03354290674603175
+      },
+      "B04": {
+        "equal_neighbour_share": 0.034906994047619044
+      },
+      "B05": {
+        "equal_neighbour_share": 0.06630580357142857
+      },
+      "B06": {
+        "equal_neighbour_share": 0.06140252976190476
+      },
+      "B07": {
+        "equal_neighbour_share": 0.06141989087301587
+      },
+      "B08": {
+        "equal_neighbour_share": 0.043632192460317465
+      },
+      "B09": {
+        "equal_neighbour_share": 0.16901785714285714
+      },
+      "B10": {
+        "equal_neighbour_share": 0.8718576388888889
+      },
+      "B11": {
+        "equal_neighbour_share": 0.07934771825396825
+      },
+      "B12": {
+        "equal_neighbour_share": 0.06902529761904762
+      },
+      "B8A": {
+        "equal_neighbour_share": 0.05643725198412698
+      }
+    },
+    "stats_file": "data/bands_stats.json"
+  },
+  "calibration": {
+    "patches_checked": 1310,
+    "max_abs_difference_rgb_vs_png": 0,
+    "mean_value_per_band": {
+      "B01": {
+        "eurosat_train_sample": 1362.0648533089452,
+        "munich_uncalibrated": 537.7574922530501,
+        "munich_calibrated": 1327.3171187205974,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1363.5689707507006
+      },
+      "B02": {
+        "eurosat_train_sample": 1126.5965709222057,
+        "munich_uncalibrated": 610.1676499795107,
+        "munich_calibrated": 1076.8573693264175,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1172.1140675676897
+      },
+      "B03": {
+        "eurosat_train_sample": 1051.3929837342923,
+        "munich_uncalibrated": 830.8374689534971,
+        "munich_calibrated": 985.9666802308778,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1096.1758592182964
+      },
+      "B04": {
+        "eurosat_train_sample": 962.4764963624339,
+        "munich_uncalibrated": 875.7589041635453,
+        "munich_calibrated": 864.3598501824731,
+        "munich_closer_after_calibration": false,
+        "india_finetune_areas_calibrated": 1028.0928881949364
+      },
+      "B05": {
+        "eurosat_train_sample": 1209.7275620556381,
+        "munich_uncalibrated": 1339.8555086854462,
+        "munich_calibrated": 1181.6713843870048,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1207.0052673231937
+      },
+      "B06": {
+        "eurosat_train_sample": 1999.9577856316137,
+        "munich_uncalibrated": 2217.634955237741,
+        "munich_calibrated": 2044.1919863224725,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1456.2976715485752
+      },
+      "B07": {
+        "eurosat_train_sample": 2367.036669663525,
+        "munich_uncalibrated": 2513.4915561844177,
+        "munich_calibrated": 2377.7477446645926,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1600.1467509860634
+      },
+      "B08": {
+        "eurosat_train_sample": 2294.233336175182,
+        "munich_uncalibrated": 2623.834483792949,
+        "munich_calibrated": 2373.3488061027406,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1617.8047522152392
+      },
+      "B09": {
+        "eurosat_train_sample": 723.0491939484127,
+        "munich_uncalibrated": 2766.859174804972,
+        "munich_calibrated": 769.6057158892175,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 376.8779169362143
+      },
+      "B11": {
+        "eurosat_train_sample": 1847.81507807333,
+        "munich_uncalibrated": 2380.940269520382,
+        "munich_calibrated": 1985.597792217503,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1434.3042150145666
+      },
+      "B12": {
+        "eurosat_train_sample": 1140.7552452773643,
+        "munich_uncalibrated": 1624.0096159891289,
+        "munich_calibrated": 1144.7895181268946,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 997.8505345999338
+      },
+      "B8A": {
+        "eurosat_train_sample": 2594.5390705088457,
+        "munich_uncalibrated": 2759.668129074676,
+        "munich_calibrated": 2679.8679015243874,
+        "munich_closer_after_calibration": true,
+        "india_finetune_areas_calibrated": 1678.181014536205
+      }
+    }
+  }
+}

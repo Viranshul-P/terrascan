@@ -2,6 +2,7 @@
 data/*
 !data/splits/
 !data/stats.json
+!data/bands_stats.json
 models/
 imagery/
 *.tif

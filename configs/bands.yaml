@@ -1,0 +1,69 @@
+# Step 8.3a: spectral bands. Data and code only; the comparison itself is 8.3b.
+#   python scripts/bands_prepare.py --config configs/bands.yaml
+#
+# Band order of EuroSAT_MS and of our own stacks. NOTE B8A comes LAST (torchgeo's documented order for this
+# dataset). A first version of this file had B8A after B08; the calibration then matched the wrong bands
+# (EuroSAT's cirrus band looked like water vapour) and was thrown away. The order is now checked against
+# torchgeo's list AND against physical signatures of the data (results/bands_check.json, band_order_full),
+# and a test pins it to torchgeo.
+all_bands: [B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B8A]
+# The order the SSL4EO-S12 weights expect (torchgeo ResNet18_Weights.SENTINEL2_ALL_MOCO meta['bands']);
+# 8.3b must permute our channels to this order for that model.
+ssl4eo_s12_band_order: [B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B10, B11, B12]
+# Planetary Computer's Level-2A scenes have no B10 (cirrus), so the Indian side can never supply it.
+# Any variant that includes B10 gets the same constant (0 after standardising) on BOTH sides.
+missing_on_india: [B10]
+rgb: [B04, B03, B02]            # red, green, blue; stretched exactly like the baseline (src/imagery.to_eurosat_rgb)
+scale_max: 2750                 # the EuroSAT stretch 0..2750 -> 1..255 (same as configs/imagery.yaml)
+reflectance_scale: 10000        # non-RGB bands are used as value / 10000 (no clipping)
+
+# Standard normalised-difference indices (name: [first band, second band]); value = (first - second) / (first + second),
+# 0 where the sum is 0.   NDVI = (NIR - Red)/(NIR + Red), NDWI = (Green - NIR)/(Green + NIR) (water),
+# NDBI = (SWIR1 - NIR)/(SWIR1 + NIR) (built-up). Sentinel-2: NIR = B08, SWIR1 = B11.
+indices:
+  ndvi: [B08, B04]
+  ndwi: [B03, B08]
+  ndbi: [B11, B08]
+
+# The input variants 8.3b will compare, one change at a time. Channel names are band or index names.
+variants:
+  rgb: [B04, B03, B02]
+  rgb_nir: [B04, B03, B02, B08]
+  rgb_nir_swir: [B04, B03, B02, B08, B11, B12]
+  rgb_indices: [B04, B03, B02, ndvi, ndwi, ndbi]
+  all_bands: [B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B8A]
+
+# EuroSAT multispectral data: the same Zenodo record as the RGB images (MIT licence).
+eurosat_ms:
+  url: https://zenodo.org/api/records/7711810/files/EuroSAT_MS.zip/content
+  md5: 091174add3c8e680a49244acf185b9f0       # from the Zenodo API record, read 2026-11-08
+  zip_path: data/raw_ms/EuroSAT_MS.zip
+  extract_dir: data/raw_ms
+  array_path: data/raw_ms/eurosat_ms_uint16.npy   # (27000, 13, 64, 64), one memmap for all splits
+  index_path: data/raw_ms/eurosat_ms_index.csv    # path, label, split, row  (row = position in the array)
+splits_dir: data/splits                          # the same split CSVs every model uses; never re-split
+rgb_jpeg_dir: data/raw
+
+# Stats of every channel over the EuroSAT TRAIN split only (committed, like data/stats.json).
+stats_path: data/bands_stats.json
+
+# Indian side: all 5 areas get extra bands (the 2 TEST areas too, for 8.8 only; nothing is scored on them here).
+india_config: configs/india.yaml
+india_bands_dir: data/india/bands               # one .npz per area (git-ignored)
+india_patches_csv: data/india/patches.csv
+# How the 20 m / 60 m bands are brought to the 10 m grid. Chosen from EuroSAT_MS's own signature
+# (results/bands_check.json, eurosat/resampling = share of neighbouring pixels with exactly equal values):
+# native 10 m bands about 4%, its 20 m bands (B05-B07, B11, B12, B8A) about 6-8%, its 60 m bands B01 25% and
+# B09 17%. Plain copying ('nearest') would give about 50% (20 m) and 83% (60 m), so every coarser band was
+# smoothed up, and 'bilinear' is used here. (B10, 87%, is nearly constant cirrus and is not read on the
+# Indian side.) Bilinear versus bicubic cannot be told apart this way: a known limit.
+india_resampling: bilinear
+
+# Per-band L2A -> L1C calibration (same idea as the 4.1 RGB fit): gain * value + shift, fitted by matching
+# percentiles of the European summer scenes to EuroSAT_MS train images. European scenes only, never India.
+imagery_config: configs/imagery.yaml
+fit_areas: [lyon, poznan, utrecht]
+eurosat_fit_images: 1000
+eurosat_fit_seed: 42
+calibration_path: results/bands_calibration.json
+check_path: results/bands_check.json

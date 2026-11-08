@@ -94,13 +94,13 @@ def remove_offset(dn, item):
 def fit_calibration(our_values, target_values, percentiles):
     """Per colour, fit gain and shift so that gain * our + shift matches the target's spread.
 
-    our_values, target_values: (N, 3) pixel values on the same scale (0-10000 reflectance units).
+    our_values, target_values: (N, bands) pixel values, same scale (0-10000 reflectance units).
     Takes the given percentiles of each (e.g. 5, 10, ..., 95) and fits a straight line through the
     pairs (least squares). Percentiles, not pixel pairs, because the images show different places.
-    Returns {"gain": [r, g, b], "shift": [r, g, b]}.
+    Returns {"gain": [...], "shift": [...]}, one number per column (step 8.3a fits every band).
     """
     gains, shifts = [], []
-    for k in range(3):
+    for k in range(our_values.shape[1]):
         ours = np.percentile(our_values[:, k], percentiles)
         target = np.percentile(target_values[:, k], percentiles)
         gain, shift = np.polyfit(ours, target, deg=1)
