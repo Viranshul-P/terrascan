@@ -10,6 +10,7 @@ waiting on you
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
+6.2 (2026-11-08, Vercel): the user chose "website now, live API later" and pushed main (5648e33). Vercel (user's Hobby team, signed in in Chrome) refused the import of Viranshul-P/terrascan: "you need to install the GitHub integration first" = the Vercel GitHub app has no access to this repo yet. User must grant it (GitHub > Settings > Applications > Vercel > Configure > add the terrascan repo), then `/next` again; Claude then clicks Deploy (root `web`, Vite). Also push commit a39057d (web/vercel.json) after that.
 6.2: pick where the API runs, because free Docker Spaces on Hugging Face need PRO (see Known issues). Also: push `main` to GitHub yourself (Vercel imports from it).
 (Older note:) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
 the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
