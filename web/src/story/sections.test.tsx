@@ -110,6 +110,7 @@ describe("How it works and the footer", () => {
   it("the footer has the project links and the data credits", () => {
     vi.stubGlobal("scrollTo", () => {});
     render(<SiteFooter />);
+    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute("href", "/about");
     expect(screen.getByRole("link", { name: /Model card/ })).toBeInTheDocument();
     expect(screen.getByText(/EuroSAT \(Helber et al\.\)/)).toBeInTheDocument();
   });
