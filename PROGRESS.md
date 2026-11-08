@@ -10,7 +10,8 @@ not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing)
+(nothing blocks 6.1.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
+the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -94,7 +95,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   web/scripts/make-globe-poster.mjs + globe_poster.py from the live map) and starts the live map only on the first scroll,
   touch, key or mouse move (the 1.6 s timer is gone); chapter 2's tiles no longer download the 680 KB city picture at load;
   favicon added (the 404); source maps on. Lighthouse (mobile, 5 runs, reports/design/5.3d/lighthouse.json): performance 93-95,
-  accessibility 100, best practices 100. Impeccable critique (29/40) + detector, then 5 fixes: phone header keeps Story and
+  accessibility 100, best practices 100; BUT simulated LCP 2.72-2.82 s misses the 2.5 s budget (own check 0.44-0.65 s). Impeccable critique (29/40) + detector, then 5 fixes: phone header keeps Story and
   Explorer links; Explorer drops `tile 43QBF` and class code names from the main view (now in tooltips); Cities text no longer says
   "point at"; model sentence says "ResNet-18 (satellite)"; Explorer's credits fold into "i" on phones, +/- hidden on touch, zoom bar
   lifted above credits on desktop; error box has a full outline instead of a side stripe. Audit found and fixed a real bug: on a
