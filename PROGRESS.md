@@ -3,27 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-5.3d
+6.1
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-**5.3d, the friends test (yours: it needs real people).** Part 1 (performance, accessibility, polish) is done and
-committed. What's left is the test with 3 friends, then Claude fixes the top 3 problems.
-1. Start the site on your laptop (two terminals):
-   - `docker run --rm -p 8000:8000 terrascan-api` (the live "map your own area" server; Docker Desktop must be open)
-   - in `web/`: `npm run dev` and open http://localhost:5173/ (the site finds the server at localhost:8000)
-2. Sit with each of 3 friends (laptop first; one of them on your phone if you can: the site must be reachable from the
-   phone, which needs `npm run dev -- --host` and your laptop's Wi-Fi address plus `VITE_API_URL=http://<that address>:8000`;
-   skip the phone if that is a hassle and say so in your notes). Do NOT explain the site. Say only:
-   (1) "Find what changed in Ahmedabad." (2) "Now map your own area." Watch; don't help unless they are stuck for a minute.
-3. Write down for each friend: what they clicked first, where they hesitated or got stuck, what they said out loud,
-   how long each task took, and whether they could tell the numbers are only partly right.
-4. Save the notes as `reports/design/5.3d/friends_test.md` (rough is fine; write who was a friend, not names) and tell
-   Claude: `/next`. Claude will pick the top 3 problems from your notes, plan the fixes (you OK the plan), fix them,
-   re-check, and tick 5.3d.
+(nothing)
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -59,7 +46,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 5.3a Design system and two design directions
 - [x] 5.3b The map experience
 - [x] 5.3c The story sections
-- [ ] 5.3d Polish, performance and real users
+- [ ] 5.3d Polish, performance and real users  <!-- part 1 done 2026-11-08; friends test + top-3 fixes DEFERRED by the user, see Known issues -->
 - [ ] 6.1 Model on Hugging Face Hub
 - [ ] 6.2 Deploy the API and the website
 - [ ] 6.3 README
@@ -102,7 +89,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3c part 1 (Claude, 2026-11-07, on medium effort at the user's request) — src/web_story.py writes web/public/data/story.json (Ahmedabad check, India 3-seed numbers, per-model EuroSAT results, each with its source file; 4 pytest tests); Story page at / in React from prototype E (web/src/pages/Story.tsx, story/Chapters.tsx, story/Story.css, lib/story.ts, components/CountUp.tsx): pinned map, hero with count-ups, chapters The city / What the model sees / What changed / How sure (319 -> 163 km² bar that shrinks, 50-square waffle) / Europe -> India (dots ± std) / Limits; header gets a Story link, Explorer stays at /explorer. 14 new web tests (68 pass), incl. one that renders every chapter with made-up numbers to prove nothing is typed in. Screenshots + load check: reports/design/5.3c/ (web/scripts/shoot-story.mjs).
 - 5.3c part 2 (Claude, 2026-11-07, medium effort) — under the story map: model cards (story/Models.tsx; Accuracy / Speed / Size switch, "Ours" = best multi-seed from-scratch model, sentence built from range overlaps AND from CPU speed so it also says EfficientNet-B0 is faster), the game ported from prototype E (story/Game.tsx, quiz.json), city cards that change year square by square (story/Cities.tsx, lib/pixelSwap.ts), How it works (4 drawn steps + links: GitHub, Indian dataset; model card and blog shown as "coming soon"), footer with data credits and a plain note that much of the work was done with Claude. Speed fixes after Lighthouse: map loads after the headline (1.6 s or first scroll/touch) and fades in; data files preloaded in index.html; GitHub header link named; footer headings fixed. 10 new web tests (78 pass). Screenshots: reports/design/5.3c/.
 - 5.3c — done (user looked at it on laptop/phone and OK'd it, 2026-11-07). Lighthouse performance 81/84 left for 5.3d (user's choice C).
-- 5.3d part 1 (Claude, 2026-11-08, high effort) — performance, accessibility and polish; friends test + top-3 fixes still to do (you).
+- 5.3d part 1 (Claude, 2026-11-08, high effort; user looked at the site on the laptop and said it looks good, then chose to move on to 6.1 and do the friends test another time; step left unticked) — performance, accessibility and polish; friends test + top-3 fixes still to do (you).
   Speed: the Story shows a still picture of the globe (web/public/globe-light.webp, globe-dark.webp, 45 KB each, made by
   web/scripts/make-globe-poster.mjs + globe_poster.py from the live map) and starts the live map only on the first scroll,
   touch, key or mouse move (the 1.6 s timer is gone); chapter 2's tiles no longer download the 680 KB city picture at load;
@@ -384,6 +371,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
 ## Known issues / things to revisit
+- **5.3d is NOT finished: the friends test (3 people, no explaining: "find what changed in Ahmedabad", "map your own area") and the top-3 fixes from it are still to do (user's decision 2026-11-08: later).** Everything else in 5.3d is done and committed (e43bc52). To do it: run `docker run --rm -p 8000:8000 terrascan-api` and, in web/, `npm run dev`, then tell Claude `/next 5.3d`. Do it before the launch (7.2) at the latest; the site is not yet checked with real people.
 <!-- e.g. Download from X was flaky, used mirror Y -->
 - 5.3c -> 5.3d: Lighthouse performance 81/84 (reports/design/5.3c/lighthouse.json) -> fixed in 5.3d: 93-95 (reports/design/5.3d/lighthouse.json). The favicon 404 is fixed. NOTE: the same 5.3c build scored 92/93/93 when re-run on 2026-11-08 (reports/design/5.3d/lighthouse_before.json), so Lighthouse scores on this laptop swing by about 10 points with machine load; judge by the 5-run spread, not one run.
 - 5.3d: Lighthouse's simulated LCP is 2.72-2.82 s (reports/design/5.3d/lighthouse.json), over the 2.5 s budget. Before today's changes it was 2.63-2.71 s; the still-globe picture added about 0.15 s. Our own check (CPU 4x slower, local files, no network delay) gives 444-648 ms (load_metrics.json). Lighthouse uses a simulated slow-4G connection, so the two disagree; the 2.5 s budget is not met on Lighthouse's measure. The floor is FCP 1.8 s (React must run before anything shows). Not fixed: would need a pre-rendered hero in index.html.
