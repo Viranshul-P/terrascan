@@ -3,15 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-6.2
+6.3
 
 ## Status
-waiting on you
+not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-6.2 phone test (yours): open https://terrascan-five.vercel.app on your phone on MOBILE DATA (not wifi). Check: the Story loads and scrolls, the globe appears, Explorer opens (tap "Explorer"), you can switch Ahmedabad / Vadodara / Surat / Rajkot and 2018 / 2026, and "Map your own area" says live mapping is not switched on. Tell Claude what you saw (or "all fine"), then `/next` ticks 6.2. The live API is deferred on purpose (no free host works, see Known issues).
-(Older note:) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
+(nothing blocks 6.3.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
 the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
@@ -50,7 +49,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 5.3c The story sections
 - [ ] 5.3d Polish, performance and real users  <!-- part 1 done 2026-11-08; friends test + top-3 fixes DEFERRED by the user, see Known issues -->
 - [x] 6.1 Model on Hugging Face Hub
-- [ ] 6.2 Deploy the API and the website
+- [x] 6.2 Deploy the API and the website (website live; live API deferred, see Known issues)
 - [ ] 6.3 README
 - [ ] 6.4 Blog post
 - [ ] 7.1 Open-source polish
@@ -106,6 +105,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 6.1 — src/hf_model.py + src/model_card.md + configs/hf_model.yaml build data/hf_model/ (model.onnx, best.pt, config.yaml, onnx_info.json, README.md = card; seed 42); every number in the card is filled in by code from results/india_after.json, efficientnet_b0.json, change_check.json, change_2018_2026.json, onnx_check.json, india_dataset.json and models/efficientnet_b0_india_nomix/*/metrics.json (tests/test_hf_model.py, 6 tests, incl. "before" = the 3-seed 0.4486 ± 0.0071 and non-overlap claims). Claude created the public repo and uploaded it with the user's already-logged-in `hf` CLI (user asked for this): https://huggingface.co/viranshul/terrascan-efficientnet-b0-india (commit c8cd4ce; README on the Hub is byte-identical to the local card; the card's usage snippet ran from the Hub files; page opened in Chrome). Site: "Model card" is now a link in How it works and the footer (80 web tests pass, first-load JS 96.6 KB gz). 136 pytest, ruff clean.
 - 6.2 (Claude, 2026-11-08) — website live at https://terrascan-five.vercel.app (Vercel Hobby, GitHub import of Viranshul-P/terrascan, root `web`, Vite; web/vercel.json rewrites everything to index.html so /explorer opens directly; checked over HTTP: /, /explorer, /data/*.json, globe picture all 200 without login; Story and Explorer opened in Chrome). Lighthouse on the live URL, mobile, 3 runs (reports/design/6.2/lighthouse_live.json): performance 95/96/97, accessibility 100, best practices 100, LCP 2.27-2.31 s (under the 2.5 s budget; the 5.3d local run had 2.72-2.82 s), CLS 0, TBT 94-179 ms. Live API NOT deployed (user's decision): "Map your own area" shows "Live mapping is not switched on in this version of the site yet." Ready for later: CORS_ORIGINS env var in api/main.py (+2 tests), api/Dockerfile.render (model downloaded from the Hub), render.yaml. 138 pytest, ruff clean. Step stays unticked until the user's phone test.
 - 6.2 polish (Claude, 2026-11-08, user's request): removed the Design system page and its nav link (web/src/pages/DesignSystem.*, scripts/shoot-ds.mjs); added an About page at /about (web/src/pages/About.tsx; plain text, no numbers of its own, links to code, dataset, model card); nav is now Story / Explorer / About, centred on desktop (grid) and a plain row on phones. 82 web tests pass, tsc clean, screenshots checked at 1440 and 360 px (no sideways scroll). Pushed and live (user pushed ed31872 and 6fafbf9; footer now also links About). Lighthouse re-run on the live URL after this change (reports/design/6.2/lighthouse_live.json now holds THIS run; the first run's numbers are in the line above): performance 95/95/97, accessibility 100, best practices 100, LCP 2.17-2.28 s, CLS 0, TBT 93-196 ms.
+- 6.2 — done: user tested the live site on their phone on mobile data (2026-11-08): "all fine". Site https://terrascan-five.vercel.app; live API deferred (see Known issues).
 
 ## Decisions made
 - Wording (user's decision, 2026-11-08, for the resume): attribution sentences that are not needed to read the results were cut or
