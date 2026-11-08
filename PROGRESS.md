@@ -106,10 +106,10 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 
 ## Decisions made
 - 6.1 (user's decision, 2026-11-08): the model card has NO "Who did what" section (user: it is for their resume and they do
-  not want it). Removed, re-uploaded (Hub commit bfcc8b1). Two plain method sentences remain because they say how the numbers
-  were made: the change check was judged by Claude first then reviewed by the user (6 of 50 answers changed), and the Indian
-  labels were suggested by an AI and reviewed by a human. Asked the user whether to keep or cut them; the dataset card and the
-  website footer also say Claude helped (not changed). Nothing in the card claims the user wrote code or labelled alone.
+  not want it). Removed, re-uploaded (Hub commit bfcc8b1). The user then also had the two method sentences cut (Hub commit
+  4bd73b3): the card now only says "All labels were reviewed by a human (one reviewer, no second opinion)" and does not say who
+  judged the change check. The dataset card and the website footer still say Claude helped (not changed). Nothing in the card
+  claims the user wrote code or labelled alone.
 - 6.1 (user OK'd, 2026-11-08): repo `viranshul/terrascan-efficientnet-b0-india`; licence Apache-2.0 (the timm starting weights
   `efficientnet_b0.ra_in1k` are Apache-2.0, read from their Hub README on 2026-11-08; EuroSAT is MIT, from its GitHub LICENSE);
   upload model.onnx + best.pt (seed 42), config, onnx_info. **Exception to "pushing stays with the user":** the user asked
