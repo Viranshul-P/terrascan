@@ -20,7 +20,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 import src.live
-from api.main import CONFIG, create_app
+from api.main import CONFIG, allowed_origins, create_app
 from src.classes import CLASSES
 from src.live import BoxError, box_size_km, check_request, load_context, pick_scenes
 
@@ -151,6 +151,24 @@ def test_cors_lets_the_website_call(client):
         "Origin": "https://example.org", "Access-Control-Request-Method": "POST"})
     assert response.status_code == 200
     assert response.headers["access-control-allow-origin"] in {"*", "https://example.org"}
+
+
+def test_allowed_origins_env_overrides_the_config():
+    cfg = {"cors_origins": ["*"]}
+    assert allowed_origins(cfg, {}) == ["*"]
+    assert allowed_origins(cfg, {"CORS_ORIGINS": " "}) == ["*"]
+    env = {"CORS_ORIGINS": "https://a.example, https://b.example"}
+    assert allowed_origins(cfg, env) == ["https://a.example", "https://b.example"]
+
+
+def test_cors_env_blocks_other_websites(fake_ctx, monkeypatch):
+    monkeypatch.setenv("CORS_ORIGINS", "https://site.example")
+    client = TestClient(create_app(fake_ctx))
+    ask = {"Access-Control-Request-Method": "POST"}
+    ok = client.options("/predict", headers={"Origin": "https://site.example", **ask})
+    assert ok.headers["access-control-allow-origin"] == "https://site.example"
+    other = client.options("/predict", headers={"Origin": "https://evil.example", **ask})
+    assert "access-control-allow-origin" not in other.headers
 
 
 def scene(tile, date, cloud, generated="2020-01-01"):

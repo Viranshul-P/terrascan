@@ -9,6 +9,7 @@ Run from the repo root:  uvicorn api.main:default_app --factory --port 8000
 """
 
 import asyncio
+import os
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,11 +25,22 @@ class PredictRequest(BaseModel):
     year: str
 
 
+def allowed_origins(cfg, env=None):
+    """Websites allowed to call the API. CORS_ORIGINS (comma-separated) overrides configs/api.yaml.
+
+    The live Space sets it to the website's address only (step 6.2); locally it stays "*".
+    """
+    value = (os.environ if env is None else env).get("CORS_ORIGINS", "").strip()
+    if not value:
+        return cfg["cors_origins"]
+    return [origin.strip() for origin in value.split(",") if origin.strip()]
+
+
 def create_app(ctx):
     """The FastAPI app. ctx comes from src.live.load_context (tests pass a fake model)."""
     cfg = ctx["cfg"]
     app = FastAPI(title="TerraScan API")
-    app.add_middleware(CORSMiddleware, allow_origins=cfg["cors_origins"],
+    app.add_middleware(CORSMiddleware, allow_origins=allowed_origins(cfg),
                        allow_methods=["GET", "POST"], allow_headers=["*"])
 
     @app.get("/health")

@@ -6,7 +6,7 @@ Claude updates this at the end of every step. Keep entries short.
 6.2
 
 ## Status
-not started
+in progress
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
