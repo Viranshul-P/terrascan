@@ -86,7 +86,7 @@ export function Inspector({ city, years, colour, sel, verdict, hidden, modelName
         </div>
         {verdict && (
           <div className="checked-note">This square was in the hand check: <b>{VERDICT[verdict]}</b>.
-            <SourceMarker file="web/public/data/ahmedabad/checks.json" field="squares[].verdict" note="Copied from results/change_check_reviewed.csv: Claude first, then reviewed by the author." /></div>
+            <SourceMarker file="web/public/data/ahmedabad/checks.json" field="squares[].verdict" note="Copied from results/change_check_reviewed.csv (reviewed by the author)." /></div>
         )}
         <dl className="meta-list">
           <dt>Centre</dt><dd>{p.lat.toFixed(4)}° N, {p.lon.toFixed(4)}° E</dd>

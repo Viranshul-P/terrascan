@@ -105,6 +105,12 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 6.1 — src/hf_model.py + src/model_card.md + configs/hf_model.yaml build data/hf_model/ (model.onnx, best.pt, config.yaml, onnx_info.json, README.md = card; seed 42); every number in the card is filled in by code from results/india_after.json, efficientnet_b0.json, change_check.json, change_2018_2026.json, onnx_check.json, india_dataset.json and models/efficientnet_b0_india_nomix/*/metrics.json (tests/test_hf_model.py, 6 tests, incl. "before" = the 3-seed 0.4486 ± 0.0071 and non-overlap claims). Claude created the public repo and uploaded it with the user's already-logged-in `hf` CLI (user asked for this): https://huggingface.co/viranshul/terrascan-efficientnet-b0-india (commit c8cd4ce; README on the Hub is byte-identical to the local card; the card's usage snippet ran from the Hub files; page opened in Chrome). Site: "Model card" is now a link in How it works and the footer (80 web tests pass, first-load JS 96.6 KB gz). 136 pytest, ruff clean.
 
 ## Decisions made
+- Wording (user's decision, 2026-11-08, for the resume): attribution sentences that are not needed to read the results were cut or
+  made neutral, as long as they stay true. Done: model card (no who-did-what), dataset card ("Every patch was reviewed by the
+  project owner, who made every final call"; limits line "reviewed by one person"), website footer (Claude line removed),
+  Inspector source note, design-system page note. Claude declined to word anything so that it says or implies the user wrote the
+  code or labelled alone. Still true and still present: the `first_labelled_by` column values (`claude`/`user`) in the dataset's
+  metadata.csv, and the internal logs in the repo (PROGRESS.md, CLAUDE.md, .claude/). The CLAUDE.md honesty rules were not changed.
 - 6.1 (user's decision, 2026-11-08): the model card has NO "Who did what" section (user: it is for their resume and they do
   not want it). Removed, re-uploaded (Hub commit bfcc8b1). The user then also had the two method sentences cut (Hub commit
   4bd73b3): the card now only says "All labels were reviewed by a human (one reviewer, no second opinion)" and does not say who

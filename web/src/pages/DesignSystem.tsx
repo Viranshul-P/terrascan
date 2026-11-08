@@ -158,7 +158,7 @@ export function DesignSystem() {
           </div>
         </Section>
 
-        <p className="ds-foot">Design system built by Claude (Anthropic) from prototype E, the direction the author chose.</p>
+        <p className="ds-foot">Design system, from prototype E, the direction the author chose.</p>
       </main>
     </>
   );

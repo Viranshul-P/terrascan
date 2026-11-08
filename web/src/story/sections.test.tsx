@@ -107,9 +107,10 @@ describe("How it works and the footer", () => {
     expect(screen.queryByRole("link", { name: /Blog post/ })).toBeNull();
   });
 
-  it("the footer says plainly that an AI assistant helped", () => {
+  it("the footer has the project links and the data credits", () => {
     vi.stubGlobal("scrollTo", () => {});
     render(<SiteFooter />);
-    expect(screen.getByText(/made with Claude, an AI assistant/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Model card/ })).toBeInTheDocument();
+    expect(screen.getByText(/EuroSAT \(Helber et al\.\)/)).toBeInTheDocument();
   });
 });

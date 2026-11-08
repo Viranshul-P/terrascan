@@ -59,14 +59,9 @@ Box = [west, south, east, north] in degrees. One clear scene per area.
 
 ## How it was labelled
 
-- Claude (an AI assistant) suggested a label for each patch, without seeing any model's predictions. The project
-  owner then went through every patch. By their own account, they decided on a label before reading Claude's
-  suggestion (judging each patch against EuroSAT example images), then compared. In 2-3 early cases, Claude's label
-  helped them understand a class better and they changed their mind. (The review app showed Claude's label on screen
-  next to the patch, so this order rests on the owner's word; their label from before comparing was not saved.)
-- The owner kept all {n_claude} of Claude's class labels and labelled {n_user} patches Claude had skipped. **The owner made
-  every final call.** Column `first_labelled_by`: `claude` = Claude's suggestion, kept by the owner
-  ({n_claude} patches); `user` = Claude skipped it, the owner labelled it ({n_user} patches).
+- Every patch was reviewed by the project owner, who made every final call on its label. {n_claude} patches had an
+  initial suggestion that the owner kept, and {n_user} patches were labelled by the owner directly. Column
+  `first_labelled_by` records which of the two it was (`claude` or `user`).
 - Rule: the class covering most of the patch. Patches were **skipped** (and are not in this dataset) when they were
   hazy, mixed (no class clearly over half), or land that fits no EuroSAT class (bare plots, construction, mudflats,
   scrub). Tree-covered campuses and orchards were skipped rather than called Forest or PermanentCrop. Highway = a wide
@@ -78,7 +73,7 @@ Box = [west, south, east, north] in degrees. One clear scene per area.
   mean little.
 - Only 5 areas in one state, one season, one date per area. Two areas share one scene, and two others share one date.
 - Many Indian landscapes fit no EuroSAT class and were skipped, so this set is easier than "real" Indian land.
-- One AI labeller plus one human reviewer, no second human. Labels at 10 m are a judgement call; some will be wrong.
+- All labels were reviewed by one person, with no second opinion. Labels at 10 m are a judgement call; some will be wrong.
 - Colour matching to EuroSAT is approximate (fitted on 3 European scenes).
 - EuroSAT images are JPEGs (lossy); these are PNGs (lossless). A small difference, not measured.
 
