@@ -45,3 +45,4 @@ reports/design/**/*.webm
 
 # Plain-English study notes for the user (kept local)
 learn/
+logs/

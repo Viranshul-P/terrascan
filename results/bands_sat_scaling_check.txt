@@ -1,0 +1,6 @@
+conv1 outputs vs what bn1 stored during pretraining, averaged over channels
+mean gap: in std units, 0 = same mean | spread factor: 1.00 = same spread
+SENTINEL2_ALL_MOCO, 512 EuroSAT_MS train images, 128x128, seed 42
+raw EuroSAT_MS digital numbers / 10000: mean gap 0.167 | spread factor 1.46
+standardised only (mean 0, std 1): mean gap 0.923 | spread factor 8.53
+standardised, rescaled to SSL4EO-S12 band stats / 10000 (config rule): mean gap 0.084 | spread factor 1.18
