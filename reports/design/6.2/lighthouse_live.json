@@ -1,0 +1,42 @@
+{
+  "url": "https://terrascan-five.vercel.app/",
+  "chrome": "Playwright Chromium",
+  "runs": [
+    {
+      "fetched": "2026-11-08T11:27:06.517Z",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100
+      },
+      "lcp_s": 2.31,
+      "tbt_ms": 172,
+      "cls": 0,
+      "fcp_s": 1.55
+    },
+    {
+      "fetched": "2026-11-08T11:27:20.252Z",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100
+      },
+      "lcp_s": 2.27,
+      "tbt_ms": 179,
+      "cls": 0,
+      "fcp_s": 1.52
+    },
+    {
+      "fetched": "2026-11-08T11:27:33.575Z",
+      "scores": {
+        "performance": 97,
+        "accessibility": 100,
+        "best-practices": 100
+      },
+      "lcp_s": 2.28,
+      "tbt_ms": 94,
+      "cls": 0,
+      "fcp_s": 1.53
+    }
+  ]
+}
