@@ -1,0 +1,14 @@
+# Step 6.2: the API on Render's free plan. Render reads this file when you create a "Blueprint".
+# It sleeps after 15 minutes without requests and needs about a minute to wake up (docs: render.com/docs/free).
+services:
+  - type: web
+    name: terrascan-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./api/Dockerfile.render
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      # The website's address (e.g. https://terrascan.vercel.app). Only that website may call the API.
+      - key: CORS_ORIGINS
+        sync: false

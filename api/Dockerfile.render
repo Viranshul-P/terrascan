@@ -1,0 +1,29 @@
+# Step 6.2: the TerraScan API on Render (free web service), built from the repo root by render.yaml:
+#   docker build -f api/Dockerfile.render -t terrascan-render .
+# Same as api/Dockerfile, except the model is downloaded from the Hugging Face Hub (our model repo, pinned to one
+# commit) instead of copied from this laptop's models/ folder, which is git-ignored.
+FROM python:3.12.5-slim
+
+WORKDIR /app
+
+COPY api/requirements.txt api/requirements.txt
+RUN pip install --no-cache-dir -r api/requirements.txt
+
+COPY src/ src/
+COPY api/ api/
+COPY configs/ configs/
+COPY results/imagery_calibration.json results/imagery_calibration.json
+
+# The files are made readable for every user (a host may run the app as a non-root user).
+ARG MODEL_REPO=viranshul/terrascan-efficientnet-b0-india
+# The commit of the model repo (README-only commits after c8cd4ce did not change the weights).
+ARG MODEL_REVISION=4bd73b31a2ac07c309f46bc24b2a4adb3ece072d
+RUN mkdir -p models/efficientnet_b0_india/seed42 && python -c "import urllib.request as u; \
+b='https://huggingface.co/${MODEL_REPO}/resolve/${MODEL_REVISION}/'; d='models/efficientnet_b0_india/seed42/'; \
+[u.urlretrieve(b+f, d+f) for f in ('model.onnx', 'onnx_info.json')]" \
+    && chmod -R a+rX models
+
+# Render gives the port in $PORT (10000 by default); locally it falls back to 8000.
+# CORS_ORIGINS (the website's address) is set in the Render dashboard.
+EXPOSE 8000
+CMD uvicorn api.main:default_app --factory --host 0.0.0.0 --port ${PORT:-8000}
