@@ -1,0 +1,46 @@
+# Step 8.1: error audit. Why is the model wrong on Indian land? (No improvement is tried here.)
+#   python -m src.error_audit --config configs/error_audit.yaml --fast-dev-run
+#   python -m src.error_audit --config configs/error_audit.yaml              # predictions + report
+#   python -m src.error_audit --config configs/error_audit.yaml --report-only
+#
+# Only the Indian FINE-TUNE areas are used for any claim of cause. The two TEST areas
+# (vadodara_outskirts, sanand_farmland) were scored in 4.3/4.4 and are not touched here.
+india_eval_config: configs/india_eval.yaml        # areas, labels, patch folder (same split as 4.3/4.4)
+india_finetune_config: configs/india_finetune.yaml  # the 4.4 recipe, used UNCHANGED for leave-one-area-out
+imagery_config: configs/india.yaml                # area boxes (for ESA WorldCover)
+seeds: [42, 43, 44]
+loao_run_prefix: efficientnet_b0_india_loao       # models/<prefix>_<held-out area>/seed<N>/ (git-ignored)
+
+# Leave-one-area-out (LOAO): for each fine-tune area, fine-tune on the OTHER two (+ the same EuroSAT
+# mix as 4.4), then predict the held-out area, which that model has never seen.
+
+# Failure cases: picked by a rule written here, not by eye. From the seed-42 LOAO predictions take the
+# top `case_pairs` most frequent (true -> predicted) mistakes and, for each, the wrong patch with the
+# highest confidence. Then add up to `case_river` wrong River-labelled patches (the user's report: river
+# called crop), also most confident first.
+case_seed: 42
+case_pairs: 6
+case_river: 4
+case_picture_scale: 4        # patch pictures are enlarged 4x with sharp pixels
+case_dir: reports/error_audit
+
+# EuroSAT reference for brightness: this many TRAIN images per class (seeded random draw).
+eurosat_sample_per_class: 300
+eurosat_sample_seed: 42
+min_indian_patches_for_class_brightness: 10
+
+# Tier 2 (noisy reference): ESA WorldCover, 10 m, from Planetary Computer (no key).
+worldcover:
+  collection: esa-worldcover
+  year: 2021        # v200
+# A showcase square counts as water / built-up if at least this share of it is. Water is low because the
+# Sabarmati is narrower than a 640 m square (a first try at 0.5 found only 1 square).
+worldcover_water_min_share: 0.2
+worldcover_built_up_min_share: 0.5
+change_config: configs/change.yaml   # box of the Ahmedabad map on the live site
+
+# The causes text is hand-written (src/error_audit_causes.md); every number in it is filled in by code.
+causes_template: src/error_audit_causes.md
+predictions_path: results/error_audit_predictions.csv
+json_path: results/error_audit.json
+report_path: results/error_audit.md

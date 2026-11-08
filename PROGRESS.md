@@ -3,14 +3,14 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-8.1
+8.2
 
 ## Status
 not started
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing blocks 6.3.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
+(nothing blocks 8.2.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
 the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
@@ -50,7 +50,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [ ] 5.3d Polish, performance and real users  <!-- part 1 done 2026-11-08; friends test + top-3 fixes DEFERRED by the user, see Known issues -->
 - [x] 6.1 Model on Hugging Face Hub
 - [x] 6.2 Deploy the API and the website (website live; live API deferred, see Known issues)
-- [ ] 8.1 Error audit (effort: medium)
+- [x] 8.1 Error audit (effort: medium)
 - [ ] 8.2 Class scheme (medium)
 - [ ] 8.3 More spectral bands (HIGH)
 - [ ] 8.4 Noisy labels at scale (medium)
@@ -120,7 +120,10 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 6.2 polish (Claude, 2026-11-08, user's request): removed the Design system page and its nav link (web/src/pages/DesignSystem.*, scripts/shoot-ds.mjs); added an About page at /about (web/src/pages/About.tsx; plain text, no numbers of its own, links to code, dataset, model card); nav is now Story / Explorer / About, centred on desktop (grid) and a plain row on phones. 82 web tests pass, tsc clean, screenshots checked at 1440 and 360 px (no sideways scroll). Pushed and live (user pushed ed31872 and 6fafbf9; footer now also links About). Lighthouse re-run on the live URL after this change (reports/design/6.2/lighthouse_live.json now holds THIS run; the first run's numbers are in the line above): performance 95/95/97, accessibility 100, best practices 100, LCP 2.17-2.28 s, CLS 0, TBT 93-196 ms.
 - 6.2 — done: user tested the live site on their phone on mobile data (2026-11-08): "all fine". Site https://terrascan-five.vercel.app; live API deferred (see Known issues).
 
+- 8.1 (Claude, 2026-11-08, medium effort) — src/error_audit.py + src/error_audit_report.py (+ src/error_audit_causes.md, configs/error_audit.yaml, tests/test_error_audit.py, 13 tests) -> results/error_audit.md/.json, results/error_audit_predictions.csv, patch pictures in reports/error_audit/. Only the 3 fine-tune areas (149 patches) are used; EuroSAT-only EfficientNet-B0 and leave-one-area-out (LOAO) fine-tunes (4.4 recipe unchanged), seeds 42/43/44. Ranked causes: (1) EuroSAT classes don't fit (wide muddy Narmada called SeaLake; Residential<->Industrial both ways; mixed patches), (2) Indian AnnualCrop looks unlike EuroSAT's (1 of 150 right before, 71 of 150 after LOAO), (3) few uneven local labels, (4) label/mixed-patch doubts (one example), (5) global brightness error unlikely. Live-site 'Sabarmati as crop' mostly NOT reproduced (22 of 29 water squares are River, 1 AnnualCrop). 151 pytest, ruff clean.
+
 ## Decisions made
+- **8.1 (Claude, user OK'd the plan 2026-11-08):** leave-one-area-out fine-tunes use the 4.4 recipe unchanged (configs/india_finetune.yaml), all 3 seeds, no forgetting check (nothing is published from them; models in models/efficientnet_b0_india_loao_<area>/, git-ignored). Failure cases are picked by a rule in configs/error_audit.yaml (top 6 mistakes of LOAO seed 42, most confident wrong patch each, plus up to 4 wrong River patches), not by eye. The cause text (src/error_audit_causes.md) is hand-written by Claude; its numbers are filled in by code and a test checks the template. ESA WorldCover 2021 v200 (tier 2, noisy) is used only to describe class occurrence and to find the live-site squares that are water / built-up; the water threshold is 20% of a square because a first try at 50% found only 1 square (the Sabarmati is narrower than a 640 m patch).
 - **New direction (user's decision, 2026-11-08): Phase 8 comes BEFORE the README.** TerraScan is now a background research project,
   not a flagship app. Claude does all the work; the user approves plans and does only the unavoidable parts (sign-ups, pushing to
   Hugging Face). Main goal: clearly better detection on Indian land (user saw on the live site: the Sabarmati river predicted as
@@ -418,6 +421,8 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
   each) stay local (git-ignored). Retake: `npm run shots:prototypes` and `npm run shots:c` in web/.
 
 ## Known issues / things to revisit
+- **8.1 for the user to look at:** `narmada_bharuch_r0512_c0640.png` is labelled AnnualCrop but looks to Claude like a town with a diagonal road (judged by eye; the label was NOT changed, it is the user's). Claude's other picture readings (Narmada = wide muddy water, Sabarmati patches = river with bridges and city on both banks) are also by eye. The user's report 'Sabarmati predicted as crop' was not reproduced on the live map; if they saw it somewhere specific, the square or a screenshot is needed.
+- 8.1 limits: three seeds share the same 149 patches (± is training noise only); matrix counts add up 3 seeds, so patches are counted 3 times; rare-class rows (3-6 rows) mean little; LOAO models see only 2 areas, so their accuracy is not comparable to the 4.4 test number; the Narmada area holds most of the River and crop labels, so it drives the main errors; brightness per class uses 300 EuroSAT train images per class (seeded). The 'winter crops' reason for the crop colour gap is a guess, not tested.
 - 2026-11-08: the old SPEC line "Labelling rules: done by hand by me (not by an AI)" (Phase 4) is out of date; PLAN/CLAUDE.md win
   (4.2 used Claude's first labels with the user's review). CLAUDE.md still says to record who did what in READMEs and cards; the
   user separately asked for no "who did what" section in public text (model card and dataset card were reworded to say the labels
@@ -570,6 +575,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - 5.3b part 2B: a drawn box is a true lon/lat box only on a flat, north-up map, so opening the tool flattens the map;
   opening Compare closes the tool and the tool turns Compare off (the second map would hide the live layers).
 ## Results so far (copied from results/ files only, with the file name)
+- **Error audit (8.1, results/error_audit.json; fine-tune areas only, 149 patches, mean ± std over seeds 42/43/44):** accuracy EuroSAT-only 0.4653 ± 0.0495; leave-one-area-out fine-tuned 0.6555 ± 0.0169. Per held-out area (EuroSAT-only / LOAO): ahmedabad_city 0.736 / 0.862, narmada_bharuch 0.220 / 0.452, ankleshwar_industrial 0.448 / 0.678. Most frequent mistakes (EuroSAT-only, patch x seed rows): AnnualCrop -> PermanentCrop 109, Residential -> Industrial 49, AnnualCrop -> Pasture 30, River -> SeaLake 12. LOAO: AnnualCrop right 71 of 150, River right 3 of 24, Residential -> Industrial 17, Industrial -> Residential 14. Mean red of AnnualCrop: Indian 0.257 vs EuroSAT sample 0.523; Residential 0.493 vs 0.399; overall gap 0.16/0.15/0.18 EuroSAT std. Live Ahmedabad map vs WorldCover: 22 of 29 water squares River, 1 AnnualCrop; 681 built-up squares: Residential 491, Industrial 165, Highway 20.
 - 5.3d Story page, final build (reports/design/5.3d/lighthouse.json, 5 runs of Lighthouse 12.0.0 mobile; reports/design/5.3d/load_metrics.json): performance 93, 93, 94, 95, 95; accessibility 100 all runs; best practices 100 all runs; CLS 0; simulated LCP 2.72-2.82 s (over the 2.5 s budget); TBT 62-131 ms. Own load check (phone window, CPU 4x, 3 runs): LCP 444-648 ms, CLS 0; main-thread blocking over 50 ms per task while settling 183-185 ms, and 14-25 ms in the 6 s after the first scroll (when the map starts). First-load JS 96.6 KB gzipped (npm run size, not saved to a file); the map code and worker (433.8 KB gzipped) load only after the first interaction.
 - 5.3c Story page (final build of part 2): own load check, phone size, CPU 4x slower, local: LCP 1820 ms, CLS 0 (reports/design/5.3c/load_metrics.json). Lighthouse 12.0.0 mobile, 2 runs: performance 81 / 84 (FAILS the 90 budget), accessibility 100 / 100, best practices 96 / 96, simulated LCP 2.72 s, TBT 531 / 447 ms, CLS 0 (reports/design/5.3c/lighthouse.json). First-load JS 96.3 KB gzipped (npm run size output, not saved to a file).
 <!-- e.g. ResNet-18 test acc: 0.98 (results/resnet18.json) -->

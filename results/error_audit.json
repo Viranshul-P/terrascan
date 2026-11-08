@@ -1,0 +1,1005 @@
+{
+  "finetune_areas": [
+    "ahmedabad_city",
+    "narmada_bharuch",
+    "ankleshwar_industrial"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "n_patches": 149,
+  "accuracy": {
+    "eurosat": {
+      "per_seed": {
+        "42": 0.48322147651006714,
+        "43": 0.40939597315436244,
+        "44": 0.5033557046979866
+      },
+      "mean": 0.46532438478747207,
+      "std": 0.049470569099543595
+    },
+    "loao": {
+      "per_seed": {
+        "42": 0.6375838926174496,
+        "43": 0.6577181208053692,
+        "44": 0.6711409395973155
+      },
+      "mean": 0.6554809843400448,
+      "std": 0.016890009922305962
+    }
+  },
+  "matrix": {
+    "eurosat": [
+      [
+        1,
+        0,
+        1,
+        8,
+        0,
+        30,
+        109,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        24,
+        1,
+        0,
+        8,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        26,
+        0,
+        0,
+        7,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        5,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        49,
+        0,
+        0,
+        146,
+        0,
+        0
+      ],
+      [
+        1,
+        2,
+        0,
+        1,
+        4,
+        0,
+        0,
+        1,
+        3,
+        12
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "loao": [
+      [
+        71,
+        0,
+        1,
+        9,
+        1,
+        6,
+        61,
+        1,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        23,
+        1,
+        0,
+        8,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        4,
+        15,
+        0,
+        0,
+        14,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        17,
+        0,
+        0,
+        178,
+        0,
+        0
+      ],
+      [
+        3,
+        2,
+        0,
+        1,
+        1,
+        0,
+        0,
+        2,
+        3,
+        12
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "top_pairs": {
+    "eurosat": [
+      [
+        "AnnualCrop",
+        "PermanentCrop",
+        109
+      ],
+      [
+        "Residential",
+        "Industrial",
+        49
+      ],
+      [
+        "AnnualCrop",
+        "Pasture",
+        30
+      ],
+      [
+        "River",
+        "SeaLake",
+        12
+      ],
+      [
+        "AnnualCrop",
+        "Highway",
+        8
+      ],
+      [
+        "Highway",
+        "PermanentCrop",
+        8
+      ],
+      [
+        "Industrial",
+        "Residential",
+        7
+      ],
+      [
+        "River",
+        "Industrial",
+        4
+      ]
+    ],
+    "loao": [
+      [
+        "AnnualCrop",
+        "PermanentCrop",
+        61
+      ],
+      [
+        "Residential",
+        "Industrial",
+        17
+      ],
+      [
+        "Industrial",
+        "Residential",
+        14
+      ],
+      [
+        "River",
+        "SeaLake",
+        12
+      ],
+      [
+        "AnnualCrop",
+        "Highway",
+        9
+      ],
+      [
+        "Highway",
+        "PermanentCrop",
+        8
+      ],
+      [
+        "AnnualCrop",
+        "Pasture",
+        6
+      ],
+      [
+        "PermanentCrop",
+        "AnnualCrop",
+        6
+      ]
+    ]
+  },
+  "per_area_accuracy": {
+    "eurosat": {
+      "ahmedabad_city": {
+        "per_seed": {
+          "42": 0.7758620689655172,
+          "43": 0.6206896551724138,
+          "44": 0.8103448275862069
+        },
+        "mean": 0.735632183908046,
+        "std": 0.10102526339797092
+      },
+      "ankleshwar_industrial": {
+        "per_seed": {
+          "42": 0.41379310344827586,
+          "43": 0.4482758620689655,
+          "44": 0.4827586206896552
+        },
+        "mean": 0.4482758620689655,
+        "std": 0.03448275862068967
+      },
+      "narmada_bharuch": {
+        "per_seed": {
+          "42": 0.24193548387096775,
+          "43": 0.1935483870967742,
+          "44": 0.22580645161290322
+        },
+        "mean": 0.22043010752688172,
+        "std": 0.024637503736321727
+      }
+    },
+    "loao": {
+      "ahmedabad_city": {
+        "per_seed": {
+          "42": 0.8448275862068966,
+          "43": 0.8448275862068966,
+          "44": 0.896551724137931
+        },
+        "mean": 0.8620689655172414,
+        "std": 0.029862944958084087
+      },
+      "ankleshwar_industrial": {
+        "per_seed": {
+          "42": 0.7241379310344828,
+          "43": 0.5862068965517241,
+          "44": 0.7241379310344828
+        },
+        "mean": 0.6781609195402298,
+        "std": 0.07963451988822427
+      },
+      "narmada_bharuch": {
+        "per_seed": {
+          "42": 0.4032258064516129,
+          "43": 0.5161290322580645,
+          "44": 0.43548387096774194
+        },
+        "mean": 0.45161290322580644,
+        "std": 0.05815405283006435
+      }
+    }
+  },
+  "per_class_recall": {
+    "eurosat": {
+      "AnnualCrop": {
+        "true_count": 150,
+        "recall": 0.006666666666666667
+      },
+      "Forest": {
+        "true_count": 3,
+        "recall": 0.0
+      },
+      "HerbaceousVegetation": {
+        "true_count": 3,
+        "recall": 1.0
+      },
+      "Highway": {
+        "true_count": 33,
+        "recall": 0.7272727272727273
+      },
+      "Industrial": {
+        "true_count": 33,
+        "recall": 0.7878787878787878
+      },
+      "PermanentCrop": {
+        "true_count": 6,
+        "recall": 0.8333333333333334
+      },
+      "Residential": {
+        "true_count": 195,
+        "recall": 0.7487179487179487
+      },
+      "River": {
+        "true_count": 24,
+        "recall": 0.125
+      }
+    },
+    "loao": {
+      "AnnualCrop": {
+        "true_count": 150,
+        "recall": 0.47333333333333333
+      },
+      "Forest": {
+        "true_count": 3,
+        "recall": 0.0
+      },
+      "HerbaceousVegetation": {
+        "true_count": 3,
+        "recall": 1.0
+      },
+      "Highway": {
+        "true_count": 33,
+        "recall": 0.696969696969697
+      },
+      "Industrial": {
+        "true_count": 33,
+        "recall": 0.45454545454545453
+      },
+      "PermanentCrop": {
+        "true_count": 6,
+        "recall": 0.0
+      },
+      "Residential": {
+        "true_count": 195,
+        "recall": 0.9128205128205128
+      },
+      "River": {
+        "true_count": 24,
+        "recall": 0.125
+      }
+    }
+  },
+  "cases": [
+    {
+      "file": "narmada_bharuch_r0192_c0000.png",
+      "area": "narmada_bharuch",
+      "true": "AnnualCrop",
+      "model": "loao",
+      "seed": 42,
+      "pred": "PermanentCrop",
+      "conf": 0.8569,
+      "why": "top mistake AnnualCrop -> PermanentCrop",
+      "lat": 21.729876,
+      "lon": 72.901908,
+      "eurosat_pred": "PermanentCrop",
+      "eurosat_conf": 0.8927
+    },
+    {
+      "file": "ahmedabad_city_r0832_c0000.png",
+      "area": "ahmedabad_city",
+      "true": "Residential",
+      "model": "loao",
+      "seed": 42,
+      "pred": "Industrial",
+      "conf": 0.8791,
+      "why": "top mistake Residential -> Industrial",
+      "lat": 23.002072,
+      "lon": 72.502699,
+      "eurosat_pred": "Industrial",
+      "eurosat_conf": 0.9039
+    },
+    {
+      "file": "narmada_bharuch_r0512_c0640.png",
+      "area": "narmada_bharuch",
+      "true": "AnnualCrop",
+      "model": "loao",
+      "seed": 42,
+      "pred": "Highway",
+      "conf": 0.9096,
+      "why": "top mistake AnnualCrop -> Highway",
+      "lat": 21.701755,
+      "lon": 72.964161,
+      "eurosat_pred": "Highway",
+      "eurosat_conf": 0.9264
+    },
+    {
+      "file": "ankleshwar_industrial_r0320_c0448.png",
+      "area": "ankleshwar_industrial",
+      "true": "Industrial",
+      "model": "loao",
+      "seed": 42,
+      "pred": "Residential",
+      "conf": 0.8984,
+      "why": "top mistake Industrial -> Residential",
+      "lat": 21.618782,
+      "lon": 73.025688,
+      "eurosat_pred": "Residential",
+      "eurosat_conf": 0.8927
+    },
+    {
+      "file": "narmada_bharuch_r0704_c0960.png",
+      "area": "narmada_bharuch",
+      "true": "River",
+      "model": "loao",
+      "seed": 42,
+      "pred": "SeaLake",
+      "conf": 0.9123,
+      "why": "top mistake River -> SeaLake",
+      "lat": 21.684795,
+      "lon": 72.995319,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.92
+    },
+    {
+      "file": "narmada_bharuch_r1024_c0128.png",
+      "area": "narmada_bharuch",
+      "true": "AnnualCrop",
+      "model": "loao",
+      "seed": 42,
+      "pred": "Pasture",
+      "conf": 0.8426,
+      "why": "top mistake AnnualCrop -> Pasture",
+      "lat": 21.654912,
+      "lon": 72.915359,
+      "eurosat_pred": "Pasture",
+      "eurosat_conf": 0.9094
+    },
+    {
+      "file": "narmada_bharuch_r0832_c0256.png",
+      "area": "narmada_bharuch",
+      "true": "River",
+      "model": "loao",
+      "seed": 42,
+      "pred": "SeaLake",
+      "conf": 0.8945,
+      "why": "River patch called something else",
+      "lat": 21.672402,
+      "lon": 72.927474,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.9168
+    },
+    {
+      "file": "narmada_bharuch_r0768_c0192.png",
+      "area": "narmada_bharuch",
+      "true": "River",
+      "model": "loao",
+      "seed": 42,
+      "pred": "SeaLake",
+      "conf": 0.878,
+      "why": "River patch called something else",
+      "lat": 21.678104,
+      "lon": 72.921209,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.8578
+    },
+    {
+      "file": "narmada_bharuch_r0832_c0320.png",
+      "area": "narmada_bharuch",
+      "true": "River",
+      "model": "loao",
+      "seed": 42,
+      "pred": "SeaLake",
+      "conf": 0.8313,
+      "why": "River patch called something else",
+      "lat": 21.672479,
+      "lon": 72.933656,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.7818
+    },
+    {
+      "file": "narmada_bharuch_r0832_c0064.png",
+      "area": "narmada_bharuch",
+      "true": "River",
+      "model": "loao",
+      "seed": 42,
+      "pred": "Forest",
+      "conf": 0.5268,
+      "why": "River patch called something else",
+      "lat": 21.67217,
+      "lon": 72.908928,
+      "eurosat_pred": "Forest",
+      "eurosat_conf": 0.599
+    }
+  ],
+  "river_patches": [
+    {
+      "file": "narmada_bharuch_r0832_c0320.png",
+      "area": "narmada_bharuch",
+      "lat": 21.672479,
+      "lon": 72.933656,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.7818,
+      "eurosat_right_seeds": 0,
+      "loao_pred": "SeaLake",
+      "loao_conf": 0.8313,
+      "loao_right_seeds": 0
+    },
+    {
+      "file": "ahmedabad_city_r0256_c0768.png",
+      "area": "ahmedabad_city",
+      "lat": 23.055221,
+      "lon": 72.576642,
+      "eurosat_pred": "Residential",
+      "eurosat_conf": 0.3466,
+      "eurosat_right_seeds": 0,
+      "loao_pred": "Residential",
+      "loao_conf": 0.3957,
+      "loao_right_seeds": 0,
+      "live_site_class_2026": "Industrial",
+      "live_site_conf_2026": 0.847,
+      "live_site_distance_m": 307.5813269549623
+    },
+    {
+      "file": "narmada_bharuch_r0832_c0064.png",
+      "area": "narmada_bharuch",
+      "lat": 21.67217,
+      "lon": 72.908928,
+      "eurosat_pred": "Forest",
+      "eurosat_conf": 0.599,
+      "eurosat_right_seeds": 1,
+      "loao_pred": "Forest",
+      "loao_conf": 0.5268,
+      "loao_right_seeds": 1
+    },
+    {
+      "file": "narmada_bharuch_r0832_c0256.png",
+      "area": "narmada_bharuch",
+      "lat": 21.672402,
+      "lon": 72.927474,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.9168,
+      "eurosat_right_seeds": 0,
+      "loao_pred": "SeaLake",
+      "loao_conf": 0.8945,
+      "loao_right_seeds": 0
+    },
+    {
+      "file": "narmada_bharuch_r0768_c0192.png",
+      "area": "narmada_bharuch",
+      "lat": 21.678104,
+      "lon": 72.921209,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.8578,
+      "eurosat_right_seeds": 0,
+      "loao_pred": "SeaLake",
+      "loao_conf": 0.878,
+      "loao_right_seeds": 0
+    },
+    {
+      "file": "narmada_bharuch_r0768_c0768.png",
+      "area": "narmada_bharuch",
+      "lat": 21.678792,
+      "lon": 72.976851,
+      "eurosat_pred": "River",
+      "eurosat_conf": 0.6598,
+      "eurosat_right_seeds": 2,
+      "loao_pred": "River",
+      "loao_conf": 0.7822,
+      "loao_right_seeds": 2
+    },
+    {
+      "file": "ahmedabad_city_r0576_c0768.png",
+      "area": "ahmedabad_city",
+      "lat": 23.02634,
+      "lon": 72.577159,
+      "eurosat_pred": "Industrial",
+      "eurosat_conf": 0.4918,
+      "eurosat_right_seeds": 0,
+      "loao_pred": "AnnualCrop",
+      "loao_conf": 0.3079,
+      "loao_right_seeds": 0,
+      "live_site_class_2026": "River",
+      "live_site_conf_2026": 0.945,
+      "live_site_distance_m": 307.60491936168575
+    },
+    {
+      "file": "narmada_bharuch_r0704_c0960.png",
+      "area": "narmada_bharuch",
+      "lat": 21.684795,
+      "lon": 72.995319,
+      "eurosat_pred": "SeaLake",
+      "eurosat_conf": 0.92,
+      "eurosat_right_seeds": 0,
+      "loao_pred": "SeaLake",
+      "loao_conf": 0.9123,
+      "loao_right_seeds": 0
+    }
+  ],
+  "class_counts_finetune_areas": {
+    "ahmedabad_city": {
+      "AnnualCrop": 0,
+      "Forest": 0,
+      "HerbaceousVegetation": 0,
+      "Highway": 1,
+      "Industrial": 2,
+      "Pasture": 0,
+      "PermanentCrop": 0,
+      "Residential": 53,
+      "River": 2,
+      "SeaLake": 0
+    },
+    "ankleshwar_industrial": {
+      "AnnualCrop": 11,
+      "Forest": 0,
+      "HerbaceousVegetation": 0,
+      "Highway": 0,
+      "Industrial": 9,
+      "Pasture": 0,
+      "PermanentCrop": 2,
+      "Residential": 7,
+      "River": 0,
+      "SeaLake": 0
+    },
+    "narmada_bharuch": {
+      "AnnualCrop": 39,
+      "Forest": 1,
+      "HerbaceousVegetation": 1,
+      "Highway": 10,
+      "Industrial": 0,
+      "Pasture": 0,
+      "PermanentCrop": 0,
+      "Residential": 5,
+      "River": 6,
+      "SeaLake": 0
+    }
+  },
+  "labels_all_areas_source": "results/india_labels.json",
+  "labels_all_areas": {
+    "AnnualCrop": 75,
+    "Forest": 5,
+    "HerbaceousVegetation": 6,
+    "Highway": 19,
+    "Industrial": 17,
+    "Pasture": 1,
+    "PermanentCrop": 4,
+    "Residential": 95,
+    "River": 8,
+    "SeaLake": 0
+  },
+  "worldcover": {
+    "collection": "esa-worldcover",
+    "year": 2021,
+    "areas": {
+      "ahmedabad_city": {
+        "tile": "ESA_WorldCover_10m_2021_v200_N21E072",
+        "n_pixels": 1440000,
+        "share": {
+          "Tree cover": 0.09105347222222222,
+          "Shrubland": 0.022509027777777777,
+          "Grassland": 0.013093055555555556,
+          "Cropland": 0.05143194444444445,
+          "Built-up": 0.7706416666666667,
+          "Bare / sparse vegetation": 0.020646527777777778,
+          "Permanent water bodies": 0.030624305555555554
+        }
+      },
+      "narmada_bharuch": {
+        "tile": "ESA_WorldCover_10m_2021_v200_N21E072",
+        "n_pixels": 1440000,
+        "share": {
+          "Tree cover": 0.149475,
+          "Shrubland": 5.6944444444444445e-05,
+          "Grassland": 0.06084861111111111,
+          "Cropland": 0.5731506944444444,
+          "Built-up": 0.11565625,
+          "Bare / sparse vegetation": 0.013127083333333333,
+          "Permanent water bodies": 0.08768541666666667
+        }
+      },
+      "ankleshwar_industrial": {
+        "tile": "ESA_WorldCover_10m_2021_v200_N21E072",
+        "n_pixels": 1152000,
+        "share": {
+          "Tree cover": 0.14417881944444444,
+          "Shrubland": 0.00022743055555555556,
+          "Grassland": 0.10879427083333333,
+          "Cropland": 0.43415190972222223,
+          "Built-up": 0.2830008680555556,
+          "Bare / sparse vegetation": 0.019586805555555555,
+          "Permanent water bodies": 0.010014756944444444,
+          "Herbaceous wetland": 4.513888888888889e-05
+        }
+      }
+    }
+  },
+  "live_site_vs_worldcover": {
+    "min_share": {
+      "Permanent water bodies": 0.2,
+      "Built-up": 0.5
+    },
+    "n_squares": 2112,
+    "Permanent water bodies": {
+      "n_squares": 29,
+      "live_site_class_2026": {
+        "River": 22,
+        "Residential": 2,
+        "HerbaceousVegetation": 2,
+        "Pasture": 1,
+        "AnnualCrop": 1,
+        "Industrial": 1
+      }
+    },
+    "Built-up": {
+      "n_squares": 681,
+      "live_site_class_2026": {
+        "Residential": 491,
+        "Industrial": 165,
+        "Highway": 20,
+        "River": 4,
+        "HerbaceousVegetation": 1
+      }
+    }
+  },
+  "brightness": {
+    "eurosat_train_mean": [
+      0.3444749823152987,
+      0.380289237999179,
+      0.40785005170125166
+    ],
+    "eurosat_train_std": [
+      0.20264413344684717,
+      0.1367330988985059,
+      0.11550886610407354
+    ],
+    "india_all_finetune_patches": {
+      "n": 768,
+      "mean": [
+        0.3762824535369873,
+        0.40101054310798645,
+        0.4286460876464844
+      ],
+      "std": [
+        0.17744828760623932,
+        0.1447511464357376,
+        0.1317981779575348
+      ]
+    },
+    "gap_in_eurosat_std": [
+      0.1569622109491345,
+      0.1515456409291829,
+      0.18003843901034816
+    ],
+    "per_area": {
+      "ahmedabad_city": {
+        "n": 272,
+        "mean": [
+          0.49533289670944214,
+          0.5071654915809631,
+          0.5381547212600708
+        ],
+        "std": [
+          0.18952035903930664,
+          0.1547701358795166,
+          0.13090184330940247
+        ]
+      },
+      "ankleshwar_industrial": {
+        "n": 224,
+        "mean": [
+          0.3368972837924957,
+          0.35488200187683105,
+          0.37919679284095764
+        ],
+        "std": [
+          0.13772699236869812,
+          0.10897453874349594,
+          0.09490486234426498
+        ]
+      },
+      "narmada_bharuch": {
+        "n": 272,
+        "mean": [
+          0.28966662287712097,
+          0.33284372091293335,
+          0.3598601818084717
+        ],
+        "std": [
+          0.12006240338087082,
+          0.08809015899896622,
+          0.07587354630231857
+        ]
+      }
+    },
+    "per_class": {
+      "AnnualCrop": {
+        "n_india": 50,
+        "n_eurosat": 300,
+        "india_mean": [
+          0.25728222727775574,
+          0.30549195408821106,
+          0.33413469791412354
+        ],
+        "eurosat_mean": [
+          0.5230575799942017,
+          0.48187515139579773,
+          0.46916326880455017
+        ]
+      },
+      "Highway": {
+        "n_india": 11,
+        "n_eurosat": 300,
+        "india_mean": [
+          0.30038192868232727,
+          0.3428204357624054,
+          0.3708052933216095
+        ],
+        "eurosat_mean": [
+          0.34402042627334595,
+          0.37914738059043884,
+          0.407020628452301
+        ]
+      },
+      "Industrial": {
+        "n_india": 11,
+        "n_eurosat": 300,
+        "india_mean": [
+          0.3840971291065216,
+          0.3897201716899872,
+          0.42501404881477356
+        ],
+        "eurosat_mean": [
+          0.4823114573955536,
+          0.49117258191108704,
+          0.527814507484436
+        ]
+      },
+      "Residential": {
+        "n_india": 65,
+        "n_eurosat": 300,
+        "india_mean": [
+          0.49271920323371887,
+          0.5030118823051453,
+          0.5325669050216675
+        ],
+        "eurosat_mean": [
+          0.3989245593547821,
+          0.4110105633735657,
+          0.44742539525032043
+        ]
+      }
+    },
+    "right_vs_wrong_eurosat_seed42": {
+      "right": {
+        "n": 72,
+        "mean_brightness": 0.4777200495203336
+      },
+      "wrong": {
+        "n": 77,
+        "mean_brightness": 0.33831402852937775
+      }
+    }
+  }
+}
