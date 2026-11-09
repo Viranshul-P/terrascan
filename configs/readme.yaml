@@ -1,0 +1,32 @@
+# Step 6.3: build README.md.
+#   python -m src.readme --config configs/readme.yaml
+#
+# Every number in the README is read from the files below by code (nothing typed by hand).
+# README.md itself is generated: change src/readme_template.md, not README.md.
+template: src/readme_template.md
+output: README.md
+hf_config: configs/hf_model.yaml        # model card numbers (India before/after, change check) come from here
+live_site: https://terrascan-five.vercel.app
+github: https://github.com/Viranshul-P/terrascan
+model_repo: viranshul/terrascan-efficientnet-b0-india
+dataset_repo: viranshul/terrascan-india-gujarat
+
+# The one number in the README that is NOT made by this repo: what the EuroSAT authors report themselves.
+# Source opened on 2026-11-09 (their GitHub page, sentence "we achieved an overall classification accuracy of 98.57%").
+published_eurosat:
+  accuracy_percent: 98.57
+  source_url: https://github.com/phelber/EuroSAT
+  checked: 2026-11-09
+
+results:
+  error_audit: results/error_audit.json
+  india_labels: results/india_labels.json
+  india_dataset: results/india_dataset.json
+
+# EuroSAT test results, in table order (results/<name>.json, made by src/evaluate.py)
+eurosat_models:
+  - small_cnn_v1
+  - small_cnn_v2
+  - resnet18
+  - efficientnet_b0
+  - resnet18_sat

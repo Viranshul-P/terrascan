@@ -3,24 +3,17 @@
 Claude updates this at the end of every step. Keep entries short.
 
 ## Current step
-8.3b
+(none: project wrapped up as a portfolio piece, 2026-11-09. See "Wrap-up" in Decisions made.)
 
 ## Status
-in progress
+done
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-**8.3b is IN PROGRESS and was paused on purpose (user shut the laptop down, 2026-11-09 ~00:05).** To resume, run from
-the repo root (this one command does ALL remaining runs of both arms in order and skips every finished piece, so it is
-safe to run again after any stop; a model that was cut off mid-training starts again from epoch 1, losing at most ~15 min):
+(nothing). Optional, only if the project is ever picked up again: 8.3b was stopped half-way (see Wrap-up). To continue it, run
 `.venv\Scripts\python.exe -u -m src.bands_train --config configs/bands_compare.yaml --runs rgb rgb_nir rgb_nir_swir rgb_indices all_bands sat_rgb sat_all > logs\bands_resume.log 2>&1`
-(expected: about 4 hours; the earlier waiter that would have started arm B automatically dies with the shutdown).
-Done at the pause: arm A `rgb` all 3 seeds (base models in models/bands_rgb/, LOAO files results/bands_runs/rgb_calibrated_seed{42,43,44}.csv);
-`rgb_nir` seed 42 was mid-training (epoch ~31 of 50) and will restart. Code + decision rule committed (7048ab8), scaling check
-for the 13-band satellite weights committed (f4a0be6, results/bands_sat_scaling_check.txt). After all runs: `python -m
-src.bands_report --config configs/bands_compare.yaml`, then pytest + ruff, PROGRESS/learn notes, commit.
-(nothing else blocks 8.3b.) Deferred by the user, 2026-11-08: the 5.3d friends test (3 people, no explaining; then Claude fixes
-the top 3 problems). Start it any time with `/next 5.3d`; details in Known issues. Do it before the launch (7.2).
+(about 4 hours; it skips finished pieces), then `python -m src.bands_report --config configs/bands_compare.yaml`.
+The 5.3d friends test (3 people, no explaining; then fix the top 3 problems) was deferred and is not planned any more.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
 <!-- When a step needs the user (labelling, W&B login, pushing to Hugging Face, writing a paragraph),
@@ -62,21 +55,21 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 8.1 Error audit (effort: medium)
 - [x] 8.2 Class scheme (medium)
 - [x] 8.3a Spectral bands: data + code (HIGH; split from 8.3 on 2026-11-08, user OK'd)
-- [ ] 8.3b Spectral bands: comparison + decision (HIGH)
-- [ ] 8.4 Noisy labels at scale (medium)
-- [ ] 8.5 Satellite foundation model (HIGH)
-- [ ] 8.6 Other ways to improve accuracy (medium)
-- [ ] 8.7 Multi-city imagery (medium)
-- [ ] 8.8 Final evaluation (HIGH)
-- [ ] 8.9 Optional extension: surface temperature (medium)
-- [ ] 8.10 Website update (medium)
-- [ ] 8.11 Technical report draft (medium)
-- [ ] 8.12 Run it on a new area (CLI or notebook) (medium)
-- [ ] 6.3 README (now after Phase 8)
-- [ ] 6.4 Short technical write-up (now after Phase 8)
-- [ ] 7.1 Open-source polish
-- [ ] 7.2 Launch
-- [ ] 9.1 Optional, last: live "Map your own area" API
+- [-] 8.3b Spectral bands: comparison + decision (HIGH)  <!-- STOPPED half-way 2026-11-09: wrapped up, no result -->
+- [-] 8.4 Noisy labels at scale (medium)  <!-- not done: wrapped up -->
+- [-] 8.5 Satellite foundation model (HIGH)  <!-- not done: wrapped up -->
+- [-] 8.6 Other ways to improve accuracy (medium)  <!-- not done: wrapped up -->
+- [-] 8.7 Multi-city imagery (medium)  <!-- not done: wrapped up -->
+- [-] 8.8 Final evaluation (HIGH)  <!-- not done: wrapped up -->
+- [-] 8.9 Optional extension: surface temperature (medium)  <!-- not done: wrapped up -->
+- [-] 8.10 Website update (medium)  <!-- not done: wrapped up (only the one-line model note was added) -->
+- [-] 8.11 Technical report draft (medium)  <!-- not done: wrapped up -->
+- [-] 8.12 Run it on a new area (CLI or notebook) (medium)  <!-- not done: wrapped up -->
+- [x] 6.3 README (done 2026-11-09 after the wrap-up decision; Phase 8 results are NOT in it, see Wrap-up)
+- [-] 6.4 Short technical write-up  <!-- SKIPPED: project wrapped up as a portfolio piece -->
+- [-] 7.1 Open-source polish  <!-- SKIPPED: wrapped up; only a short MIT LICENSE was added -->
+- [-] 7.2 Launch  <!-- SKIPPED: project wrapped up as a portfolio piece -->
+- [-] 9.1 Optional, last: live "Map your own area" API  <!-- not done -->
 
 ## Log
 <!-- One line per finished step: - 0.1 — commit abc1234 — short note -->
@@ -136,7 +129,16 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 
 - 8.3a (Claude, 2026-11-08, high effort; user said "go ahead, do everything") — EuroSAT_MS downloaded from the same Zenodo record (MD5 matches), read straight from the zip into one memmap (data/raw_ms/, git-ignored); src/bands.py (band stacking, NDVI/NDWI/NDBI, standardising, EuroSATMS + IndiaBands datasets), src/bands_data.py (stages eurosat / india / calibrate), configs/bands.yaml, data/bands_stats.json (EuroSAT train, committed), results/bands_check.json, results/bands_calibration.json, tests/test_bands.py (21 tests incl. real-data ones that skip in CI). Checks: all 27,000 MS images match our split files exactly; full 13-band order confirmed (torchgeo order, B8A LAST, plus data signatures); Indian extra bands for all 5 areas + 4 European scenes read on the existing grid and the new RGB equals the existing values / all 1310 PNG patches exactly; per-band L2A->L1C lines fitted on European scenes only. A first band order (B8A after B08) was WRONG and its calibration was thrown away; fixed and pinned by a test. 199 pytest, ruff clean.
 
+- Wrap-up (2026-11-09, user's decision: "wrapping TerraScan up as a finished portfolio project. No new models or experiments"):
+  (1) `git push origin main` (3fc119c..bf3408b); (2) one-line note on the Explorer map: "Model predictions. Accuracy on Indian data: 68% ± 3 (81 test patches). Some areas are mislabelled." (web/src/lib/story.ts `modelNote`, read from web/public/data/story.json = results/india_after.json; 1 new web test, 83 pass, tsc clean; checked on screen at desktop and phone size);
+  (3) step 6.3 README: src/readme.py + src/readme_template.md + configs/readme.yaml fill README.md from results/ (+ the same model-card code); tests/test_readme.py (7 tests); includes "Known limitations" with the Sabarmati and Residential/Industrial examples, numbers from results/error_audit.json; (4) 6.4, 7.1, 7.2 marked skipped, short MIT LICENSE added; (5) learn/ notes updated (git-ignored); (6) committed and pushed. ruff clean (also fixed 3 over-long docstring lines in scripts/check_sat_ms_scaling.py).
+
 ## Decisions made
+- **Wrap-up (user's decision, 2026-11-09): the project is finished as a portfolio piece.** No new models or experiments. 8.3b was stopped
+  half-way: arm A `rgb` is done for 3 seeds (results/bands_runs/rgb_calibrated_seed{42,43,44}.csv, left UNTRACKED on purpose, models/bands_rgb/ is git-ignored); `rgb_nir` seed 42 was cut off; no
+  band-comparison result exists, so none is reported anywhere (README says so). 8.4-8.12 and 9.1 were not done. What the README therefore
+  does NOT have: multi-city results, label-efficiency curves, a Compare-slider GIF. What the Indian-accuracy story rests on: 4.3/4.4 (the TEST areas were scored there) and the 8.1 error audit (fine-tune areas only).
+  The README mentions in one line that an AI assistant suggested the first label for 187 of the 230 Indian patches (owner reviewed all and made every final call); the user may cut or reword it (it is also in the dataset card). The change-check text in the README does not say who judged. LICENSE copyright line says "Viranshul-P" (change to a full name if wanted).
 - **8.3a decisions:** (1) EuroSAT_MS band order = torchgeo's: B01..B08, B09, B10, B11, B12, B8A (B8A last); the SSL4EO-S12 weights expect B8A after B08, so 8.3b must permute (configs/bands.yaml ssl4eo_s12_band_order). (2) RGB channels use the baseline stretch (0..2750 -> 1..255, /255); every other band is value/10000 without clipping; indices use raw values; all non-RGB channels are standardised with EuroSAT-train stats (data/bands_stats.json). B10 is a constant 0 on BOTH sides (L2A scenes have no B10). (3) Coarser bands go onto the 10 m grid with bilinear, chosen from EuroSAT_MS's own signature (its 20 m bands share equal neighbours ~6-8% like 10 m bands ~4%; nearest would give ~50%); bilinear vs bicubic cannot be told apart. (4) Offsets: per-scene rule from the baseline, applied to all 12 bands; the smallest non-zero raw value per band is about 1000 in every offset scene (results/bands_check.json, india_reads). (5) RGB bands keep the 4.1 calibration unchanged so the baseline does not move; the MS-based RGB fit agrees with it (gain 0.92/0.906/0.833 vs 0.907/0.905/0.839). (6) For 8.3b: the RGB variant should be RETRAINED through the MS pipeline for a strictly fair comparison (MS-derived RGB differs from the JPEGs by 1-2 grey levels, results/bands_check.json band_order), instead of reusing models/efficientnet_b0.
 - **8.2 after /review-step + code-review (Claude, 2026-11-08):** PLAN.md 8.2 got a one-line note that Claude judged. The report's headline now says 'no evidence for merging, test was weak', and its counts, sample sizes and which pairs share an area are computed from the data, not typed. `--answers` now requires `--judge`, so the report can't call Claude's answers the user's; `score_quiz` rejects answers that are not A/B, duplicated, unknown or missing. Not done (low risk, noted): the audit JSON does not store its class order (screen_pairs trusts src.data.CLASSES), and src/error_audit.py's predict_with_probs runs one batch (fine for ~150 patches, would need batching for many more in 8.4-8.7). 178 pytest, ruff clean.
 - **8.2 result:** keep the 10 EuroSAT classes (results/class_scheme.md). The rule could not test River vs SeaLake (SeaLake has 0 Indian labels) or AnnualCrop vs PermanentCrop (PermanentCrop has 2), so it says nothing about them. Source mappings use "could mean" sets: a source class maps to a scheme class only if all its possible EuroSAT classes land in one scheme class, else `ignore` (so WorldCover Cropland, Built-up, Water, Grassland and Shrubland are `ignore` under keep-10; Tree cover -> Forest). Dynamic World classes were read from the official Earth Engine catalogue page on 2026-11-08 (CC-BY 4.0; needs a Google Earth Engine account to download, so no data was fetched). 8.4 must decide how to use the ambiguous tier-2 classes.
