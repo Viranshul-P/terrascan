@@ -15,6 +15,7 @@ import { cityBounds, DATA, loadCity } from "../lib/city";
 import { className } from "../lib/classes";
 import { getJson, pct, useJson } from "../lib/data";
 import { reducedMotion } from "../lib/motion";
+import { modelNote, type StoryData } from "../lib/story";
 import { snapPx, type Snap } from "../lib/sheet";
 import type { Checks, City, Index, Summary } from "../lib/types";
 import type { TerraMap } from "../map/TerraMap";
@@ -53,6 +54,7 @@ function ExplorerView({ index }: { index: Index }) {
   const [layersSnap, setLayersSnap] = useState<Snap>("peek"); // phone: height of the layers sheet
   const [inspSnap, setInspSnap] = useState<Snap>("half"); // phone: height of the square sheet
   const [areaSnap, setAreaSnap] = useState<Snap>("half"); // phone: height of the "map your own area" sheet
+  const story = useJson<StoryData>(`${DATA}story.json`);
   const area = useAreaMap(years);
   const [picked, setPicked] = useState<{ id: number; cls: string; conf: number } | null>(null); // tapped square of a live map
   const [intro, setIntro] = useState(false);
@@ -358,6 +360,7 @@ function ExplorerView({ index }: { index: Index }) {
               <span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 4-4 4 4 4M10 4l4 4-4 4" /></svg></span>
             </div>
           </>}
+          {!intro && <p className="model-note" role="note">{modelNote(story.data?.india ?? null)}</p>}
           <div className="tip" ref={tip} hidden />
           {area.mode === "draw" && <DrawLayer map={() => tm.current?.map ?? null} maxKm={area.limits.max_side_km} onBox={area.setBox} onCancel={area.close} />}
           {!ready && <div className="map-loading" role="status"><span className="spinner" />Loading the map…</div>}

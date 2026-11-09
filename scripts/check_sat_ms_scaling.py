@@ -1,9 +1,10 @@
-"""Which input scaling suits the 13-band satellite ResNet-18 (SENTINEL2_ALL_MOCO)? (step 8.3b, arm B)
+"""Which input scaling suits the 13-band satellite ResNet-18 (SENTINEL2_ALL_MOCO)?
+(step 8.3b, arm B)
 
-Same idea as scripts/check_sat_scaling.py (2.4b): the first BatchNorm layer stores the average and spread of
-what the first conv layer produced during pretraining. Feed EuroSAT_MS TRAIN images with each candidate
-scaling through the pretrained first conv layer; the candidate closest to the stored values wins.
-No val or test images are used.
+Same idea as scripts/check_sat_scaling.py (2.4b): the first BatchNorm layer stores the average
+and spread of what the first conv layer produced during pretraining. Feed EuroSAT_MS TRAIN
+images with each candidate scaling through the pretrained first conv layer; the candidate
+closest to the stored values wins. No val or test images are used.
 
 Run from the repo root:
     python scripts/check_sat_ms_scaling.py

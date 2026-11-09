@@ -55,6 +55,16 @@ export function accuracyRows(india: StoryData["india"]) {
   ];
 }
 
+// The one-line note on the Explorer map. The accuracy is the 3-seed "after" number on the Indian TEST areas, read from
+// story.json (results/india_after.json), never typed here. Without the file the note still warns, just without a number.
+export function modelNote(india: StoryData["india"] | null) {
+  const warn = "Some areas are mislabelled.";
+  if (!india) return `Model predictions. ${warn}`;
+  const a = india.summary_mean_std_over_seeds.india_test_accuracy_after;
+  const acc = `${(a.mean * 100).toFixed(0)}% ± ${(a.std * 100).toFixed(0)}`;
+  return `Model predictions. Accuracy on Indian data: ${acc} (${india.n_india_test_patches} test patches). ${warn}`;
+}
+
 // For each class: the square the model was most sure about in that year. id = index in patches = map id; row and
 // col = its place in the grid, counted in squares (patches.csv's own row/col are pixels, so they are not used).
 export function mostSure(patches: Patch[], year: string, gridCols: number) {

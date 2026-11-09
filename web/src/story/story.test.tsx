@@ -5,7 +5,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import realStoryFile from "../../public/data/story.json?raw";
-import { accuracyRows, mostSure, pinFor, shrink, topShifts, waffleOrder, type StoryData } from "../lib/story";
+import { accuracyRows, modelNote, mostSure, pinFor, shrink, topShifts, waffleOrder, type StoryData } from "../lib/story";
 import type { Checks, City, Patch, Summary } from "../lib/types";
 import { EuropeIndia, Hero, HowSure, Limits, TheCity, WhatChanged, WhatItSees, type Ctx } from "./Chapters";
 
@@ -65,6 +65,11 @@ describe("story helpers", () => {
     ]);
     expect(rows[1].value.mean).toBe(0.4111);
     expect(rows.map((r) => r.highlight)).toEqual([false, false, true]);
+  });
+
+  it("modelNote reads the India-after accuracy and test size from the data, and still warns without it", () => {
+    expect(modelNote(STORY.india)).toBe("Model predictions. Accuracy on Indian data: 62% ± 2 (45 test patches). Some areas are mislabelled.");
+    expect(modelNote(null)).toBe("Model predictions. Some areas are mislabelled.");
   });
 
   it("mostSure picks the most confident square per class, with its place in the grid", () => {

@@ -169,6 +169,12 @@
   height: 30px; padding: 0 12px; border-radius: var(--r-md); background: var(--surface-glass); box-shadow: var(--e1), var(--ring);
   font: 500 11px var(--mono); color: var(--ink-2); white-space: nowrap;
 }
+/* The always-visible warning under the toolbar: model output, not truth */
+.model-note {
+  position: absolute; z-index: 8; top: var(--s-3); left: 50%; transform: translateX(-50%); margin: 0;
+  width: max-content; max-width: min(640px, calc(100% - 740px)); min-width: 220px; padding: 6px 12px; border-radius: var(--r-md);
+  background: var(--surface-glass); box-shadow: var(--e1), var(--ring); font-size: var(--t-xs); line-height: 1.4; color: var(--ink-2); text-align: center;
+}
 .status b { color: var(--ink); font-weight: 600; }
 .zoombar { position: absolute; z-index: 8; right: var(--s-4); bottom: calc(var(--s-4) + 28px); display: grid; border-radius: var(--r-md); overflow: hidden; background: var(--surface-glass); box-shadow: var(--e1), var(--ring); transition: right var(--d-3) var(--ease-out); }
 .zoombar button { width: 34px; height: 34px; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; color: var(--ink-2); }
@@ -269,6 +275,7 @@
   .grabber:hover span, .grabber:focus-visible span { background: var(--ink-3); }
   .grabber:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; border-radius: var(--r-lg) var(--r-lg) 0 0; }
   .status { display: none; }
+  .model-note { left: var(--s-3); right: 64px; top: var(--s-3); transform: none; width: auto; max-width: none; min-width: 0; text-align: left; }
   .zoombar { bottom: auto; top: var(--s-3); right: var(--s-3); }
   /* a finger pinches to zoom, so the + and - buttons only take up map */
   @media (pointer: coarse) { .zoombar button[aria-label="Zoom in"], .zoombar button[aria-label="Zoom out"] { display: none; } }
