@@ -155,7 +155,7 @@ The in-browser engine was checked against the Python pipeline (`src/live.py`, th
 (4 boxes chosen before the run, one outside Gujarat; `configs/browser_parity.yaml`). Same scenes chosen in every run:
 yes. Squares with the same class: **272 of 272**; largest gap between square centres:
 0.0 m (`results/browser_parity.json`). Median time for one box-year in headless Chromium (WebAssembly, no GPU):
-11.2 s. The UTM maths, rounding and median steps also have unit tests (`web/src/live/live.test.ts`).
+7.4 s. The UTM maths, rounding and median steps also have unit tests (`web/src/live/live.test.ts`).
 
 ## What was not done
 

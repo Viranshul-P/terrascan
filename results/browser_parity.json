@@ -10,7 +10,7 @@
     "all_same_scenes": true,
     "max_centre_offset_m": 0.0,
     "max_confidence_diff": 0.0,
-    "median_browser_total_ms": 11180,
+    "median_browser_total_ms": 7406,
     "browser": "156.0.8078.4"
   },
   "runs": [
@@ -34,10 +34,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 1743,
-        "pictures": 11946,
-        "model": 343,
-        "total": 14060
+        "search": 1699,
+        "pictures": 7373,
+        "model": 1131,
+        "total": 10228
       }
     },
     {
@@ -60,10 +60,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 1148,
-        "pictures": 9731,
-        "model": 287,
-        "total": 11180
+        "search": 1263,
+        "pictures": 4804,
+        "model": 1320,
+        "total": 7406
       }
     },
     {
@@ -86,10 +86,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 1032,
-        "pictures": 10793,
-        "model": 788,
-        "total": 12624
+        "search": 979,
+        "pictures": 4780,
+        "model": 1934,
+        "total": 7713
       }
     },
     {
@@ -112,10 +112,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 1201,
-        "pictures": 14184,
-        "model": 760,
-        "total": 16153
+        "search": 2133,
+        "pictures": 5205,
+        "model": 1997,
+        "total": 9355
       }
     },
     {
@@ -138,10 +138,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 856,
-        "pictures": 7101,
-        "model": 726,
-        "total": 8694
+        "search": 796,
+        "pictures": 3044,
+        "model": 1669,
+        "total": 5524
       }
     },
     {
@@ -164,10 +164,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 1151,
-        "pictures": 5889,
-        "model": 703,
-        "total": 7753
+        "search": 900,
+        "pictures": 3325,
+        "model": 1924,
+        "total": 6167
       }
     },
     {
@@ -190,10 +190,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 842,
-        "pictures": 5676,
-        "model": 609,
-        "total": 7133
+        "search": 822,
+        "pictures": 3207,
+        "model": 1457,
+        "total": 5498
       }
     },
     {
@@ -216,10 +216,10 @@
       "max_confidence_diff": 0.0,
       "browser_backend": "wasm",
       "browser_ms": {
-        "search": 1173,
-        "pictures": 5829,
-        "model": 631,
-        "total": 7641
+        "search": 972,
+        "pictures": 2939,
+        "model": 1538,
+        "total": 5468
       }
     }
   ]
