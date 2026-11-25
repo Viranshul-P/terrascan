@@ -61,6 +61,9 @@ function ExplorerView({ index }: { index: Index }) {
   const [changesOnly, setChangesOnly] = useState(false); // live change map: only the changed squares
   const [intro, setIntro] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  // First visit only: a small "three things to try" card (closed for good once dismissed or used).
+  const [guide, setGuide] = useState(() => { try { return localStorage.getItem("ts-guide") !== "done"; } catch { return false; } });
+  const closeGuide = () => { setGuide(false); try { localStorage.setItem("ts-guide", "done"); } catch { /* private mode */ } };
 
   const stage = useRef<HTMLDivElement>(null);
   const mapEl = useRef<HTMLDivElement>(null);
@@ -115,6 +118,8 @@ function ExplorerView({ index }: { index: Index }) {
       const t = new TerraMap(mapEl.current, {
         base: city.base, summary: city.summary, classes: index.classes, years, year,
         center: GLOBE.center as [number, number], zoom: phone() ? 0.6 : GLOBE.zoom!,
+        // A shared link starts on the city, so it doesn't wait for the whole globe's tiles first.
+        ...(FRESH ? {} : { bounds: cityBounds(city.summary) as [[number, number], [number, number]] }),
       });
       tm.current = t;
       const m = t.map;
@@ -148,7 +153,7 @@ function ExplorerView({ index }: { index: Index }) {
         raf ||= requestAnimationFrame(() => { raf = 0; if (tip.current) tip.current.style.transform = `translate(${pt.x + 14}px, ${pt.y}px) translateY(-50%)`; });
       });
       m.on("mouseleave", "hit", () => { tipId = null; t.highlight("hover", null); if (tip.current) tip.current.hidden = true; m.getCanvas().style.cursor = ""; });
-      m.on("click", "hit", (e) => { const id = e.features?.[0]?.id; if (id !== undefined) setSel(Number(id)); });
+      m.on("click", "hit", (e) => { const id = e.features?.[0]?.id; if (id !== undefined) { setSel(Number(id)); setGuide(false); } });
       // The squares of a live map ("map your own area"): the label on hover, the details when tapped. The class
       // names come from the server, so the label is built from text, never from HTML.
       let liveId: number | null = null;
@@ -223,6 +228,8 @@ function ExplorerView({ index }: { index: Index }) {
     if (areaOpen) { m.dragRotate.disable(); m.touchZoomRotate.disableRotation(); m.touchPitch.disable(); m.keyboard.disableRotation(); }
     else { m.dragRotate.enable(); m.touchZoomRotate.enableRotation(); m.touchPitch.enable(); m.keyboard.enableRotation(); }
   }, [ready, areaOpen]);
+  // ?area=1 (the Story's "Try it" button) opens the tool as soon as the map is ready.
+  useEffect(() => { if (ready && !intro && params.get("area") === "1") openArea(); }, [ready, intro]);
   const toggleArea = () => (area.mode === "off" ? openArea() : area.close());
   const middleBox = useCallback(() => {
     // A box in the middle of the part of the map that can be seen (on a phone the sheet covers the bottom), 60% of
@@ -384,6 +391,16 @@ function ExplorerView({ index }: { index: Index }) {
           {area.mode === "draw" && <DrawLayer map={() => tm.current?.map ?? null} maxKm={area.maxKm} onBox={area.setBox} onCancel={area.close} />}
           {!ready && <div className="map-loading" role="status"><span className="spinner" />Loading the map…</div>}
           {intro && <button type="button" className="skip" onClick={() => setIntro(false)}>Skip intro</button>}
+          {ready && !intro && guide && !areaOpen && sel === null && (
+            <aside className="guide" aria-label="Three things to try">
+              <div className="guide-head"><b>Three things to try</b><button type="button" className="icon-btn" aria-label="Close the tips" onClick={closeGuide}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" /></svg></button></div>
+              <ol>
+                <li><div><span>1</span><div><b>Click any square</b> to see what the model saw there in {y0} and {y1}.</div></div></li>
+                <li><button type="button" onClick={() => { closeGuide(); setCompare(true); }}><span>2</span><div><b>Compare the years</b> with a slider over the map.</div></button></li>
+                <li><button type="button" onClick={() => { closeGuide(); openArea(); }}><span>3</span><div><b>Map your own area</b>: anywhere, live, in your browser.</div></button></li>
+              </ol>
+            </aside>
+          )}
 
           <LayersPanel layers={layers} setLayers={setLayers} hidden={phone() ? sel !== null || areaOpen || intro : !panel || intro} onHide={() => setPanel(false)} snap={layersSnap} onSnap={setLayersSnap} onArea={openArea}
             legendTitle={compare ? `Land use, ${y0} → ${y1}` : `Land use, ${legendYear}`}

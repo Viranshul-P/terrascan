@@ -63,6 +63,7 @@ export type MapOptions = {
   zoom: number;
   interactive?: boolean;
   landuseOpacity?: number;
+  bounds?: [[number, number], [number, number]]; // start already fitted to these (wins over center/zoom)
 };
 
 export class TerraMap {
@@ -128,6 +129,7 @@ export class TerraMap {
       style: { version: 8, projection: { type: "globe" }, sky: sky(), sources, layers },
       center: o.center,
       zoom: o.zoom,
+      ...(o.bounds ? { bounds: o.bounds, fitBoundsOptions: { padding: 40 } } : {}),
       interactive: o.interactive ?? true,
       attributionControl: { compact: true, customAttribution: "City images: modified Copernicus Sentinel-2 data" },
       fadeDuration: 150,

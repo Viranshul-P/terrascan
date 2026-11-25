@@ -16,6 +16,7 @@ import { CHAPTERS, EuropeIndia, Hero, HowSure, Limits, TheCity, WhatChanged, Wha
 import { Cities } from "../story/Cities";
 import { Game } from "../story/Game";
 import { HowItWorks } from "../story/HowItWorks";
+import { MapAnyPlace } from "../story/MapAnyPlace";
 import { Models } from "../story/Models";
 import "../story/Sections.css";
 import "../story/Story.css";
@@ -262,6 +263,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
         <Models story={story} />
         <Game colour={colour} />
         <Cities index={index} />
+        <MapAnyPlace year={years[1]} />
         <HowItWorks index={index} story={story} />
       </main>
       <SiteFooter />
