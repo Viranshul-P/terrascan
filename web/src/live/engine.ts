@@ -98,7 +98,7 @@ async function readScene(cfg: LiveConfig, item: Item, bbox: Bbox, epsg: number, 
   const bands = await Promise.all(cfg.bands.map(async (b) => {
     // blockSize: fetch in 128 KB blocks so the many small header reads merge (120 -> 45 requests for one year;
     // measured with scripts/count-reads.mjs; bigger blocks were slower).
-    const tif = await fromUrl(`${item.assets[b].href}?${token}`, { allowFullFile: false, blockSize: 131072 }, signal);
+    const tif = await fromUrl(`${item.assets[b].href}?${token}`, { allowFullFile: false, blockSize: 131072 } as Parameters<typeof fromUrl>[1], signal); // blockSize is read by geotiff but missing from its types
     const img = await tif.getImage();
     origin = img.getOrigin().slice(0, 2) as [number, number];
     res = img.getResolution()[0];

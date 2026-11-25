@@ -386,7 +386,7 @@ function ExplorerView({ index }: { index: Index }) {
               <span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 4-4 4 4 4M10 4l4 4-4 4" /></svg></span>
             </div>
           </>}
-          {!intro && <p className="model-note" role="note">{modelNote(story.data?.india ?? null)}</p>}
+          {!intro && !areaOpen && <p className="model-note" role="note">{modelNote(story.data?.india ?? null)}</p>}
           <div className="tip" ref={tip} hidden />
           {area.mode === "draw" && <DrawLayer map={() => tm.current?.map ?? null} maxKm={area.maxKm} onBox={area.setBox} onCancel={area.close} />}
           {!ready && <div className="map-loading" role="status"><span className="spinner" />Loading the map…</div>}
