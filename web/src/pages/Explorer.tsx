@@ -45,7 +45,7 @@ function ExplorerView({ index }: { index: Index }) {
   const [year, setYear] = useState(years.includes(params.get("year") ?? "") ? params.get("year")! : y1);
   const [compare, setCompare] = useState(params.get("compare") === "1");
   const [sel, setSel] = useState<number | null>(params.has("sq") ? Number(params.get("sq")) : null);
-  const [layers, setLayers] = useState<Layers>({ sat: true, land: true, opacity: 0.6, conf: false, change: false, checks: false });
+  const [layers, setLayers] = useState<Layers>({ sat: true, land: true, opacity: 0.5, conf: false, change: false, checks: false });
   const [only, setOnly] = useState<string[] | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [pair, setPair] = useState<Pair>(null);

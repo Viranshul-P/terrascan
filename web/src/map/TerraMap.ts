@@ -76,7 +76,7 @@ export class TerraMap {
     this.years = o.years;
     this.classes = o.classes;
     this.landuse.year = o.year;
-    this.landuse.opacity = o.landuseOpacity ?? 0.6;
+    this.landuse.opacity = o.landuseOpacity ?? 0.5;
     const sources: Record<string, SourceSpecification> = {
       earth: { type: "raster", tiles: [GIBS], tileSize: 256, maxzoom: 8, attribution: "Globe: NASA Blue Marble · NASA GIBS" },
       world: { type: "vector", url: WORLD },
@@ -99,6 +99,8 @@ export class TerraMap {
     for (const y of o.years) {
       layers.push({ id: `landuse${y}`, type: "fill", source: "patches", paint: { "fill-color": classColour(o.classes, y), "fill-opacity": y === o.year ? this.landuse.opacity : 0, "fill-opacity-transition": FADE, "fill-antialias": false } });
     }
+    // A faint line between squares, so close up the land use reads as a grid of 640 m squares, not one block of paint.
+    layers.push({ id: "grid", type: "line", source: "patches", paint: { "line-color": "#0b0e12", "line-width": 0.6, "line-opacity": this.gridOpacity() } });
     layers.push(
       { id: "changes", type: "fill", source: "patches", filter: CHANGED, layout: { visibility: "none" }, paint: { "fill-color": classColour(o.classes, o.years[1]), "fill-opacity": 0, "fill-opacity-transition": FADE } },
       { id: "changes-line", type: "line", source: "patches", filter: CHANGED, layout: { visibility: "none" }, paint: { "line-color": "#ffffff", "line-width": 0.8, "line-opacity": 0, "line-opacity-transition": FADE } },
@@ -146,7 +148,12 @@ export class TerraMap {
       : l.opacity;
   }
 
+  private gridOpacity(): ExpressionSpecification | number {
+    return this.landuse.on ? ["interpolate", ["linear"], ["zoom"], 11.2, 0, 13, 0.4] : 0;
+  }
+
   private refreshLanduse() {
+    this.map.setPaintProperty("grid", "line-opacity", this.gridOpacity());
     for (const y of this.years) {
       this.map.setPaintProperty(`landuse${y}`, "fill-opacity", this.landuseOpacity(y));
       this.map.setFilter(`landuse${y}`, this.landuse.classes ? ["in", ["get", `class_${y}`], ["literal", this.landuse.classes]] : null);

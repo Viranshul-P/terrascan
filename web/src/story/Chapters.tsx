@@ -48,10 +48,11 @@ export function Hero({ ctx }: { ctx: Ctx }) {
   return (
     <div className="step hero" data-step={0}>
       <div className="hero-in">
+        <span className="eyebrow hero-eyebrow rise">TerraScan · land-use maps of Indian cities from free satellite pictures</span>
         <h1 className="split" aria-label={HEADLINE.join(" ")}>
           {HEADLINE.map((w, i) => <span key={i} aria-hidden="true">{i > 0 && " "}<span className="w" style={{ "--i": i } as CSSProperties}>{w === "really" ? <em>{w}</em> : w}</span></span>)}
         </h1>
-        <p className="lede rise">A model read satellite pictures of the city from {years[0]} and {years[1]} and named every 640&nbsp;m square. Then its work was checked, square by square.</p>
+        <p className="lede rise">An image model read Sentinel-2 satellite pictures of the city from {years[0]} and {years[1]} and named the land use of every 640&nbsp;m square: housing, farmland, industry, roads… Then a random sample of the changes it reported was checked by eye.</p>
         <div className="actions rise">
           <Button href="#c1" arrow="down">Start the story</Button>
           <Button href="/explorer" variant="quiet">Open the Explorer</Button>

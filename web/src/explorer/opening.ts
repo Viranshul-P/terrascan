@@ -5,8 +5,8 @@ import type { Map as MlMap, CameraOptions, PaddingOptions } from "maplibre-gl";
 import { reducedMotion } from "../lib/motion";
 
 export const GLOBE: CameraOptions = { center: [62, 16], zoom: 1.6, pitch: 0, bearing: 0 };
-const SPIN_MS = 1400; // globe turning before the flight
-const FLY_MS = 4200;
+const SPIN_MS = 600; // globe turning before the flight
+const FLY_MS = 2400; // short: a long flight felt like lag (friends' feedback, 2026-11-25)
 
 export type EndCamera = CameraOptions & { padding: PaddingOptions };
 

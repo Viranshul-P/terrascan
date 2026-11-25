@@ -115,7 +115,10 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
     const go = () => setMapGo(true);
     const events = ["scroll", "wheel", "pointerdown", "pointermove", "keydown", "touchstart"];
     events.forEach((e) => addEventListener(e, go, { once: true, passive: true }));
-    return () => events.forEach((e) => removeEventListener(e, go));
+    // Wider screens also start it by itself soon after the page shows, so the first scroll already has a map that
+    // moves (without it the story felt laggy: friends' feedback, 2026-11-25). Phones still wait, as above.
+    const later = phone() ? 0 : window.setTimeout(go, 1500); // after the headline has arrived
+    return () => { clearTimeout(later); events.forEach((e) => removeEventListener(e, go)); };
   }, []);
   useEffect(() => {
     if (!mapGo) return;
@@ -151,18 +154,21 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
   // ---------- Chapters: which card is on screen ----------
   useEffect(() => {
     const io = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.step));
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    // A card shows as soon as its chapter is a quarter of the way up the screen (it looked empty while scrolling).
+    const reveal = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         const k = Number((e.target as HTMLElement).dataset.step);
-        setActive(k);
         setSeen((s) => (s.has(k) ? s : new Set(s).add(k)));
       }
-    }, { rootMargin: "-45% 0px -45% 0px" });
-    stepsEl.current?.querySelectorAll(".step").forEach((el) => io.observe(el));
+    }, { rootMargin: "0px 0px -25% 0px" });
+    stepsEl.current?.querySelectorAll(".step").forEach((el) => { io.observe(el); reveal.observe(el); });
     // The chapter dots belong to the story only: hidden once the story has scrolled away.
     const away = new IntersectionObserver(([e]) => setInStory(e.isIntersecting), { rootMargin: "0px 0px -60% 0px" });
     if (stepsEl.current) away.observe(stepsEl.current);
-    return () => { io.disconnect(); away.disconnect(); };
+    return () => { io.disconnect(); reveal.disconnect(); away.disconnect(); };
   }, []);
 
   // Move the map for the chapter on screen.
@@ -185,7 +191,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
     else {
       // Long flights (globe <-> city) get more time than moves within the city.
       const far = prev === -1 || [prev, active].some((k) => SCENES[k].cam !== "city");
-      t.map.flyTo({ ...cam, duration: far ? 3600 : 2000, curve: 1.35, essential: true });
+      t.map.flyTo({ ...cam, duration: far ? 2200 : 1200, curve: 1.35, essential: true });
     }
   }, [ready, active, camFor, years]);
 
@@ -200,7 +206,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
         raf = requestAnimationFrame(step);
       };
       raf = requestAnimationFrame(step);
-    }, 3700); // after the flight back to the globe
+    }, 2300); // after the flight back to the globe
     return () => { clearTimeout(start); cancelAnimationFrame(raf); };
   }, [ready, active]);
 
@@ -242,7 +248,7 @@ function StoryView({ index, story, checks, city }: { index: Index; story: StoryD
       <div className="progress" ref={progress} aria-hidden="true" />
       <main>
         <section className="story" aria-label="Story">
-          <div className="story-map" data-ready={ready} ref={stageEl}><div className="poster" ref={posterEl} aria-hidden="true" /><div className="map" ref={mapEl} role="img" aria-label="Map that follows the story: globe, then Ahmedabad and its land use" /></div>
+          <div className="story-map" data-ready={ready} data-hero={active === 0} ref={stageEl}><div className="poster" ref={posterEl} aria-hidden="true" /><div className="map" ref={mapEl} role="img" aria-label="Map that follows the story: globe, then Ahmedabad and its land use" /></div>
           <div className="steps" ref={stepsEl}>
             <Hero ctx={ctx} />
             <TheCity ctx={ctx} />

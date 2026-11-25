@@ -11,6 +11,8 @@
 .story-map .poster { position: absolute; pointer-events: none; background: url("/globe-light.webp") center / 100% 100% no-repeat; }
 :root[data-theme="dark"] .story-map .poster { background-image: url("/globe-dark.webp"); }
 .story-map[data-ready="true"] .poster { visibility: hidden; transition: visibility 0s 1000ms; }
+/* Once the camera leaves the globe the still picture must be gone, or it shows as a second globe during the flight. */
+.story-map[data-ready="true"][data-hero="false"] .poster { visibility: hidden; transition: none; }
 /* the map loads a moment after the headline, then fades in */
 .motion .story-map .map { opacity: 0; transition: opacity 900ms var(--ease-out); }
 .motion .story-map[data-ready="true"] .map { opacity: 1; }
@@ -26,6 +28,7 @@
 /* ---------- Hero ---------- */
 .hero { align-items: flex-end; padding-bottom: clamp(48px, 9vh, 96px); }
 .hero-in { max-width: 680px; pointer-events: auto; }
+.hero-eyebrow { display: inline-block; margin-bottom: var(--s-5); }
 .hero h1 { margin: 0; font-size: var(--t-4xl); line-height: 0.98; font-weight: 700; letter-spacing: -0.045em; text-wrap: balance; }
 .hero h1 em { font-style: normal; color: var(--accent); }
 .hero .lede { margin: var(--s-6) 0 0; font-size: var(--t-lg); color: var(--ink-2); max-width: 44ch; text-wrap: pretty; }
@@ -40,17 +43,20 @@
 
 /* Headline: words arrive one after another from a soft blur; the rest of the hero rises in after it (once) */
 .split .w { display: inline-block; }
-.motion .split .w { opacity: 0; filter: blur(12px); transform: translateY(0.18em); animation: word-in 1000ms var(--ease-out) forwards; animation-delay: calc(150ms + var(--i) * 75ms); }
-@keyframes word-in { to { opacity: 1; filter: blur(0); transform: none; } }
+/* No blur: animating a blur filter on big text is slow work for the browser while the map is loading. */
+.motion .split .w { opacity: 0; transform: translateY(0.25em); animation: word-in 700ms var(--ease-out) forwards; animation-delay: calc(100ms + var(--i) * 60ms); }
+@keyframes word-in { to { opacity: 1; transform: none; } }
 .motion .hero .rise { animation: rise 700ms var(--ease-out) backwards; }
-.motion .hero .lede { animation-delay: 550ms; }
-.motion .hero .actions { animation-delay: 680ms; }
-.motion .hero .hero-stats { animation-delay: 800ms; }
+.motion .hero .lede { animation-delay: 400ms; }
+.motion .hero .actions { animation-delay: 500ms; }
+.motion .hero .hero-stats { animation-delay: 600ms; }
 @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
 
 .scroll-cue { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 3; color: var(--ink-3); font-size: var(--t-xs); display: grid; justify-items: center; gap: 6px; pointer-events: none; transition: opacity var(--d-3) var(--ease-out); }
 .scroll-cue i { width: 1px; height: 28px; background: linear-gradient(var(--ink-3), transparent); }
 .motion .scroll-cue i { animation: cue 2.4s var(--ease-in-out) infinite; transform-origin: top; }
+/* Short screens: the cue would sit on top of the hero numbers. */
+@media (max-height: 760px) { .scroll-cue { display: none; } }
 @keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 
 /* ---------- Chapter cards ---------- */
@@ -69,15 +75,15 @@
 .card .actions { display: flex; gap: var(--s-2); margin-top: var(--s-7); flex-wrap: wrap; }
 
 /* The card rises in, then its parts follow one by one (first time only) */
-.motion .step:not(.hero) .card { opacity: 0; transform: translateY(28px) scale(0.985); transition: opacity 600ms var(--ease-out), transform 800ms var(--ease-out); }
+.motion .step:not(.hero) .card { opacity: 0; transform: translateY(20px); transition: opacity 450ms var(--ease-out), transform 550ms var(--ease-out); }
 .motion .step.seen .card { opacity: 1; transform: none; }
-.motion .step:not(.hero) .card > * { opacity: 0; transform: translateY(10px); transition: opacity 500ms var(--ease-out), transform 650ms var(--ease-out); }
+.motion .step:not(.hero) .card > * { opacity: 0; transform: translateY(8px); transition: opacity 400ms var(--ease-out), transform 500ms var(--ease-out); }
 .motion .step.seen .card > * { opacity: 1; transform: none; }
-.motion .step.seen .card > :nth-child(2) { transition-delay: 90ms; }
-.motion .step.seen .card > :nth-child(3) { transition-delay: 170ms; }
-.motion .step.seen .card > :nth-child(4) { transition-delay: 240ms; }
-.motion .step.seen .card > :nth-child(5) { transition-delay: 300ms; }
-.motion .step.seen .card > :nth-child(n+6) { transition-delay: 360ms; }
+.motion .step.seen .card > :nth-child(2) { transition-delay: 60ms; }
+.motion .step.seen .card > :nth-child(3) { transition-delay: 110ms; }
+.motion .step.seen .card > :nth-child(4) { transition-delay: 150ms; }
+.motion .step.seen .card > :nth-child(5) { transition-delay: 180ms; }
+.motion .step.seen .card > :nth-child(n+6) { transition-delay: 210ms; }
 .motion .step:not(.seen) .card .chap i { transform: scaleX(0); }
 .motion .card .chap i { transition: transform 900ms var(--ease-out) 300ms; }
 
