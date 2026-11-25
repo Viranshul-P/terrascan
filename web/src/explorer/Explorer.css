@@ -332,3 +332,9 @@
 .guide li span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #11151a; font: 700 11px var(--mono); }
 .guide b { color: var(--ink); }
 @media (max-width: 960px) { .guide { display: none; } }
+
+/* Year switch: one soft scan line across the map, like a satellite pass (not with reduced motion). */
+.sweep { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.sweep::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 22%; background: linear-gradient(90deg, transparent, rgb(255 178 36 / 0.16) 70%, rgb(255 210 120 / 0.55) 99%, transparent); transform: translateX(-100%); animation: sweep 900ms var(--ease-in-out) 1 forwards; }
+@keyframes sweep { to { transform: translateX(560%); } }
+@media (prefers-reduced-motion: reduce) { .sweep { display: none; } }

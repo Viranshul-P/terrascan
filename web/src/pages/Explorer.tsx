@@ -61,6 +61,9 @@ function ExplorerView({ index }: { index: Index }) {
   const [changesOnly, setChangesOnly] = useState(false); // live change map: only the changed squares
   const [intro, setIntro] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [sweeps, setSweeps] = useState(0); // how many year switches so far (each replays the scan line)
+  const firstYear = useRef(true);
+  useEffect(() => { if (firstYear.current) { firstYear.current = false; return; } setSweeps((n) => n + 1); }, [year]);
   // First visit only: a small "three things to try" card (closed for good once dismissed or used).
   const [guide, setGuide] = useState(() => { try { return localStorage.getItem("ts-guide") !== "done"; } catch { return false; } });
   const closeGuide = () => { setGuide(false); try { localStorage.setItem("ts-guide", "done"); } catch { /* private mode */ } };
@@ -387,6 +390,8 @@ function ExplorerView({ index }: { index: Index }) {
             </div>
           </>}
           {!intro && !areaOpen && <p className="model-note" role="note">{modelNote(story.data?.india ?? null)}</p>}
+          {/* A scan line sweeps the map when the year changes (keyed, so each change replays it once). */}
+          {sweeps > 0 && !compare && <div key={sweeps} className="sweep" aria-hidden="true" />}
           <div className="tip" ref={tip} hidden />
           {area.mode === "draw" && <DrawLayer map={() => tm.current?.map ?? null} maxKm={area.maxKm} onBox={area.setBox} onCancel={area.close} />}
           {!ready && <div className="map-loading" role="status"><span className="spinner" />Loading the map…</div>}
