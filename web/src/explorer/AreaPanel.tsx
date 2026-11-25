@@ -83,7 +83,7 @@ export function AreaPanel({ area, years, classes, picked, hidden, snap, onSnap, 
           </div>
         )}
 
-        {mode === "running" && <Running progress={progress} elapsed={elapsed} onCancel={area.cancel} />}
+        {mode === "running" && <Running progress={progress} modelDl={area.modelDl} elapsed={elapsed} onCancel={area.cancel} />}
 
         {mode === "done" && result && (
           <Result area={area} classes={classes} picked={picked} changesOnly={changesOnly} onChangesOnly={onChangesOnly} />
@@ -95,10 +95,10 @@ export function AreaPanel({ area, years, classes, picked, hidden, snap, onSnap, 
   );
 }
 
-function Running({ progress, elapsed, onCancel }: { progress: Progress | null; elapsed: number; onCancel: () => void }) {
+function Running({ progress, modelDl, elapsed, onCancel }: { progress: Progress | null; modelDl: Progress | null; elapsed: number; onCancel: () => void }) {
   const at = progress ? ORDER.indexOf(progress.stage) : 0;
   const share = progress?.total ? (progress.done ?? 0) / progress.total : null;
-  const modelMb = progress?.stage === "model-download" && progress.total ? `Downloading the model, once: ${Math.round(((progress.done ?? 0) / progress.total) * 100)}% of ${(progress.total / 1e6).toFixed(0)} MB` : null;
+  const modelMb = modelDl?.total && (modelDl.done ?? 0) < modelDl.total ? `Also downloading the model (once, then kept by your browser): ${Math.round(((modelDl.done ?? 0) / modelDl.total) * 100)}% of ${(modelDl.total / 1e6).toFixed(0)} MB` : null;
   return (
     <div className="area-step" role="status">
       <ol className="area-progress">
@@ -115,7 +115,7 @@ function Running({ progress, elapsed, onCancel }: { progress: Progress | null; e
         })}
       </ol>
       {modelMb && <p className="area-small">{modelMb}</p>}
-      <p className="area-small">{elapsed} s · all of this runs in your browser. Usually 10–30 s.</p>
+      <p className="area-small">{elapsed} s · all of this runs in your browser. Reading the pictures takes longest.</p>
       <Button size="sm" variant="ghost" onClick={onCancel}>Cancel</Button>
     </div>
   );

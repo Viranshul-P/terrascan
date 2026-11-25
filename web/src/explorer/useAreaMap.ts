@@ -30,6 +30,7 @@ export function useAreaMap(years: string[], run: Run = runLive) {
   const [result, setResult] = useState<LiveResult | null>(null);
   const [shown, setShown] = useState(years[years.length - 1]); // the year drawn on the map
   const [progress, setProgress] = useState<Progress | null>(null);
+  const [modelDl, setModelDl] = useState<Progress | null>(null); // the one-time model download, alongside the steps
   const [error, setError] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [maxKm, setMaxKm] = useState(DEFAULT_MAX_KM);
@@ -53,12 +54,12 @@ export function useAreaMap(years: string[], run: Run = runLive) {
     stop();
     const ctl = new AbortController();
     job.current = ctl;
-    setWhich(w); setResult(null); setError(null); setProgress(null); setElapsed(0); setMode("running");
+    setWhich(w); setResult(null); setError(null); setProgress(null); setModelDl(null); setElapsed(0); setMode("running");
     const t0 = Date.now();
     timer.current = window.setInterval(() => setElapsed(Math.floor((Date.now() - t0) / 1000)), 1000);
     try {
       const ys = w === "both" ? years : [w];
-      const r = await run(bbox, ys, setProgress, ctl.signal);
+      const r = await run(bbox, ys, (p) => (p.stage === "model-download" ? setModelDl(p) : setProgress(p)), ctl.signal);
       if (ctl.signal.aborted) return;
       setResult(r); setShown(ys[ys.length - 1]); setMode("done");
     } catch (e) {
@@ -70,5 +71,5 @@ export function useAreaMap(years: string[], run: Run = runLive) {
 
   const cancel = useCallback(() => { stop(); setMode(bbox ? "ready" : "draw"); }, [bbox]);
 
-  return { mode, bbox, which, setWhich, result, shown, setShown, progress, error, elapsed, maxKm, parity, open, close, draw, setBox, run: start, cancel };
+  return { mode, bbox, which, setWhich, result, shown, setShown, progress, modelDl, error, elapsed, maxKm, parity, open, close, draw, setBox, run: start, cancel };
 }
