@@ -2,7 +2,7 @@
 // corners are turned into longitude/latitude with the map's own unproject. (A box only stays a true lon/lat box
 // when the map is flat and facing north; the Explorer flattens the map before drawing.)
 import { useEffect, useRef, useState, type PointerEvent } from "react";
-import { boxKm, type Bbox } from "../lib/api";
+import { boxKm, type Bbox } from "../live/pipeline";
 
 export type Projector = { unproject: (p: [number, number]) => { lng: number; lat: number } };
 type Point = { x: number; y: number };

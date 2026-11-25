@@ -3,13 +3,14 @@
 // maplibre-gl, ~430 KB) is downloaded after the page shows, so the page itself stays small.
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { SiteHeader } from "../components/SiteHeader";
-import { AreaPanel } from "../explorer/AreaPanel";
+import { AreaPanel, type Picked } from "../explorer/AreaPanel";
 import { DrawLayer } from "../explorer/DrawLayer";
 import { Inspector } from "../explorer/Inspector";
 import { LayersPanel, type Layers, type Pair } from "../explorer/LayersPanel";
 import { GLOBE, playOpening, type EndCamera } from "../explorer/opening";
 import { Toolbar } from "../explorer/Toolbar";
 import { useAreaMap } from "../explorer/useAreaMap";
+import { boxKm } from "../live/pipeline";
 import { ViewControls } from "../explorer/ViewControls";
 import { cityBounds, DATA, loadCity } from "../lib/city";
 import { className } from "../lib/classes";
@@ -56,7 +57,8 @@ function ExplorerView({ index }: { index: Index }) {
   const [areaSnap, setAreaSnap] = useState<Snap>("half"); // phone: height of the "map your own area" sheet
   const story = useJson<StoryData>(`${DATA}story.json`);
   const area = useAreaMap(years);
-  const [picked, setPicked] = useState<{ id: number; cls: string; conf: number } | null>(null); // tapped square of a live map
+  const [picked, setPicked] = useState<Picked>(null); // tapped square of a live map
+  const [changesOnly, setChangesOnly] = useState(false); // live change map: only the changed squares
   const [intro, setIntro] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -70,8 +72,8 @@ function ExplorerView({ index }: { index: Index }) {
   const tmB = useRef<TerraMap | null>(null);
   const [ready, setReady] = useState(false); // map style loaded
   // Map event handlers read the latest state through this ref (they are attached once).
-  const live = useRef({ compare, year, city, areaYear: area.year });
-  live.current = { compare, year, city, areaYear: area.result?.year ?? area.year };
+  const live = useRef({ compare, year, city, areaYear: area.shown, areaYears: area.result?.years ?? [] });
+  live.current = { compare, year, city, areaYear: area.shown, areaYears: area.result?.years ?? [] };
 
   // ---------- Data ----------
   useEffect(() => {
@@ -158,11 +160,16 @@ function ExplorerView({ index }: { index: Index }) {
           liveId = Number(f.id);
           t.highlightLive("livehover", liveId);
           m.getCanvas().style.cursor = "pointer";
-          const pr = f.properties as Record<string, string | number>, y = live.current.areaYear, cls = String(pr[`class_${y}`]);
-          const dot = document.createElement("i"), conf = document.createElement("span");
-          dot.style.background = colour[cls] ?? "#888";
-          conf.textContent = `${pct(Number(pr[`confidence_${y}`]), 0)}% sure`;
-          tip.current.replaceChildren(dot, className(cls).plain, conf);
+          const pr = f.properties as Record<string, string | number>, y = live.current.areaYear, ys = live.current.areaYears;
+          const dot = (c: string) => { const i = document.createElement("i"); i.style.background = colour[c] ?? "#888"; return i; };
+          if (ys.length === 2) {
+            const [a, b] = ys.map((yy) => String(pr[`class_${yy}`]));
+            tip.current.replaceChildren(dot(a), className(a).plain, " → ", dot(b), className(b).plain);
+          } else {
+            const cls = String(pr[`class_${y}`]), conf = document.createElement("span");
+            conf.textContent = `${pct(Number(pr[`confidence_${y}`]), 0)}% sure`;
+            tip.current.replaceChildren(dot(cls), className(cls).plain, conf);
+          }
           tip.current.hidden = false;
         }
         raf ||= requestAnimationFrame(() => { raf = 0; if (tip.current) tip.current.style.transform = `translate(${pt.x + 14}px, ${pt.y}px) translateY(-50%)`; });
@@ -171,8 +178,7 @@ function ExplorerView({ index }: { index: Index }) {
       m.on("click", "livehit", (e) => {
         const f = e.features?.[0];
         if (!f || f.id === undefined) return;
-        const pr = f.properties as Record<string, string | number>, y = live.current.areaYear;
-        setPicked({ id: Number(f.id), cls: String(pr[`class_${y}`]), conf: Number(pr[`confidence_${y}`]) });
+        setPicked({ id: Number(f.id), props: f.properties as Record<string, string | number> });
       });
       let cr = 0, ll = { lng: 0, lat: 0 };
       m.on("mousemove", (e) => {
@@ -228,28 +234,41 @@ function ExplorerView({ index }: { index: Index }) {
     const side = Math.min(c.width, seen) * 0.6;
     const a = { x: c.width / 2 - side / 2, y: seen / 2 - side / 2 }, b = { x: a.x + side, y: a.y + side };
     const sw = m.unproject([a.x, b.y]), ne = m.unproject([b.x, a.y]);
-    area.setBox([sw.lng, sw.lat, ne.lng, ne.lat]);
-  }, [area.setBox, areaSnap]);
+    // Never bigger than the browser can map: shrink around the centre to just under the limit.
+    const [wk, hk] = boxKm([sw.lng, sw.lat, ne.lng, ne.lat]), k = Math.min(1, (area.maxKm - 0.2) / Math.max(wk, hk));
+    const cx = (sw.lng + ne.lng) / 2, cy = (sw.lat + ne.lat) / 2, hw = ((ne.lng - sw.lng) / 2) * k, hh = ((ne.lat - sw.lat) / 2) * k;
+    area.setBox([cx - hw, cy - hh, cx + hw, cy + hh]);
+  }, [area.setBox, area.maxKm, areaSnap]);
   useEffect(() => { if (ready) tm.current?.setBox(area.bbox); }, [ready, area.bbox]);
+  useEffect(() => { setPicked(null); setChangesOnly(false); }, [area.result]);
   useEffect(() => {
     if (!ready || !tm.current) return;
-    setPicked(null);
     const r = area.result;
-    if (r) tm.current.showLive({ corners: r.map.overlay_corners, rgbUrl: r.map.files.rgb[r.year], patches: r.map.patches_geojson, year: r.year });
+    if (r) tm.current.showLive({ corners: r.overlay_corners, rgbUrl: r.rgb[area.shown], patches: r.patches_geojson, year: area.shown, twoYears: r.years.length === 2 });
     else tm.current.clearLive();
+  }, [ready, area.result, area.shown]);
+  useEffect(() => { if (ready) tm.current?.setLiveChangesOnly(changesOnly); }, [ready, changesOnly, area.result, area.shown]);
+  // A new live map: fly to it so the person sees it land.
+  useEffect(() => {
+    const r = area.result, m = tm.current?.map;
+    if (!ready || !r || !m) return;
+    const [w, s, e, n] = r.bbox;
+    m.fitBounds([[w, s], [e, n]], { padding: pad(), duration: reducedMotion() ? 0 : 900, essential: true });
   }, [ready, area.result]);
   useEffect(() => { if (ready) tm.current?.highlightLive("livesel", picked?.id ?? null); }, [ready, picked]);
 
   // ---------- Keep the map in step with the state ----------
+  const liveShown = areaOpen && !!area.result;
   const apply = useCallback((t: TerraMap | null, isB = false) => {
     if (!t || !t.map.getLayer("space")) return;
     t.setSatellite(layers.sat);
-    t.setLanduse({ on: layers.land && !layers.change, opacity: layers.opacity, confidence: layers.conf, classes: preview ? [preview] : only });
-    t.setVisible("changes", layers.change);
+    // While a live map is shown, the showcase city's squares are hidden so the two don't mix.
+    t.setLanduse({ on: layers.land && !layers.change && !liveShown, opacity: layers.opacity, confidence: layers.conf, classes: preview ? [preview] : only });
+    t.setVisible("changes", layers.change && !liveShown);
     t.setVisible("checks", layers.checks && city?.id === "ahmedabad");
     t.focusChange(pair?.from ?? null, pair?.to ?? null);
     t.showYear(compare ? (isB ? y1 : y0) : year);
-  }, [layers, only, preview, pair, compare, year, city, y0, y1]);
+  }, [layers, only, preview, pair, compare, year, city, y0, y1, liveShown]);
   useEffect(() => { if (ready) { apply(tm.current); apply(tmB.current, true); } }, [ready, apply]);
   useEffect(() => { if (ready) tm.current?.highlight("selected", sel); }, [ready, sel]);
   useEffect(() => { if (ready && checks) tm.current?.setChecks(checks.squares); }, [ready, checks]);
@@ -362,7 +381,7 @@ function ExplorerView({ index }: { index: Index }) {
           </>}
           {!intro && <p className="model-note" role="note">{modelNote(story.data?.india ?? null)}</p>}
           <div className="tip" ref={tip} hidden />
-          {area.mode === "draw" && <DrawLayer map={() => tm.current?.map ?? null} maxKm={area.limits.max_side_km} onBox={area.setBox} onCancel={area.close} />}
+          {area.mode === "draw" && <DrawLayer map={() => tm.current?.map ?? null} maxKm={area.maxKm} onBox={area.setBox} onCancel={area.close} />}
           {!ready && <div className="map-loading" role="status"><span className="spinner" />Loading the map…</div>}
           {intro && <button type="button" className="skip" onClick={() => setIntro(false)}>Skip intro</button>}
 
@@ -380,7 +399,7 @@ function ExplorerView({ index }: { index: Index }) {
             onClose={() => setSel(null)} onCopy={copyLink} snap={inspSnap} onSnap={setInspSnap}
             onZoom={() => { const p = city.patches[sel!]; tm.current?.map.flyTo({ center: [p.lon, p.lat], zoom: 14, pitch: 0, duration: reducedMotion() ? 0 : 1400, essential: true }); }} />
 
-          <AreaPanel area={area} years={years} classes={index.classes} picked={picked} hidden={intro || !areaOpen} snap={areaSnap} onSnap={setAreaSnap} onMiddle={middleBox} />
+          <AreaPanel area={area} years={years} classes={index.classes} picked={picked} hidden={intro || !areaOpen} snap={areaSnap} onSnap={setAreaSnap} onMiddle={middleBox} changesOnly={changesOnly} onChangesOnly={setChangesOnly} />
 
           <div className="status"><span ref={cursor}>—</span><span>zoom <b ref={zoomVal}>—</b></span><span title={`Sentinel-2 tile ${s.tile}`}>10 m Sentinel-2</span></div>
           <div className="zoombar">

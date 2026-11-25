@@ -1,0 +1,15 @@
+# Does the in-browser "Map your own area" (web/src/live/) give the same map as the Python pipeline
+# (src/live.py map_box, the API)? Same boxes, same years, square by square.
+#   1. cd web && node scripts/browser-parity.mjs      -> results/browser_parity_runs.json (browser side)
+#   2. python -m src.browser_parity                    -> results/browser_parity.json (compares)
+# Boxes are at most 6 x 6 km (the browser limit, scripts/web_live_config.py). Chosen before any run:
+# one inside a fine-tune area, two other Gujarat cities, and one place outside Gujarat.
+api_config: configs/api.yaml
+browser_runs: results/browser_parity_runs.json
+output: results/browser_parity.json
+years: ["2018", "2026"]
+boxes:
+  ahmedabad_centre: [72.55, 23.0, 72.58, 23.027]
+  surat: [72.80, 21.15, 72.84, 21.19]
+  rajkot: [70.77, 22.27, 70.81, 22.31]
+  pune: [73.84, 18.50, 73.88, 18.54]

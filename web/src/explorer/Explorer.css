@@ -289,3 +289,32 @@
   .stage[data-sheet="full"] .zoombar { display: none; } /* the map strip above a tall sheet is too small to need it */
   .toast { bottom: calc(var(--sheet-peek) + 16px); }
 }
+
+/* Map your own area, in the browser: intro, progress steps, change summary */
+.area-lead { color: var(--ink) !important; }
+.area-how { margin: 0; padding-left: 1.2em; font-size: var(--t-sm); color: var(--ink-2); display: grid; gap: 4px; }
+.area-progress { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.area-progress li { position: relative; display: grid; grid-template-columns: 16px 1fr; gap: 10px; align-items: center; font-size: var(--t-sm); color: var(--ink-3); }
+.area-progress li[data-state="now"] { color: var(--ink); font-weight: 600; }
+.area-progress li[data-state="done"] { color: var(--ink-2); }
+.area-progress i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--line-strong); }
+.area-progress li[data-state="done"] i { border-color: var(--verified); background: var(--verified); box-shadow: inset 0 0 0 3px var(--surface); }
+.area-progress li[data-state="now"] i { border-color: var(--accent); border-top-color: transparent; animation: area-spin 0.9s linear infinite; }
+@keyframes area-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .area-progress li[data-state="now"] i { animation: none; border-top-color: var(--accent); } }
+.area-progress .bar { grid-column: 2; height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; position: relative; }
+.area-progress .bar::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(var(--w)); transition: transform 300ms var(--ease-out); }
+.area-change { display: grid; gap: 2px; padding: 12px; border-radius: var(--r-md); background: var(--accent-wash); box-shadow: inset 0 0 0 1px var(--accent-fill); }
+.area-change b { font-size: 1.9rem; line-height: 1; letter-spacing: -0.03em; }
+.area-change span { font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+.area-shifts { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.area-shifts li { display: grid; grid-template-columns: 10px auto auto 10px 1fr auto; gap: 6px; align-items: center; font-size: 12.5px; }
+.area-shifts i { width: 10px; height: 10px; border-radius: 3px; }
+.area-shifts .arr { color: var(--ink-3); }
+.area-shifts .mono { color: var(--ink-2); }
+.area-check { display: flex; gap: 8px; align-items: center; font-size: var(--t-sm); cursor: pointer; }
+.area-check input { accent-color: var(--accent); width: 15px; height: 15px; }
+.area-details { border-top: 1px solid var(--line); padding-top: var(--s-3); }
+.area-details summary { cursor: pointer; font-size: var(--t-sm); font-weight: 600; }
+.area-details[open] summary { margin-bottom: var(--s-3); }
+.area-details p { margin-top: var(--s-2) !important; }

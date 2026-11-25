@@ -1,0 +1,1878 @@
+{
+ "made_by": "web/scripts/browser-parity.mjs",
+ "browser": "156.0.8078.4",
+ "runs": [
+  {
+   "name": "ahmedabad_centre",
+   "bbox": [
+    72.55,
+    23,
+    72.58,
+    23.027
+   ],
+   "year": "2018",
+   "ok": true,
+   "tile": "42QZL",
+   "n_patches": 16,
+   "scenes": [
+    "S2B_MSIL2A_20180103T054219_R005_T42QZL_20201014T030508",
+    "S2B_MSIL2A_20180202T054029_R005_T42QZL_20201013T181739",
+    "S2A_MSIL2A_20180217T053911_R005_T42QZL_20201013T221241",
+    "S2B_MSIL2A_20180222T053829_R005_T42QZL_20201014T001709",
+    "S2A_MSIL2A_20180227T053801_R005_T42QZL_20201026T043418"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 1743,
+    "pictures": 11946,
+    "model": 343,
+    "total": 14060
+   },
+   "bytes_read": 2901150,
+   "patches": [
+    {
+     "cls": "Residential",
+     "conf": 0.91,
+     "lon": 72.5530625,
+     "lat": 23.02474525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.765,
+     "lon": 72.55929675,
+     "lat": 23.024604999999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.886,
+     "lon": 72.56553100000001,
+     "lat": 23.0244645
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.759,
+     "lon": 72.57176475,
+     "lat": 23.024323499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.906,
+     "lon": 72.55291125,
+     "lat": 23.018975
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 72.559145,
+     "lat": 23.018835
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.901,
+     "lon": 72.56537900000001,
+     "lat": 23.0186945
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.84,
+     "lon": 72.5716125,
+     "lat": 23.0185535
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.898,
+     "lon": 72.55276,
+     "lat": 23.013205
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.91,
+     "lon": 72.55899324999999,
+     "lat": 23.01306475
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 72.565227,
+     "lat": 23.01292425
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.534,
+     "lon": 72.5714605,
+     "lat": 23.0127835
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.908,
+     "lon": 72.55260875,
+     "lat": 23.007435
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.91,
+     "lon": 72.558842,
+     "lat": 23.0072945
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.906,
+     "lon": 72.56507525,
+     "lat": 23.007154
+    },
+    {
+     "cls": "River",
+     "conf": 0.908,
+     "lon": 72.57130849999999,
+     "lat": 23.0070135
+    }
+   ]
+  },
+  {
+   "name": "ahmedabad_centre",
+   "bbox": [
+    72.55,
+    23,
+    72.58,
+    23.027
+   ],
+   "year": "2026",
+   "ok": true,
+   "tile": "42QZL",
+   "n_patches": 16,
+   "scenes": [
+    "S2B_MSIL2A_20251202T054109_R005_T42QZL_20251202T073232",
+    "S2C_MSIL2A_20251207T054231_R005_T42QZL_20251207T092711",
+    "S2C_MSIL2A_20251227T054241_R005_T42QZL_20251227T092116",
+    "S2B_MSIL2A_20260121T054039_R005_T42QZL_20260121T091302",
+    "S2C_MSIL2A_20260215T053921_R005_T42QZL_20260215T085810"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 1148,
+    "pictures": 9731,
+    "model": 287,
+    "total": 11180
+   },
+   "bytes_read": 2901150,
+   "patches": [
+    {
+     "cls": "Residential",
+     "conf": 0.91,
+     "lon": 72.5530625,
+     "lat": 23.02474525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.617,
+     "lon": 72.55929675,
+     "lat": 23.024604999999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.862,
+     "lon": 72.56553100000001,
+     "lat": 23.0244645
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.776,
+     "lon": 72.57176475,
+     "lat": 23.024323499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.905,
+     "lon": 72.55291125,
+     "lat": 23.018975
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.876,
+     "lon": 72.559145,
+     "lat": 23.018835
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.903,
+     "lon": 72.56537900000001,
+     "lat": 23.0186945
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.829,
+     "lon": 72.5716125,
+     "lat": 23.0185535
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 72.55276,
+     "lat": 23.013205
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.91,
+     "lon": 72.55899324999999,
+     "lat": 23.01306475
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.911,
+     "lon": 72.565227,
+     "lat": 23.01292425
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.271,
+     "lon": 72.5714605,
+     "lat": 23.0127835
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.908,
+     "lon": 72.55260875,
+     "lat": 23.007435
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.911,
+     "lon": 72.558842,
+     "lat": 23.0072945
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.905,
+     "lon": 72.56507525,
+     "lat": 23.007154
+    },
+    {
+     "cls": "River",
+     "conf": 0.901,
+     "lon": 72.57130849999999,
+     "lat": 23.0070135
+    }
+   ]
+  },
+  {
+   "name": "surat",
+   "bbox": [
+    72.8,
+    21.15,
+    72.84,
+    21.19
+   ],
+   "year": "2018",
+   "ok": true,
+   "tile": "43QBD",
+   "n_patches": 42,
+   "scenes": [
+    "S2B_MSIL2A_20171224T054229_R005_T43QBD_20201014T160506",
+    "S2B_MSIL2A_20180103T054219_R005_T43QBD_20201014T030507",
+    "S2B_MSIL2A_20180202T054029_R005_T43QBD_20201013T181738",
+    "S2B_MSIL2A_20180222T053829_R005_T43QBD_20201014T001658",
+    "S2A_MSIL2A_20180227T053801_R005_T43QBD_20201014T013250"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 1032,
+    "pictures": 10793,
+    "model": 788,
+    "total": 12624
+   },
+   "bytes_read": 5684340,
+   "patches": [
+    {
+     "cls": "River",
+     "conf": 0.906,
+     "lon": 72.802492,
+     "lat": 21.187222000000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.835,
+     "lon": 72.80865299999999,
+     "lat": 21.187302000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.903,
+     "lon": 72.81481425,
+     "lat": 21.187382000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.889,
+     "lon": 72.82097575,
+     "lat": 21.18746175
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.877,
+     "lon": 72.82713724999999,
+     "lat": 21.187541000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 72.8332985,
+     "lat": 21.187620000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.494,
+     "lon": 72.80257725,
+     "lat": 21.18144375
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.888,
+     "lon": 72.808738,
+     "lat": 21.18152375
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.883,
+     "lon": 72.814899,
+     "lat": 21.1816035
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.858,
+     "lon": 72.82106025,
+     "lat": 21.18168325
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.875,
+     "lon": 72.82722150000001,
+     "lat": 21.1817625
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.894,
+     "lon": 72.8333825,
+     "lat": 21.1818415
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.889,
+     "lon": 72.80266275,
+     "lat": 21.17566525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.887,
+     "lon": 72.80882325,
+     "lat": 21.175745250000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.862,
+     "lon": 72.81498400000001,
+     "lat": 21.175825
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.703,
+     "lon": 72.821145,
+     "lat": 21.17590475
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.606,
+     "lon": 72.82730600000001,
+     "lat": 21.175984000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.853,
+     "lon": 72.83346675,
+     "lat": 21.176063000000003
+    },
+    {
+     "cls": "AnnualCrop",
+     "conf": 0.897,
+     "lon": 72.80274825000001,
+     "lat": 21.169887000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.894,
+     "lon": 72.8089085,
+     "lat": 21.169967000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.904,
+     "lon": 72.815069,
+     "lat": 21.17004675
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.887,
+     "lon": 72.82122975,
+     "lat": 21.17012625
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.833,
+     "lon": 72.8273905,
+     "lat": 21.1702055
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.582,
+     "lon": 72.833551,
+     "lat": 21.1702845
+    },
+    {
+     "cls": "AnnualCrop",
+     "conf": 0.619,
+     "lon": 72.8028335,
+     "lat": 21.1641085
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.874,
+     "lon": 72.8089935,
+     "lat": 21.1641885
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.823,
+     "lon": 72.815154,
+     "lat": 21.16426825
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.859,
+     "lon": 72.8213145,
+     "lat": 21.16434775
+    },
+    {
+     "cls": "River",
+     "conf": 0.461,
+     "lon": 72.82747475,
+     "lat": 21.164427
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.411,
+     "lon": 72.833635,
+     "lat": 21.164506000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 72.8029185,
+     "lat": 21.158330000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.829,
+     "lon": 72.8090785,
+     "lat": 21.15841
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.881,
+     "lon": 72.81523875,
+     "lat": 21.15848975
+    },
+    {
+     "cls": "River",
+     "conf": 0.911,
+     "lon": 72.821399,
+     "lat": 21.15856925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.881,
+     "lon": 72.82755900000001,
+     "lat": 21.1586485
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.864,
+     "lon": 72.833719,
+     "lat": 21.1587275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.887,
+     "lon": 72.803004,
+     "lat": 21.1525515
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.797,
+     "lon": 72.80916375000001,
+     "lat": 21.152631500000002
+    },
+    {
+     "cls": "River",
+     "conf": 0.925,
+     "lon": 72.8153235,
+     "lat": 21.15271125
+    },
+    {
+     "cls": "HerbaceousVegetation",
+     "conf": 0.444,
+     "lon": 72.8214835,
+     "lat": 21.152790749999998
+    },
+    {
+     "cls": "HerbaceousVegetation",
+     "conf": 0.878,
+     "lon": 72.82764350000001,
+     "lat": 21.15287
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.873,
+     "lon": 72.83380325,
+     "lat": 21.152949
+    }
+   ]
+  },
+  {
+   "name": "surat",
+   "bbox": [
+    72.8,
+    21.15,
+    72.84,
+    21.19
+   ],
+   "year": "2026",
+   "ok": true,
+   "tile": "43QBD",
+   "n_patches": 42,
+   "scenes": [
+    "S2C_MSIL2A_20251207T054231_R005_T43QBD_20251207T092711",
+    "S2B_MSIL2A_20251212T054139_R005_T43QBD_20251212T073145",
+    "S2C_MSIL2A_20251217T054241_R005_T43QBD_20251217T091609",
+    "S2C_MSIL2A_20260116T054201_R005_T43QBD_20260116T091409",
+    "S2C_MSIL2A_20260215T053921_R005_T43QBD_20260215T085810"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 1201,
+    "pictures": 14184,
+    "model": 760,
+    "total": 16153
+   },
+   "bytes_read": 5684340,
+   "patches": [
+    {
+     "cls": "River",
+     "conf": 0.872,
+     "lon": 72.802492,
+     "lat": 21.187222000000002
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.496,
+     "lon": 72.80865299999999,
+     "lat": 21.187302000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.906,
+     "lon": 72.81481425,
+     "lat": 21.187382000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.898,
+     "lon": 72.82097575,
+     "lat": 21.18746175
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.882,
+     "lon": 72.82713724999999,
+     "lat": 21.187541000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.89,
+     "lon": 72.8332985,
+     "lat": 21.187620000000003
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.452,
+     "lon": 72.80257725,
+     "lat": 21.18144375
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 72.808738,
+     "lat": 21.18152375
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.873,
+     "lon": 72.814899,
+     "lat": 21.1816035
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.873,
+     "lon": 72.82106025,
+     "lat": 21.18168325
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.865,
+     "lon": 72.82722150000001,
+     "lat": 21.1817625
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 72.8333825,
+     "lat": 21.1818415
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.882,
+     "lon": 72.80266275,
+     "lat": 21.17566525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.888,
+     "lon": 72.80882325,
+     "lat": 21.175745250000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.862,
+     "lon": 72.81498400000001,
+     "lat": 21.175825
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.369,
+     "lon": 72.821145,
+     "lat": 21.17590475
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.722,
+     "lon": 72.82730600000001,
+     "lat": 21.175984000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.866,
+     "lon": 72.83346675,
+     "lat": 21.176063000000003
+    },
+    {
+     "cls": "AnnualCrop",
+     "conf": 0.643,
+     "lon": 72.80274825000001,
+     "lat": 21.169887000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 72.8089085,
+     "lat": 21.169967000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.889,
+     "lon": 72.815069,
+     "lat": 21.17004675
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.9,
+     "lon": 72.82122975,
+     "lat": 21.17012625
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.569,
+     "lon": 72.8273905,
+     "lat": 21.1702055
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.775,
+     "lon": 72.833551,
+     "lat": 21.1702845
+    },
+    {
+     "cls": "AnnualCrop",
+     "conf": 0.705,
+     "lon": 72.8028335,
+     "lat": 21.1641085
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.895,
+     "lon": 72.8089935,
+     "lat": 21.1641885
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.86,
+     "lon": 72.815154,
+     "lat": 21.16426825
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.894,
+     "lon": 72.8213145,
+     "lat": 21.16434775
+    },
+    {
+     "cls": "River",
+     "conf": 0.675,
+     "lon": 72.82747475,
+     "lat": 21.164427
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.784,
+     "lon": 72.833635,
+     "lat": 21.164506000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 72.8029185,
+     "lat": 21.158330000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.859,
+     "lon": 72.8090785,
+     "lat": 21.15841
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.842,
+     "lon": 72.81523875,
+     "lat": 21.15848975
+    },
+    {
+     "cls": "River",
+     "conf": 0.905,
+     "lon": 72.821399,
+     "lat": 21.15856925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.896,
+     "lon": 72.82755900000001,
+     "lat": 21.1586485
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.881,
+     "lon": 72.833719,
+     "lat": 21.1587275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.881,
+     "lon": 72.803004,
+     "lat": 21.1525515
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.881,
+     "lon": 72.80916375000001,
+     "lat": 21.152631500000002
+    },
+    {
+     "cls": "River",
+     "conf": 0.899,
+     "lon": 72.8153235,
+     "lat": 21.15271125
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.862,
+     "lon": 72.8214835,
+     "lat": 21.152790749999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.871,
+     "lon": 72.82764350000001,
+     "lat": 21.15287
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.864,
+     "lon": 72.83380325,
+     "lat": 21.152949
+    }
+   ]
+  },
+  {
+   "name": "rajkot",
+   "bbox": [
+    70.77,
+    22.27,
+    70.81,
+    22.31
+   ],
+   "year": "2018",
+   "ok": true,
+   "tile": "42QXK",
+   "n_patches": 42,
+   "scenes": [
+    "S2B_MSIL2A_20171227T055229_R048_T42QXK_20201014T164556",
+    "S2A_MSIL2A_20180101T055231_R048_T42QXK_20210517T083912",
+    "S2B_MSIL2A_20180126T055109_R048_T42QXK_20201014T085922",
+    "S2A_MSIL2A_20180220T054851_R048_T42QXK_20201013T232121",
+    "S2B_MSIL2A_20180225T054809_R048_T42QXK_20201014T011744"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 856,
+    "pictures": 7101,
+    "model": 726,
+    "total": 8694
+   },
+   "bytes_read": 5604480,
+   "patches": [
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 70.773056,
+     "lat": 22.30753225
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.583,
+     "lon": 70.77926674999999,
+     "lat": 22.30746425
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 70.7854775,
+     "lat": 22.30739575
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.786,
+     "lon": 70.79168849999999,
+     "lat": 22.30732725
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.87,
+     "lon": 70.797899,
+     "lat": 22.307258749999995
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.642,
+     "lon": 70.8041095,
+     "lat": 22.30719
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 70.772983,
+     "lat": 22.30175275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.906,
+     "lon": 70.7791935,
+     "lat": 22.30168475
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.882,
+     "lon": 70.78540375,
+     "lat": 22.301616499999998
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.802,
+     "lon": 70.79161450000001,
+     "lat": 22.301548
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 70.797825,
+     "lat": 22.301479500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.905,
+     "lon": 70.80403525,
+     "lat": 22.301410999999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 70.77291025,
+     "lat": 22.295973500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 70.7791205,
+     "lat": 22.295905499999996
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.896,
+     "lon": 70.7853305,
+     "lat": 22.295837499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.898,
+     "lon": 70.79154075,
+     "lat": 22.295769
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.819,
+     "lon": 70.79775099999999,
+     "lat": 22.295700500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.905,
+     "lon": 70.803961,
+     "lat": 22.295632
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 70.77283750000001,
+     "lat": 22.290194500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 70.7790475,
+     "lat": 22.290126500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.9,
+     "lon": 70.78525725,
+     "lat": 22.2900585
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.874,
+     "lon": 70.791467,
+     "lat": 22.289989999999996
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.893,
+     "lon": 70.797677,
+     "lat": 22.2899215
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.909,
+     "lon": 70.803887,
+     "lat": 22.28985275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.908,
+     "lon": 70.7727645,
+     "lat": 22.284415499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.893,
+     "lon": 70.77897425,
+     "lat": 22.2843475
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.9,
+     "lon": 70.78518375,
+     "lat": 22.2842795
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.636,
+     "lon": 70.79139325,
+     "lat": 22.284211000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.904,
+     "lon": 70.797603,
+     "lat": 22.284142250000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.904,
+     "lon": 70.803813,
+     "lat": 22.28407325
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 70.7726915,
+     "lat": 22.278636499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.84,
+     "lon": 70.778901,
+     "lat": 22.2785685
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.907,
+     "lon": 70.78511025,
+     "lat": 22.2785005
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.884,
+     "lon": 70.79131975,
+     "lat": 22.278432
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.864,
+     "lon": 70.79752925,
+     "lat": 22.278363
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.895,
+     "lon": 70.80373875,
+     "lat": 22.278293999999995
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.877,
+     "lon": 70.77261875,
+     "lat": 22.2728575
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.797,
+     "lon": 70.778828,
+     "lat": 22.272789500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.903,
+     "lon": 70.785037,
+     "lat": 22.272721500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.867,
+     "lon": 70.79124625,
+     "lat": 22.272653
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.866,
+     "lon": 70.7974555,
+     "lat": 22.272584
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.886,
+     "lon": 70.8036645,
+     "lat": 22.272515000000002
+    }
+   ]
+  },
+  {
+   "name": "rajkot",
+   "bbox": [
+    70.77,
+    22.27,
+    70.81,
+    22.31
+   ],
+   "year": "2026",
+   "ok": true,
+   "tile": "42QXK",
+   "n_patches": 42,
+   "scenes": [
+    "S2B_MSIL2A_20251205T055129_R048_T42QXK_20251205T064344",
+    "S2C_MSIL2A_20251210T055241_R048_T42QXK_20251210T091717",
+    "S2B_MSIL2A_20251215T055229_R048_T42QXK_20251215T074632",
+    "S2C_MSIL2A_20251220T055251_R048_T42QXK_20251220T092511",
+    "S2C_MSIL2A_20260109T055231_R048_T42QXK_20260109T093116"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 1151,
+    "pictures": 5889,
+    "model": 703,
+    "total": 7753
+   },
+   "bytes_read": 5604480,
+   "patches": [
+    {
+     "cls": "Residential",
+     "conf": 0.909,
+     "lon": 70.773056,
+     "lat": 22.30753225
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.542,
+     "lon": 70.77926674999999,
+     "lat": 22.30746425
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.889,
+     "lon": 70.7854775,
+     "lat": 22.30739575
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.819,
+     "lon": 70.79168849999999,
+     "lat": 22.30732725
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.895,
+     "lon": 70.797899,
+     "lat": 22.307258749999995
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.851,
+     "lon": 70.8041095,
+     "lat": 22.30719
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.909,
+     "lon": 70.772983,
+     "lat": 22.30175275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.911,
+     "lon": 70.7791935,
+     "lat": 22.30168475
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.882,
+     "lon": 70.78540375,
+     "lat": 22.301616499999998
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.807,
+     "lon": 70.79161450000001,
+     "lat": 22.301548
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 70.797825,
+     "lat": 22.301479500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.896,
+     "lon": 70.80403525,
+     "lat": 22.301410999999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 70.77291025,
+     "lat": 22.295973500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 70.7791205,
+     "lat": 22.295905499999996
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.904,
+     "lon": 70.7853305,
+     "lat": 22.295837499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.894,
+     "lon": 70.79154075,
+     "lat": 22.295769
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.864,
+     "lon": 70.79775099999999,
+     "lat": 22.295700500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 70.803961,
+     "lat": 22.295632
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.907,
+     "lon": 70.77283750000001,
+     "lat": 22.290194500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.892,
+     "lon": 70.7790475,
+     "lat": 22.290126500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.898,
+     "lon": 70.78525725,
+     "lat": 22.2900585
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.89,
+     "lon": 70.791467,
+     "lat": 22.289989999999996
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.878,
+     "lon": 70.797677,
+     "lat": 22.2899215
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.896,
+     "lon": 70.803887,
+     "lat": 22.28985275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.903,
+     "lon": 70.7727645,
+     "lat": 22.284415499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 70.77897425,
+     "lat": 22.2843475
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.904,
+     "lon": 70.78518375,
+     "lat": 22.2842795
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.827,
+     "lon": 70.79139325,
+     "lat": 22.284211000000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.904,
+     "lon": 70.797603,
+     "lat": 22.284142250000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.905,
+     "lon": 70.803813,
+     "lat": 22.28407325
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.896,
+     "lon": 70.7726915,
+     "lat": 22.278636499999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.843,
+     "lon": 70.778901,
+     "lat": 22.2785685
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.904,
+     "lon": 70.78511025,
+     "lat": 22.2785005
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.906,
+     "lon": 70.79131975,
+     "lat": 22.278432
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.857,
+     "lon": 70.79752925,
+     "lat": 22.278363
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.892,
+     "lon": 70.80373875,
+     "lat": 22.278293999999995
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.883,
+     "lon": 70.77261875,
+     "lat": 22.2728575
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.827,
+     "lon": 70.778828,
+     "lat": 22.272789500000002
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.898,
+     "lon": 70.785037,
+     "lat": 22.272721500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.872,
+     "lon": 70.79124625,
+     "lat": 22.272653
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.888,
+     "lon": 70.7974555,
+     "lat": 22.272584
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.903,
+     "lon": 70.8036645,
+     "lat": 22.272515000000002
+    }
+   ]
+  },
+  {
+   "name": "pune",
+   "bbox": [
+    73.84,
+    18.5,
+    73.88,
+    18.54
+   ],
+   "year": "2018",
+   "ok": true,
+   "tile": "43QCA",
+   "n_patches": 36,
+   "scenes": [
+    "S2A_MSIL2A_20171226T053231_R105_T43QCA_20201014T162436",
+    "S2B_MSIL2A_20171231T053219_R105_T43QCA_20201014T173742",
+    "S2B_MSIL2A_20180130T053049_R105_T43QCA_20201014T101013",
+    "S2B_MSIL2A_20180219T052849_R105_T43QCA_20201013T231018",
+    "S2A_MSIL2A_20180224T052811_R105_T43QCA_20201014T004901"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 842,
+    "pictures": 5676,
+    "model": 609,
+    "total": 7133
+   },
+   "bytes_read": 5673750,
+   "patches": [
+    {
+     "cls": "Industrial",
+     "conf": 0.646,
+     "lon": 73.842749,
+     "lat": 18.537172
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.686,
+     "lon": 73.848812,
+     "lat": 18.537209
+    },
+    {
+     "cls": "River",
+     "conf": 0.623,
+     "lon": 73.85487499999999,
+     "lat": 18.537246
+    },
+    {
+     "cls": "HerbaceousVegetation",
+     "conf": 0.476,
+     "lon": 73.860938,
+     "lat": 18.5372825
+    },
+    {
+     "cls": "HerbaceousVegetation",
+     "conf": 0.725,
+     "lon": 73.86700075,
+     "lat": 18.53731875
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.783,
+     "lon": 73.87306375,
+     "lat": 18.53735525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.886,
+     "lon": 73.84278800000001,
+     "lat": 18.531388749999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.875,
+     "lon": 73.84885075,
+     "lat": 18.531426
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.562,
+     "lon": 73.8549135,
+     "lat": 18.53146275
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.505,
+     "lon": 73.8609765,
+     "lat": 18.53149925
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.786,
+     "lon": 73.867039,
+     "lat": 18.5315355
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.793,
+     "lon": 73.8731015,
+     "lat": 18.53157175
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.898,
+     "lon": 73.842827,
+     "lat": 18.52560525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.883,
+     "lon": 73.84888950000001,
+     "lat": 18.5256425
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.784,
+     "lon": 73.85495175,
+     "lat": 18.52567925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.663,
+     "lon": 73.8610145,
+     "lat": 18.525716
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.85,
+     "lon": 73.867077,
+     "lat": 18.525752500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.857,
+     "lon": 73.87313950000001,
+     "lat": 18.5257885
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 73.84286575,
+     "lat": 18.519822
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.514,
+     "lon": 73.84892825,
+     "lat": 18.519859
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.875,
+     "lon": 73.85499050000001,
+     "lat": 18.519896
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.895,
+     "lon": 73.86105275,
+     "lat": 18.51993275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.892,
+     "lon": 73.867115,
+     "lat": 18.51996925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.861,
+     "lon": 73.8731775,
+     "lat": 18.5200055
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.402,
+     "lon": 73.8429045,
+     "lat": 18.514039
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.886,
+     "lon": 73.84896675,
+     "lat": 18.514076
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.894,
+     "lon": 73.855029,
+     "lat": 18.51411275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.895,
+     "lon": 73.86109100000002,
+     "lat": 18.51414925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.907,
+     "lon": 73.867153,
+     "lat": 18.51418575
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.897,
+     "lon": 73.8732155,
+     "lat": 18.514222
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.879,
+     "lon": 73.84294350000002,
+     "lat": 18.508256
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.864,
+     "lon": 73.8490055,
+     "lat": 18.508293
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.902,
+     "lon": 73.8550675,
+     "lat": 18.5083295
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.893,
+     "lon": 73.86112924999999,
+     "lat": 18.508366
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.86,
+     "lon": 73.867191,
+     "lat": 18.5084025
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.884,
+     "lon": 73.87325325,
+     "lat": 18.5084385
+    }
+   ]
+  },
+  {
+   "name": "pune",
+   "bbox": [
+    73.84,
+    18.5,
+    73.88,
+    18.54
+   ],
+   "year": "2026",
+   "ok": true,
+   "tile": "43QCA",
+   "n_patches": 36,
+   "scenes": [
+    "S2C_MSIL2A_20251214T053241_R105_T43QCA_20251214T090710",
+    "S2C_MSIL2A_20260113T053201_R105_T43QCA_20260113T090418",
+    "S2B_MSIL2A_20260118T053049_R105_T43QCA_20260118T073403",
+    "S2B_MSIL2A_20260207T052909_R105_T43QCA_20260207T092426",
+    "S2C_MSIL2A_20260212T052941_R105_T43QCA_20260212T100910"
+   ],
+   "backend": "wasm",
+   "timings_ms": {
+    "search": 1173,
+    "pictures": 5829,
+    "model": 631,
+    "total": 7641
+   },
+   "bytes_read": 5673750,
+   "patches": [
+    {
+     "cls": "Industrial",
+     "conf": 0.679,
+     "lon": 73.842749,
+     "lat": 18.537172
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.813,
+     "lon": 73.848812,
+     "lat": 18.537209
+    },
+    {
+     "cls": "River",
+     "conf": 0.911,
+     "lon": 73.85487499999999,
+     "lat": 18.537246
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.549,
+     "lon": 73.860938,
+     "lat": 18.5372825
+    },
+    {
+     "cls": "River",
+     "conf": 0.907,
+     "lon": 73.86700075,
+     "lat": 18.53731875
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.778,
+     "lon": 73.87306375,
+     "lat": 18.53735525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.872,
+     "lon": 73.84278800000001,
+     "lat": 18.531388749999998
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.83,
+     "lon": 73.84885075,
+     "lat": 18.531426
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.781,
+     "lon": 73.8549135,
+     "lat": 18.53146275
+    },
+    {
+     "cls": "River",
+     "conf": 0.895,
+     "lon": 73.8609765,
+     "lat": 18.53149925
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.884,
+     "lon": 73.867039,
+     "lat": 18.5315355
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.828,
+     "lon": 73.8731015,
+     "lat": 18.53157175
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.885,
+     "lon": 73.842827,
+     "lat": 18.52560525
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.86,
+     "lon": 73.84888950000001,
+     "lat": 18.5256425
+    },
+    {
+     "cls": "Industrial",
+     "conf": 0.644,
+     "lon": 73.85495175,
+     "lat": 18.52567925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.516,
+     "lon": 73.8610145,
+     "lat": 18.525716
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.842,
+     "lon": 73.867077,
+     "lat": 18.525752500000003
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.847,
+     "lon": 73.87313950000001,
+     "lat": 18.5257885
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 73.84286575,
+     "lat": 18.519822
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.362,
+     "lon": 73.84892825,
+     "lat": 18.519859
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.874,
+     "lon": 73.85499050000001,
+     "lat": 18.519896
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.903,
+     "lon": 73.86105275,
+     "lat": 18.51993275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.885,
+     "lon": 73.867115,
+     "lat": 18.51996925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.887,
+     "lon": 73.8731775,
+     "lat": 18.5200055
+    },
+    {
+     "cls": "Highway",
+     "conf": 0.464,
+     "lon": 73.8429045,
+     "lat": 18.514039
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.898,
+     "lon": 73.84896675,
+     "lat": 18.514076
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.896,
+     "lon": 73.855029,
+     "lat": 18.51411275
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.9,
+     "lon": 73.86109100000002,
+     "lat": 18.51414925
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.906,
+     "lon": 73.867153,
+     "lat": 18.51418575
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.89,
+     "lon": 73.8732155,
+     "lat": 18.514222
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.878,
+     "lon": 73.84294350000002,
+     "lat": 18.508256
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.88,
+     "lon": 73.8490055,
+     "lat": 18.508293
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.899,
+     "lon": 73.8550675,
+     "lat": 18.5083295
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.901,
+     "lon": 73.86112924999999,
+     "lat": 18.508366
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.84,
+     "lon": 73.867191,
+     "lat": 18.5084025
+    },
+    {
+     "cls": "Residential",
+     "conf": 0.878,
+     "lon": 73.87325325,
+     "lat": 18.5084385
+    }
+   ]
+  }
+ ]
+}

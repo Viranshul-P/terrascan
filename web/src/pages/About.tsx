@@ -40,6 +40,11 @@ export function About() {
               <p>Sentinel-2 satellite pictures at 10&nbsp;m per pixel, read from Microsoft Planetary Computer. For each year, the clear December to February days are merged into one cloud-free picture, and the picture is cut into 640&nbsp;m squares.</p>
               <p>The labelled Indian patches are published as an open dataset.</p>
             </section>
+            <section aria-labelledby="a-live">
+              <h2 id="a-live">Map any place, in your browser</h2>
+              <p>In the Explorer, "Map your area" runs the whole pipeline on your own device: it finds clear Sentinel-2 pictures, reads only the pixels inside your box straight from the public archive, builds the cloud-free picture and runs the model with WebGPU or WebAssembly. There is no server to pay for or wait on.</p>
+              <p>It was checked square by square against the Python code that made the showcase maps; the result is in the repository (results/browser_parity.json).</p>
+            </section>
             <section aria-labelledby="a-trust">
               <h2 id="a-trust">What to trust</h2>
               <p>It was only tested in Gujarat, on winter pictures, with a small test set. Maps of other places are untested. A square is one guess about the main land use in 640&nbsp;m, not a survey.</p>

@@ -154,9 +154,25 @@ def build_readme_numbers(cfg):
             "change_n_pairs": load_json("results/change_check.json")["n_pairs"],
             "ft_areas": ", ".join(after["finetune_areas"]),
             "test_areas": ", ".join(after["test_areas"]),
+            **parity_numbers(),
         }
     )
     return n
+
+
+def parity_numbers():
+    """Browser vs Python (results/browser_parity.json) and the browser box limit (live.json)."""
+    s = load_json("results/browser_parity.json")["summary"]
+    live = load_json("web/public/data/live.json")
+    return {
+        "live_max_km": live["max_side_km"],
+        "parity_runs": s["runs_compared"],
+        "parity_same_scenes": "yes" if s["all_same_scenes"] else "no",
+        "parity_same": s["squares_same_class"],
+        "parity_squares": s["squares_compared"],
+        "parity_offset_m": s["max_centre_offset_m"],
+        "parity_median_s": round(s["median_browser_total_ms"] / 1000, 1),
+    }
 
 
 def make_readme(numbers, template):

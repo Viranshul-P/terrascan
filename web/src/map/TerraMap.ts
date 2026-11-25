@@ -115,6 +115,7 @@ export class TerraMap {
       { id: "selected", type: "line", source: "patches", filter: ["==", ["id"], -1], paint: { "line-color": "#ffb224", "line-width": 2.5 } },
       // "Map your own area" (the picture, livergb, is added when a result arrives, just below livefill)
       { id: "livefill", type: "fill", source: "livepatches", layout: { visibility: "none" }, paint: { "fill-color": "#000000", "fill-opacity": 0.6, "fill-antialias": false } },
+      { id: "livechange", type: "line", source: "livepatches", filter: CHANGED, layout: { visibility: "none" }, paint: { "line-color": "#ffffff", "line-width": 1.4, "line-opacity": 0.9 } },
       { id: "livehit", type: "fill", source: "livepatches", layout: { visibility: "none" }, paint: { "fill-color": "#000000", "fill-opacity": 0 } },
       { id: "livehover", type: "line", source: "livepatches", filter: ["==", ["id"], -1], paint: { "line-color": "#ffffff", "line-width": 1.5 } },
       { id: "livesel", type: "line", source: "livepatches", filter: ["==", ["id"], -1], paint: { "line-color": "#ffb224", "line-width": 2.5 } },
@@ -222,7 +223,7 @@ export class TerraMap {
 
   // Show the server's answer: its picture, the model's class for every square, and a mouse target for each square.
   // While it is shown the showcase city's own mouse target is switched off, so hovering reads the live squares.
-  showLive(live: { corners: [number, number][]; rgbUrl: string; patches: { type: "FeatureCollection"; features: unknown[] }; year: string }) {
+  showLive(live: { corners: [number, number][]; rgbUrl: string; patches: { type: "FeatureCollection"; features: unknown[] }; year: string; twoYears?: boolean }) {
     this.clearLive();
     const corners = live.corners as [[number, number], [number, number], [number, number], [number, number]];
     this.map.addSource("livergb", { type: "image", url: live.rgbUrl, coordinates: corners });
@@ -231,14 +232,22 @@ export class TerraMap {
     this.map.setPaintProperty("livefill", "fill-color", classColour(this.classes, live.year));
     this.map.setPaintProperty("livefill", "fill-opacity", this.landuse.opacity);
     for (const l of ["livefill", "livehit"]) this.map.setLayoutProperty(l, "visibility", "visible");
+    // Two years: the changed squares get a white outline.
+    this.map.setLayoutProperty("livechange", "visibility", live.twoYears ? "visible" : "none");
     this.map.setFilter("hit", ["==", ["id"], -1]);
+  }
+
+  // Live change map: show only the squares whose class changed between the two years.
+  setLiveChangesOnly(on: boolean) {
+    this.map.setFilter("livefill", on ? CHANGED : null);
   }
 
   clearLive() {
     if (this.map.getLayer("livergb")) this.map.removeLayer("livergb");
     if (this.map.getSource("livergb")) this.map.removeSource("livergb");
     (this.map.getSource("livepatches") as GeoJSONSource).setData(EMPTY as unknown as GeoJsonData);
-    for (const l of ["livefill", "livehit"]) this.map.setLayoutProperty(l, "visibility", "none");
+    for (const l of ["livefill", "livehit", "livechange"]) this.map.setLayoutProperty(l, "visibility", "none");
+    this.map.setFilter("livefill", null);
     this.highlightLive("livehover", null);
     this.highlightLive("livesel", null);
     this.map.setFilter("hit", null);

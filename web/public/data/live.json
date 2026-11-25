@@ -1,0 +1,106 @@
+{
+  "source": "scripts/web_live_config.py from configs/api.yaml",
+  "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1",
+  "token_url": "https://planetarycomputer.microsoft.com/api/sas/v1/token/sentinel-2-l2a",
+  "collection": "sentinel-2-l2a",
+  "bands": [
+    "B04",
+    "B03",
+    "B02"
+  ],
+  "offset": 1000,
+  "offset_from_baseline": [
+    4,
+    0
+  ],
+  "years": {
+    "2018": "2017-12-01/2018-02-28",
+    "2026": "2025-12-01/2026-02-28"
+  },
+  "max_cloud": 10,
+  "max_scenes": 5,
+  "max_side_km": 6,
+  "patch_size": 64,
+  "scale_max": 2750,
+  "calibration": {
+    "gain": [
+      0.9073893629612131,
+      0.9051338832553644,
+      0.8391807629371203
+    ],
+    "shift": [
+      69.705536025904,
+      233.94753560294103,
+      564.8164152970617
+    ]
+  },
+  "model": {
+    "url": "https://huggingface.co/viranshul/terrascan-efficientnet-b0-india/resolve/main/model.onnx",
+    "sha256": "ddfc33276e20dc9e454acb6946c2d1d697527b0ee8d644e5ccdff08e08eb2836",
+    "seed": 42,
+    "image_size": 128,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "classes": [
+      "AnnualCrop",
+      "Forest",
+      "HerbaceousVegetation",
+      "Highway",
+      "Industrial",
+      "Pasture",
+      "PermanentCrop",
+      "Residential",
+      "River",
+      "SeaLake"
+    ]
+  },
+  "colours": {
+    "AnnualCrop": "#e6c84a",
+    "Forest": "#1b7837",
+    "HerbaceousVegetation": "#a6d96a",
+    "Highway": "#7f7f7f",
+    "Industrial": "#762a83",
+    "Pasture": "#d9f0a3",
+    "PermanentCrop": "#f4a582",
+    "Residential": "#d73027",
+    "River": "#4393c3",
+    "SeaLake": "#08306b"
+  },
+  "finetune_boxes": [
+    [
+      72.5,
+      22.98,
+      72.6,
+      23.08
+    ],
+    [
+      72.9,
+      21.65,
+      73.0,
+      21.75
+    ],
+    [
+      72.98,
+      21.57,
+      73.08,
+      21.65
+    ]
+  ],
+  "parity": {
+    "source": "results/browser_parity.json",
+    "runs_compared": 8,
+    "squares_compared": 272,
+    "squares_same_class": 272,
+    "class_agreement": 1.0,
+    "all_same_scenes": true,
+    "max_centre_offset_m": 0.0
+  }
+}

@@ -47,6 +47,12 @@ does a small set of local labels help?
 4. **Change study.** Median composites of the clear scenes of one tile for Dec-Feb 2017/18 and Dec-Feb 2025/26, the
    fine-tuned model on 2112 patches, then a before/after check of a random sample of the "changed" squares.
 5. **Website, API and model files.** React + MapLibre site, a small FastAPI server, ONNX export, model on Hugging Face.
+6. **Map any area in the browser, with no server.** The website repeats the whole Python pipeline in the visitor's browser
+   (`web/src/live/`): it searches Planetary Computer's STAC catalogue, reads only the needed pixel blocks of each
+   Sentinel-2 Cloud-Optimised GeoTIFF with HTTP range requests, removes the +1000 offset per scene, builds the median
+   composite, calibrates, cuts 64 × 64 squares and runs the ONNX model with ONNX Runtime Web (WebGPU, or WebAssembly),
+   all inside a Web Worker. It can map one year or both years (a change map) for a box of up to 6 × 6 km.
+   See "Browser vs Python" below.
 
 ## Results
 
@@ -142,6 +148,14 @@ More limits:
 - **Colour matching is approximate** (fitted on 3 European summer scenes).
 - RGB only, one patch at a time, no time series and no cloud mask beyond choosing clear scenes.
 - Not for decisions about land, property, safety or policy.
+
+### Browser vs Python
+
+The in-browser engine was checked against the Python pipeline (`src/live.py`, the API's code) on 8 box-years
+(4 boxes chosen before the run, one outside Gujarat; `configs/browser_parity.yaml`). Same scenes chosen in every run:
+yes. Squares with the same class: **272 of 272**; largest gap between square centres:
+0.0 m (`results/browser_parity.json`). Median time for one box-year in headless Chromium (WebAssembly, no GPU):
+11.2 s. The UTM maths, rounding and median steps also have unit tests (`web/src/live/live.test.ts`).
 
 ## What was not done
 

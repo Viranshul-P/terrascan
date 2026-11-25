@@ -1,0 +1,226 @@
+{
+  "what": "in-browser engine (web/src/live/) vs src/live.py map_box, same boxes and years",
+  "config": "configs/browser_parity.yaml",
+  "summary": {
+    "runs": 8,
+    "runs_compared": 8,
+    "squares_compared": 272,
+    "squares_same_class": 272,
+    "class_agreement": 1.0,
+    "all_same_scenes": true,
+    "max_centre_offset_m": 0.0,
+    "max_confidence_diff": 0.0,
+    "median_browser_total_ms": 11180,
+    "browser": "156.0.8078.4"
+  },
+  "runs": [
+    {
+      "box": "ahmedabad_centre",
+      "year": "2018",
+      "bbox": [
+        72.55,
+        23,
+        72.58,
+        23.027
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 16,
+      "n_python": 16,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 16,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 1743,
+        "pictures": 11946,
+        "model": 343,
+        "total": 14060
+      }
+    },
+    {
+      "box": "ahmedabad_centre",
+      "year": "2026",
+      "bbox": [
+        72.55,
+        23,
+        72.58,
+        23.027
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 16,
+      "n_python": 16,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 16,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 1148,
+        "pictures": 9731,
+        "model": 287,
+        "total": 11180
+      }
+    },
+    {
+      "box": "surat",
+      "year": "2018",
+      "bbox": [
+        72.8,
+        21.15,
+        72.84,
+        21.19
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 42,
+      "n_python": 42,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 42,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 1032,
+        "pictures": 10793,
+        "model": 788,
+        "total": 12624
+      }
+    },
+    {
+      "box": "surat",
+      "year": "2026",
+      "bbox": [
+        72.8,
+        21.15,
+        72.84,
+        21.19
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 42,
+      "n_python": 42,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 42,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 1201,
+        "pictures": 14184,
+        "model": 760,
+        "total": 16153
+      }
+    },
+    {
+      "box": "rajkot",
+      "year": "2018",
+      "bbox": [
+        70.77,
+        22.27,
+        70.81,
+        22.31
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 42,
+      "n_python": 42,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 42,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 856,
+        "pictures": 7101,
+        "model": 726,
+        "total": 8694
+      }
+    },
+    {
+      "box": "rajkot",
+      "year": "2026",
+      "bbox": [
+        70.77,
+        22.27,
+        70.81,
+        22.31
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 42,
+      "n_python": 42,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 42,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 1151,
+        "pictures": 5889,
+        "model": 703,
+        "total": 7753
+      }
+    },
+    {
+      "box": "pune",
+      "year": "2018",
+      "bbox": [
+        73.84,
+        18.5,
+        73.88,
+        18.54
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 36,
+      "n_python": 36,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 36,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 842,
+        "pictures": 5676,
+        "model": 609,
+        "total": 7133
+      }
+    },
+    {
+      "box": "pune",
+      "year": "2026",
+      "bbox": [
+        73.84,
+        18.5,
+        73.88,
+        18.54
+      ],
+      "same_tile": true,
+      "same_scenes": true,
+      "n_browser": 36,
+      "n_python": 36,
+      "same_squares": true,
+      "max_centre_offset_m": 0.0,
+      "same_class": 36,
+      "class_agreement": 1.0,
+      "max_confidence_diff": 0.0,
+      "browser_backend": "wasm",
+      "browser_ms": {
+        "search": 1173,
+        "pictures": 5829,
+        "model": 631,
+        "total": 7641
+      }
+    }
+  ]
+}

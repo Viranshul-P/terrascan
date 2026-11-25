@@ -1,100 +1,84 @@
-// Tests for "Map your own area" (step 5.3b part 2B): the state machine, the panel's states and the drawn box.
-// The server is a fake fetch (no network). The map answer below is TEST DATA made up for these tests; it is never
-// shown on the website.
-import { act, render, renderHook, screen, waitFor } from "@testing-library/react";
+// Tests for "Map your own area": the state machine, the panel's states and the drawn box. The mapping engine is a
+// fake `run` (no network, no model). The map answer below is TEST DATA made up for these tests; it is never shown on
+// the website.
+import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Bbox, LiveMap } from "../lib/api";
+import type { LiveResult, Progress } from "../live/engine";
+import type { Bbox } from "../live/pipeline";
 import { AreaPanel } from "./AreaPanel";
 import { boxFromPixels } from "./DrawLayer";
-import { useAreaMap, WAKING_AFTER_MS } from "./useAreaMap";
+import { useAreaMap, type Run } from "./useAreaMap";
+
+vi.mock("../live/client", () => ({ liveConfig: async () => ({ max_side_km: 6, parity: null }), runLive: async () => { throw new Error("not in tests"); } }));
 
 const YEARS = ["2018", "2026"];
 const CLASSES = [{ name: "Residential", colour: "#d33" }, { name: "AnnualCrop", colour: "#ec4" }, { name: "River", colour: "#38b" }];
 const BOX: Bbox = [72.55, 23.02, 72.58, 23.047]; // about 3.1 x 3.0 km
-const HEALTH = { status: "ok", years: YEARS, max_side_km: 10, timeout_s: 60 };
-const MAP = {
-  bbox: BOX, tile: "TEST", scene_note: "median of the 5 clearest scenes at most", overlay_corners: [], km2_per_patch: 0.4096, n_patches: 25,
-  n_patches_touching_finetune_area: 3,
-  years: { "2026": { window: "w", n_scenes: 5, first_date: "2025-12-02", last_date: "2026-02-20" } },
-  areas_km2: { "2026": { Residential: 6.5, AnnualCrop: 3.5, River: 0 } }, mean_confidence: { "2026": 0.8 },
+const info = { window: "w", n_scenes: 5, first_date: "2025-12-02", last_date: "2026-02-20", scenes: [], offset_fixed: 5 };
+const RESULT = {
+  bbox: BOX, tile: "TEST", epsg: 32643, years: YEARS, info: { "2018": info, "2026": info },
+  overlay_corners: [], km2_per_patch: 0.4096, n_patches: 25, n_patches_touching_finetune_area: 3,
+  areas_km2: { "2018": { Residential: 4.5, AnnualCrop: 5.5, River: 0 }, "2026": { Residential: 6.5, AnnualCrop: 3.5, River: 0 } },
+  mean_confidence: { "2018": 0.7, "2026": 0.8 },
+  changes: [{ from: "AnnualCrop", to: "Residential", patches: 5, km2: 2.048 }], n_changed: 5,
   patches_geojson: { type: "FeatureCollection", features: [] },
-  files: { overlay: {}, rgb: {}, geotiff: { "2026": "data:image/tiff;base64,AAAA" } },
-} as unknown as LiveMap;
+  rgb: { "2018": "blob:a", "2026": "blob:b" }, geotiff: { "2018": "blob:c", "2026": "blob:d" },
+  backend: "wasm", timings_ms: { search: 1000, pictures: 8000, model: 500, total: 9500 }, bytes_read: 3e6,
+} as unknown as LiveResult;
 
-const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status });
-// A fake server: /health and /predict answered by the given functions.
-const fakeServer = (health: () => Promise<Response>, predict: () => Promise<Response>) =>
-  vi.fn((url: RequestInfo | URL) => (String(url).endsWith("/health") ? health() : predict())) as unknown as typeof fetch;
-const fine = () => fakeServer(async () => json(200, HEALTH), async () => json(200, MAP));
+const fine = (): Run => vi.fn(async (_b: Bbox, ys: string[]) => ({ ...RESULT, years: ys }));
+const never = (): Run => vi.fn((_b, _y, onProgress: (p: Progress) => void) => { onProgress({ stage: "pictures", done: 3, total: 10 }); return new Promise<LiveResult>(() => {}); });
 
 beforeEach(() => vi.useFakeTimers({ shouldAdvanceTime: true }));
 afterEach(() => vi.useRealTimers());
 
 describe("useAreaMap", () => {
-  it("goes draw -> ready -> running -> done", async () => {
-    const { result } = renderHook(() => useAreaMap(YEARS, fine()));
+  it("goes draw -> ready -> running -> done, both years by default", async () => {
+    const run = fine();
+    const { result } = renderHook(() => useAreaMap(YEARS, run));
     expect(result.current.mode).toBe("off");
     act(() => result.current.open());
     expect(result.current.mode).toBe("draw");
     act(() => result.current.setBox(BOX));
     expect(result.current.mode).toBe("ready");
-    await waitFor(() => expect(result.current.server).toBe("awake"));
-    expect(result.current.limits.max_side_km).toBe(10);
-    await act(async () => { await result.current.run("2026"); });
+    await act(async () => { await result.current.run(); });
+    expect(vi.mocked(run).mock.calls[0][1]).toEqual(YEARS);
     expect(result.current.mode).toBe("done");
-    expect(result.current.result?.year).toBe("2026");
+    expect(result.current.shown).toBe("2026");
   });
 
-  it("says the server is waking up when /health is slow", async () => {
-    let answer: (r: Response) => void = () => {};
-    const f = fakeServer(() => new Promise((res) => { answer = res; }), async () => json(200, MAP));
-    const { result } = renderHook(() => useAreaMap(YEARS, f));
-    act(() => result.current.open());
-    expect(result.current.server).toBe("checking");
-    act(() => { vi.advanceTimersByTime(WAKING_AFTER_MS + 100); });
-    expect(result.current.server).toBe("waking");
-    await act(async () => { answer(json(200, HEALTH)); });
-    await waitFor(() => expect(result.current.server).toBe("awake"));
+  it("maps one year when asked", async () => {
+    const run = fine();
+    const { result } = renderHook(() => useAreaMap(YEARS, run));
+    act(() => { result.current.open(); result.current.setBox(BOX); });
+    await act(async () => { await result.current.run("2018"); });
+    expect(vi.mocked(run).mock.calls[0][1]).toEqual(["2018"]);
+    expect(result.current.shown).toBe("2018");
   });
 
-  it("says so when the server cannot be reached", async () => {
-    const f = fakeServer(() => Promise.reject(new TypeError("Failed to fetch")), () => Promise.reject(new TypeError("Failed to fetch")));
-    const { result } = renderHook(() => useAreaMap(YEARS, f));
-    act(() => result.current.open());
-    await waitFor(() => expect(result.current.server).toBe("off"));
-    act(() => result.current.setBox(BOX));
-    await act(async () => { await result.current.run("2026"); });
-    expect(result.current.mode).toBe("error");
-    expect(result.current.error).toMatch(/Could not reach the mapping server/);
-  });
-
-  it("shows the server's own words when it refuses the box (422)", async () => {
-    const f = fakeServer(async () => json(200, HEALTH), async () => json(422, { detail: "The pictures have gaps everywhere in this box." }));
-    const { result } = renderHook(() => useAreaMap(YEARS, f));
-    act(() => result.current.open());
-    act(() => result.current.setBox(BOX));
-    await act(async () => { await result.current.run("2026"); });
+  it("shows the engine's own words when it refuses the box", async () => {
+    const run: Run = async () => { throw new Error("The pictures have gaps everywhere in this box."); };
+    const { result } = renderHook(() => useAreaMap(YEARS, run));
+    act(() => { result.current.open(); result.current.setBox(BOX); });
+    await act(async () => { await result.current.run(); });
     expect(result.current.mode).toBe("error");
     expect(result.current.error).toBe("The pictures have gaps everywhere in this box.");
   });
 
-  it("does not send a box that is too big", async () => {
-    const f = fine();
-    const { result } = renderHook(() => useAreaMap(YEARS, f));
-    act(() => result.current.open());
-    act(() => result.current.setBox([72.4, 22.9, 72.7, 23.2]));
-    await act(async () => { await result.current.run("2026"); });
+  it("does not run a box that is too big", async () => {
+    const run = fine();
+    const { result } = renderHook(() => useAreaMap(YEARS, run));
+    act(() => { result.current.open(); result.current.setBox([72.4, 22.9, 72.7, 23.2]); });
+    await act(async () => { await result.current.run(); });
     expect(result.current.mode).toBe("ready");
-    expect(vi.mocked(f).mock.calls.some(([u]) => String(u).endsWith("/predict"))).toBe(false);
+    expect(run).not.toHaveBeenCalled();
   });
 
-  it("counts seconds while mapping, and Cancel stops waiting", async () => {
-    const f = fakeServer(async () => json(200, HEALTH), () => new Promise(() => {})); // never answers
-    const { result } = renderHook(() => useAreaMap(YEARS, f));
-    act(() => result.current.open());
-    act(() => result.current.setBox(BOX));
-    act(() => { void result.current.run("2026"); });
+  it("counts seconds while mapping, and Cancel stops it", async () => {
+    const { result } = renderHook(() => useAreaMap(YEARS, never()));
+    act(() => { result.current.open(); result.current.setBox(BOX); });
+    act(() => { void result.current.run(); });
     expect(result.current.mode).toBe("running");
     act(() => { vi.advanceTimersByTime(4100); });
     expect(result.current.elapsed).toBeGreaterThanOrEqual(4);
@@ -102,23 +86,10 @@ describe("useAreaMap", () => {
     expect(result.current.mode).toBe("ready");
   });
 
-  it("gives up a little after the server's own time limit", async () => {
-    const f = fakeServer(async () => json(200, HEALTH), (() => new Promise(() => {})));
-    const { result } = renderHook(() => useAreaMap(YEARS, f));
-    act(() => result.current.open());
-    await waitFor(() => expect(result.current.server).toBe("awake"));
-    act(() => result.current.setBox(BOX));
-    act(() => { void result.current.run("2026"); });
-    await act(async () => { vi.advanceTimersByTime((60 + 15) * 1000 + 100); });
-    await waitFor(() => expect(result.current.mode).toBe("error"));
-    expect(result.current.error).toMatch(/did not answer within 75 seconds/);
-  });
-
   it("closing clears the box and the result", async () => {
     const { result } = renderHook(() => useAreaMap(YEARS, fine()));
-    act(() => result.current.open());
-    act(() => result.current.setBox(BOX));
-    await act(async () => { await result.current.run("2026"); });
+    act(() => { result.current.open(); result.current.setBox(BOX); });
+    await act(async () => { await result.current.run(); });
     act(() => result.current.close());
     expect(result.current.mode).toBe("off");
     expect(result.current.bbox).toBeNull();
@@ -128,23 +99,24 @@ describe("useAreaMap", () => {
 
 describe("AreaPanel", () => {
   // Renders the panel around a real hook, so the buttons really change the state.
-  function Harness({ fetchFn, start }: { fetchFn: typeof fetch; start: (a: ReturnType<typeof useAreaMap>) => void }) {
-    const area = useAreaMap(YEARS, fetchFn);
+  function Harness({ run, start }: { run: Run; start: (a: ReturnType<typeof useAreaMap>) => void }) {
+    const area = useAreaMap(YEARS, run);
     return (
       <>
         <button onClick={() => start(area)}>start</button>
-        <AreaPanel area={area} years={YEARS} classes={CLASSES} picked={null} hidden={false} snap="half" onSnap={() => {}} onMiddle={() => {}} />
+        <AreaPanel area={area} years={YEARS} classes={CLASSES} picked={null} hidden={false} snap="half" onSnap={() => {}} onMiddle={() => {}} changesOnly={false} onChangesOnly={() => {}} />
       </>
     );
   }
-  const go = async (fetchFn: typeof fetch, start: (a: ReturnType<typeof useAreaMap>) => void) => {
-    render(<Harness fetchFn={fetchFn} start={start} />);
+  const go = async (run: Run, start: (a: ReturnType<typeof useAreaMap>) => void) => {
+    render(<Harness run={run} start={start} />);
     await userEvent.click(screen.getByText("start"), { advanceTimers: vi.advanceTimersByTime });
   };
 
-  it("asks for a box first, and always shows the limits", async () => {
+  it("asks for a box first, says it runs in the browser, and shows the limits", async () => {
     await go(fine(), (a) => a.open());
-    expect(screen.getByText(/at most 60|at most 10/)).toBeInTheDocument();
+    expect(screen.getByText(/at most 6 × 6 km/)).toBeInTheDocument();
+    expect(screen.getByText(/No server, no sign-in/)).toBeInTheDocument();
     expect(screen.getByText(/Accuracy was only measured in Gujarat/)).toBeInTheDocument();
   });
 
@@ -154,32 +126,31 @@ describe("AreaPanel", () => {
     expect(screen.getByRole("button", { name: "Map this box" })).toBeDisabled();
   });
 
-  it("shows the waking-up message and the time limit while mapping", async () => {
-    const f = fakeServer(() => new Promise(() => {}), () => new Promise(() => {})); // the server never answers
-    await go(f, (a) => { a.open(); a.setBox(BOX); });
+  it("shows the steps and their progress while mapping", async () => {
+    await go(never(), (a) => { a.open(); a.setBox(BOX); });
     await userEvent.click(screen.getByRole("button", { name: "Map this box" }), { advanceTimers: vi.advanceTimersByTime });
-    expect(screen.getAllByRole("status").map((e) => e.textContent).join(" ")).toMatch(/Waking up the server, then mapping/);
-    expect(screen.getByText(/gives up after 60 seconds/)).toBeInTheDocument();
+    expect(screen.getByText("Read the pictures (3 of 10)").closest("li")).toHaveAttribute("data-state", "now");
+    expect(screen.getByText("Find clear Sentinel-2 pictures").closest("li")).toHaveAttribute("data-state", "done");
     expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
   });
 
-  it("shows the result: km² per class (zero classes left out), confidence, GeoTIFF link", async () => {
+  it("shows the change and the land use (zero classes left out), and the downloads", async () => {
     await go(fine(), (a) => { a.open(); a.setBox(BOX); });
     await userEvent.click(screen.getByRole("button", { name: "Map this box" }), { advanceTimers: vi.advanceTimersByTime });
     await screen.findByText("6.50");
-    expect(screen.getByText("Housing")).toBeInTheDocument();
-    expect(screen.getByText("3.50")).toBeInTheDocument();
+    expect(screen.getByText(/of 25 squares changed class from 2018 to 2026/)).toBeInTheDocument();
+    expect(screen.getByText("2.05 km²")).toBeInTheDocument();
+    expect(screen.getAllByText("Housing").length).toBeGreaterThan(0);
     expect(screen.queryByText("River")).not.toBeInTheDocument();
-    expect(screen.getByText("80%")).toBeInTheDocument();
     expect(screen.getByText(/3 of these squares touch an area used to fine-tune/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Download GeoTIFF" })).toHaveAttribute("download", "terrascan-box-2026.tif");
+    expect(screen.getByRole("link", { name: "GeoTIFF (2026)" })).toHaveAttribute("download", "terrascan-TEST-2026.tif");
   });
 
   it("shows why it failed, with a way to try again", async () => {
-    const f = fakeServer(async () => json(200, HEALTH), async () => json(504, { detail: "Mapping took longer than 60 seconds." }));
-    await go(f, (a) => { a.open(); a.setBox(BOX); });
+    const run: Run = async () => { throw new Error("No clear Sentinel-2 picture covers this whole box."); };
+    await go(run, (a) => { a.open(); a.setBox(BOX); });
     await userEvent.click(screen.getByRole("button", { name: "Map this box" }), { advanceTimers: vi.advanceTimersByTime });
-    expect(await screen.findByText("Mapping took longer than 60 seconds.")).toBeInTheDocument();
+    expect(await screen.findByText("No clear Sentinel-2 picture covers this whole box.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Try again" })).toBeEnabled();
   });
 });
@@ -194,3 +165,5 @@ describe("boxFromPixels", () => {
     expect(boxFromPixels(map, { x: 300, y: 100 }, { x: 100, y: 300 })).toEqual(expected);
   });
 });
+
+
