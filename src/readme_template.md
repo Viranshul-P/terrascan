@@ -179,6 +179,15 @@ no label-efficiency curves, and no GIF of the Compare slider.
 
 ## Run it yourself
 
+**Map any area from the command line** (box in degrees west south east north, one or two years; needs the internet and the
+ONNX model in `models/`, or download `model.onnx` from the Hub):
+
+```
+python -m src.map_area --bbox 73.84 18.50 73.88 18.54 --years 2018 2026 --out maps/my_area
+```
+
+It writes a GeoTIFF per year (one pixel per 640 m square, opens in QGIS), the squares as GeoJSON, and `summary.json`.
+
 Python 3.12. On the training laptop (NVIDIA GPU) install the CUDA build of PyTorch first, then the pinned packages:
 
 ```
