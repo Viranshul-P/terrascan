@@ -1,0 +1,69 @@
+{
+  "url": "http://localhost:4320/",
+  "chrome": "Playwright Chromium",
+  "runs": [
+    {
+      "fetched": "2026-11-26T10:12:12.706Z",
+      "scores": {
+        "performance": 89,
+        "accessibility": 100,
+        "best-practices": 100
+      },
+      "lcp_s": 2.84,
+      "tbt_ms": 236,
+      "cls": 0.001,
+      "fcp_s": 2.11,
+      "failed": [
+        "first-contentful-paint (0.81)",
+        "largest-contentful-paint (0.82)",
+        "total-blocking-time (0.86)",
+        "max-potential-fid (0.32)",
+        "mainthread-work-breakdown (0)",
+        "unused-css-rules (0)",
+        "unused-javascript (0)",
+        "dom-size (0)"
+      ]
+    },
+    {
+      "fetched": "2026-11-26T10:12:26.709Z",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100
+      },
+      "lcp_s": 2.73,
+      "tbt_ms": 68,
+      "cls": 0.001,
+      "fcp_s": 1.81,
+      "failed": [
+        "first-contentful-paint (0.89)",
+        "largest-contentful-paint (0.85)",
+        "max-potential-fid (0.72)",
+        "unused-css-rules (0)",
+        "unused-javascript (0)",
+        "dom-size (0)"
+      ]
+    },
+    {
+      "fetched": "2026-11-26T10:12:40.428Z",
+      "scores": {
+        "performance": 92,
+        "accessibility": 100,
+        "best-practices": 100
+      },
+      "lcp_s": 2.79,
+      "tbt_ms": 157,
+      "cls": 0.001,
+      "fcp_s": 2.11,
+      "failed": [
+        "first-contentful-paint (0.81)",
+        "largest-contentful-paint (0.83)",
+        "max-potential-fid (0.55)",
+        "mainthread-work-breakdown (0)",
+        "unused-css-rules (0)",
+        "unused-javascript (0)",
+        "dom-size (0)"
+      ]
+    }
+  ]
+}

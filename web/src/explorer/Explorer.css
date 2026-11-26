@@ -205,8 +205,9 @@
 .maplibregl-ctrl-attrib, .maplibregl-ctrl-attrib * { color: var(--ink-3) !important; }
 
 /* Map your own area: entry button, drawing layer, panel */
-.area-entry { display: grid; gap: 2px; width: 100%; padding: 10px 12px; border: 1px dashed var(--line-strong); border-radius: var(--r-md); background: var(--surface-2); text-align: left; cursor: pointer; transition: border-color var(--d-1), background-color var(--d-1); }
-.area-entry:hover { border-color: var(--ink-3); background: var(--accent-wash); }
+.area-entry { display: grid; gap: 3px; width: 100%; padding: 11px 12px; border: 1px solid var(--accent-fill); border-radius: var(--r-md); background: var(--accent-wash); color: var(--ink); text-align: left; cursor: pointer; transition: box-shadow var(--d-1), transform var(--d-1); }
+.area-entry:hover { box-shadow: 0 0 0 3px var(--accent-wash); transform: translateY(-1px); }
+.area-entry .new { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--accent); color: #11151a; font: 700 10px var(--mono); vertical-align: 2px; }
 .area-entry b { font-size: var(--t-sm); }
 .area-entry span { font-size: 12px; color: var(--ink-3); }
 .head-area { display: none; align-items: center; height: 30px; padding: 0 12px; margin-left: auto; margin-right: var(--s-2); border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); font-size: 12.5px; font-weight: 600; cursor: pointer; }

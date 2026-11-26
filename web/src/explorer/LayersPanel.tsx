@@ -51,7 +51,7 @@ export function LayersPanel(p: Props) {
       <div className="p-body">
         <div className="group">
           <button type="button" className="area-entry" onClick={p.onArea}>
-            <b>Map your own area</b><span>Any place, 2018 vs 2026: your browser fetches the pictures and runs the model. Tested in Gujarat only.</span>
+            <b>Map your own area <span className="new">New</span></b><span>Any place, 2018 vs 2026: your browser fetches the pictures and runs the model. Tested in Gujarat only.</span>
           </button>
         </div>
         <div className="group">
