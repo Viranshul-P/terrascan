@@ -1,0 +1,20 @@
+# Step 8.6: other ways to improve Indian accuracy, one at a time.
+#   python -m src.india_ablation --config configs/india_ablation.yaml
+# DECISION RULE (fixed and committed BEFORE any run):
+#  - Metric: Indian leave-one-area-out (LOAO) accuracy, 3 fine-tune areas, 149 hand-labelled patches pooled; the
+#    reference is the 8.1 audit's LOAO models (models/efficientnet_b0_india_loao_<area>/seed<N>/, 4.4 recipe).
+#    The Indian TEST areas are never used.
+#  - A change is KEPT only if its mean beats the reference mean by more than the two stds added together
+#    (mean +- sample std over seeds 42/43/44). For the seed ensemble there is one number, not three, so it is
+#    kept only if it beats the reference mean by more than twice the reference std.
+#  - Every attempt is recorded, including failures and the ones skipped (with the reason).
+# Attempts in this file (inference only, no training):
+#   d  test-time augmentation: average the softmax over the 8 flips / 90-degree turns of each patch
+#   e  seed ensemble: average the softmax of the three seeds' models (with d if d was kept)
+# Attempts a, b (bigger context window, monsoon composites) need data that does not exist yet (8.7) and c
+# (pseudo-labels) needs a training run; their status is written into the report.
+error_audit_config: configs/error_audit.yaml
+india_finetune_config: configs/india_finetune.yaml
+seeds: [42, 43, 44]
+output_md: results/india_ablation.md
+output_json: results/india_ablation.json
