@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this code, the Indian dataset or the model, please cite it as below."
+title: "TerraScan: a land-use model trained on European satellite images, tested on Indian land"
+type: software
+authors:
+  - alias: Viranshul-P
+repository-code: "https://github.com/Viranshul-P/terrascan"
+url: "https://terrascan-five.vercel.app"
+license: MIT
+keywords: [remote sensing, Sentinel-2, domain shift, land use, EuroSAT, India, ONNX, WebGPU]
+references:
+  - type: article
+    title: "EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification"
+    authors:
+      - family-names: Helber
+        given-names: Patrick
+      - family-names: Bischke
+        given-names: Benjamin
+      - family-names: Dengel
+        given-names: Andreas
+      - family-names: Borth
+        given-names: Damian
+    journal: "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing"
+    year: 2019

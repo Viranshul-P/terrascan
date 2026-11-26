@@ -1,5 +1,11 @@
 # TerraScan: does a land-use model trained on European satellite images work on Indian land?
 
+[![CI](https://github.com/Viranshul-P/terrascan/actions/workflows/ci.yml/badge.svg)](https://github.com/Viranshul-P/terrascan/actions/workflows/ci.yml)
+[![Live site](https://img.shields.io/badge/live-site-ffb224)]({live_site})
+[![Model](https://img.shields.io/badge/%F0%9F%A4%97-model-yellow)](https://huggingface.co/{model_repo})
+[![Dataset](https://img.shields.io/badge/%F0%9F%A4%97-dataset-yellow)](https://huggingface.co/datasets/{dataset_repo})
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 A small research-style project on **domain shift** in satellite image classification. Models that read 64 × 64 px
 Sentinel-2 patches (10 m per pixel, so 640 m × 640 m) were trained on the European EuroSAT dataset, then tested on
 hand-labelled patches from Gujarat, India. A map website and a change study of Ahmedabad (2018 vs 2026) were built on top.
@@ -218,4 +224,7 @@ This README is generated: change `src/readme_template.md` and run `python -m src
 
 Code: MIT (see `LICENSE`). Model files: Apache-2.0 (start weights: timm `efficientnet_b0.ra_in1k`, Apache-2.0). Indian dataset: CC BY 4.0.
 EuroSAT: MIT licence, Helber et al. (2019), *EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification*.
-Contains modified Copernicus Sentinel data 2017, 2018, 2025 and 2026. Land-cover reference used in the audit only: ESA WorldCover 2021.
+Contains modified Copernicus Sentinel data 2017, 2018, 2025 and 2026 (reuse and modification allowed with this credit line:
+[Copernicus Sentinel data legal notice](https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice)).
+EuroSAT licence as stated in its repository: [phelber/EuroSAT](https://github.com/phelber/EuroSAT).
+To cite this project: `CITATION.cff`. To help: `CONTRIBUTING.md` and `docs/good-first-issues.md`. Land-cover reference used in the audit only: ESA WorldCover 2021.
