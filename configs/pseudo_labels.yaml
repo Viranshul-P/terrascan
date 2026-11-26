@@ -1,0 +1,21 @@
+# Step 8.6 (c): pseudo-labels (TIER 3, "model-assisted"; flagged in the data; training only, never evaluated on).
+#   python -m src.pseudo_labels --config configs/pseudo_labels.yaml --fast-dev-run
+#   python -m src.pseudo_labels --config configs/pseudo_labels.yaml
+# DECISION RULE (fixed and committed BEFORE any run), same as configs/india_ablation.yaml:
+#  - Metric: Indian LOAO accuracy, 149 fine-tune patches pooled, seeds 42/43/44; TEST areas never used.
+#  - For each fold, the pseudo-labeller is THAT fold's LOAO model (it never saw the held-out area), so no label from
+#    the held-out area can leak in. The unlabelled pool is the tier-2 squares' IMAGES only (their WorldCover labels
+#    are ignored), which lie 2 km or more from every labelled area.
+#  - Threshold: keep a pseudo-label only if the model's confidence >= min_confidence. Fixed here, not tuned (there is
+#    no Indian validation set left to tune it on without touching the LOAO folds).
+#  - Then the 4.4 recipe from the EuroSAT model on the fold's hand labels + the kept pseudo-labels; score the held-out
+#    area. Kept only if the mean beats the reference (results/india_ablation.json) by more than the stds added together.
+pool_config: configs/noisy_labels.yaml          # out_npz: the unlabelled images
+error_audit_config: configs/error_audit.yaml     # loao_run_prefix: the per-fold pseudo-labellers
+india_finetune_config: configs/india_finetune.yaml
+reference_json: results/india_ablation.json
+seeds: [42, 43, 44]
+min_confidence: 0.9
+pseudo_dir: data/india_tier3                     # tier-3 labels written here (git-ignored)
+ablation_json: results/india_ablation.json       # the attempt is added to the 8.6 table
+ablation_md: results/india_ablation.md
