@@ -61,13 +61,13 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [-] 8.6 Other ways to improve accuracy (medium)  <!-- not done: wrapped up -->
 - [-] 8.7 Multi-city imagery (medium)  <!-- not done: wrapped up -->
 - [-] 8.8 Final evaluation (HIGH)  <!-- not done: wrapped up -->
-- [-] 8.9 Optional extension: surface temperature (medium)  <!-- not done: wrapped up -->
+- [x] 8.9 Optional extension: surface temperature (medium)  <!-- done 2026-11-26 by Claude, EXTENSION only -->
 - [-] 8.10 Website update (medium)  <!-- not done: wrapped up (only the one-line model note was added) -->
 - [-] 8.11 Technical report draft (medium)  <!-- not done: wrapped up -->
-- [-] 8.12 Run it on a new area (CLI or notebook) (medium)  <!-- not done: wrapped up -->
+- [x] 8.12 Run it on a new area (CLI or notebook) (medium)  <!-- done 2026-11-26 by Claude -->
 - [x] 6.3 README (done 2026-11-09 after the wrap-up decision; Phase 8 results are NOT in it, see Wrap-up)
 - [-] 6.4 Short technical write-up  <!-- SKIPPED: project wrapped up as a portfolio piece -->
-- [-] 7.1 Open-source polish  <!-- SKIPPED: wrapped up; only a short MIT LICENSE was added -->
+- [x] 7.1 Open-source polish  <!-- done 2026-11-26 by Claude: CITATION.cff, CONTRIBUTING.md, issue templates, good first issues, badges, licence links -->
 - [-] 7.2 Launch  <!-- SKIPPED: project wrapped up as a portfolio piece -->
 - [-] 9.1 Optional, last: live "Map your own area" API  <!-- not done -->
 

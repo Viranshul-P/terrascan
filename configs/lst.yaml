@@ -1,0 +1,16 @@
+# Step 8.9 (optional EXTENSION, not a main result): land-surface temperature vs the model's land use, Ahmedabad.
+#   python -m src.lst --config configs/lst.yaml
+# One clear Landsat 8/9 Collection 2 Level-2 scene (surface temperature band ST_B10, asset "lwir11") from the same
+# dry-season window as the 2026 map; the clearest one is used. Mean temperature per 640 m square, grouped by the
+# model's 2026 class (web/public/data/ahmedabad/patches.geojson). Similar studies exist; no "novel" claim.
+collection: landsat-c2-l2
+window: 2025-12-01/2026-02-28        # same as the 2026 map (configs/api.yaml years.2026)
+max_cloud: 10
+patches_geojson: web/public/data/ahmedabad/patches.geojson
+summary_json: web/public/data/ahmedabad/summary.json
+year: "2026"
+min_pixels: 300                      # a square needs this many valid 30 m pixels (of ~455) to count
+min_squares_per_class: 10            # classes with fewer squares are listed but marked "too few"
+output_md: results/lst_ahmedabad.md
+output_json: results/lst_ahmedabad.json
+figure: reports/figures/lst_ahmedabad.png

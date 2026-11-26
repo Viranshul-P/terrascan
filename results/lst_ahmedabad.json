@@ -1,0 +1,74 @@
+{
+ "what": "EXTENSION: Landsat surface temperature per 640 m square vs the model's 2026 class",
+ "scene": "LC08_L2SP_148044_20260107_02_T1",
+ "date": "2026-01-07",
+ "cloud_cover": 0.02,
+ "platform": "landsat-8",
+ "squares_used": 1677,
+ "squares_total": 2112,
+ "by_class": {
+  "AnnualCrop": {
+   "n_squares": 215,
+   "median_c": 26.27,
+   "q1_c": 24.88,
+   "q3_c": 27.18,
+   "too_few": false
+  },
+  "HerbaceousVegetation": {
+   "n_squares": 34,
+   "median_c": 26.06,
+   "q1_c": 24.53,
+   "q3_c": 26.66,
+   "too_few": false
+  },
+  "Highway": {
+   "n_squares": 180,
+   "median_c": 26.68,
+   "q1_c": 25.86,
+   "q3_c": 27.3,
+   "too_few": false
+  },
+  "Industrial": {
+   "n_squares": 453,
+   "median_c": 26.54,
+   "q1_c": 25.83,
+   "q3_c": 27.5,
+   "too_few": false
+  },
+  "Pasture": {
+   "n_squares": 15,
+   "median_c": 27.15,
+   "q1_c": 25.88,
+   "q3_c": 29.41,
+   "too_few": false
+  },
+  "PermanentCrop": {
+   "n_squares": 154,
+   "median_c": 26.39,
+   "q1_c": 25.57,
+   "q3_c": 27.14,
+   "too_few": false
+  },
+  "Residential": {
+   "n_squares": 556,
+   "median_c": 25.46,
+   "q1_c": 25.02,
+   "q3_c": 26.01,
+   "too_few": false
+  },
+  "River": {
+   "n_squares": 70,
+   "median_c": 24.82,
+   "q1_c": 24.36,
+   "q3_c": 25.48,
+   "too_few": false
+  }
+ },
+ "limits": [
+  "one winter date, about 10:30 local time",
+  "thermal band measured at 100 m, served at 30 m",
+  "classes are model predictions, not ground truth",
+  "a square's bounding box in UTM is used (slightly larger than the square)",
+  "the scene's edge cuts off the west of the city, so not every square is used"
+ ]
+}
