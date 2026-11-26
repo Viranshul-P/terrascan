@@ -1,0 +1,31 @@
+# Step 8.5: a satellite foundation model, frozen, with a linear probe.
+#   python -m src.foundation --config configs/foundation.yaml
+# Candidate checked on its official page (huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-300M, read 2026-11-26):
+# Prithvi-EO-2.0-300M, Apache-2.0, ~300M parameters (ViT-L: 24 blocks, width 1024), pretrained on NASA HLS V2
+# (30 m) with 6 bands Blue, Green, Red, Narrow NIR, SWIR 1, SWIR 2, 224 px, up to 4 time steps.
+# Our Sentinel-2 equivalents: B02, B03, B04, B8A, B11, B12 (the 8.3a multispectral data). One time step.
+# Also checked: Clay (huggingface.co/made-with-clay/Clay, Apache-2.0); its page does not list inputs or size, so it is
+# recorded and not run. torchgeo's SSL4EO-S12 ResNet-18 was already run in 2.4b and 8.3b (sat_rgb, sat_all).
+#
+# DECISION RULE (fixed BEFORE any run): frozen encoder, mean of the final tokens (no class token) as the feature,
+# multinomial logistic regression as the probe (no tuning: C=1, standardised features). Scores:
+#  - EuroSAT val accuracy (probe trained on a seeded random subset of EuroSAT train);
+#  - Indian LOAO accuracy on the 149 fine-tune patches (probe trained on the same EuroSAT subset + the other two
+#    areas' hand-labelled patches), seeds 42/43/44 (= the subset draw). TEST areas never used.
+#  Compared with the fine-tuned EfficientNet-B0 LOAO reference (0.655 +- 0.017, results/india_ablation.json): the
+#  probe counts as better only if its mean beats the reference by more than the two stds added together.
+#  A full fine-tune of a 300M model is not attempted here: on 8 GB the model alone in fp32 with AdamW state needs
+#  about 4.8 GB before activations (weights + 2 moments, 4 bytes each); written as the reason.
+repo: ibm-nasa-geospatial/Prithvi-EO-2.0-300M
+local_dir: models/prithvi_eo2_300m       # git-ignored; weights and model code from the official repo only
+bands: [B02, B03, B04, B8A, B11, B12]
+image_size: 224
+batch_size: 32
+eurosat_train_subset: 5000
+probe_C: 1.0
+bands_config: configs/bands.yaml
+bands_compare_config: configs/bands_compare.yaml
+reference_json: results/india_ablation.json
+features_dir: data/foundation              # cached features (git-ignored)
+output_md: results/foundation_models.md
+output_json: results/foundation_models.json
