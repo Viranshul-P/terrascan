@@ -1,0 +1,34 @@
+# Step 8.4 part 2: does training on the tier-2 WorldCover squares help on Indian land?
+#   python -m src.noisy_train --config configs/noisy_train.yaml --fast-dev-run
+#   python -m src.noisy_train --config configs/noisy_train.yaml
+#
+# DECISION RULE (fixed and committed BEFORE any run):
+#  - Metric: Indian leave-one-area-out (LOAO) accuracy on the 3 fine-tune areas (149 hand-labelled patches pooled),
+#    mean +- sample std over seeds 42/43/44. The Indian TEST areas are never used (the tier-2 set also keeps 2 km away
+#    from every labelled area, results/noisy_labels_data.json).
+#  - Three stages, all starting from the EuroSAT EfficientNet-B0 of each seed:
+#      A  hand labels only      = the 8.1 audit's LOAO predictions (results/error_audit_predictions.csv, model "loao"),
+#                                 same 4.4 recipe, so it is not re-run;
+#      B  tier 2 only           = train on the tier-2 squares (+ EuroSAT mixed in), then score all 149 patches
+#                                 (no hand label was used, so no LOAO is needed);
+#      C  tier 2, then hand     = stage B's model, then the 4.4 recipe (configs/india_finetune.yaml) LOAO.
+#  - A stage counts as better than A only if its mean beats A's mean by MORE than the two stds added together.
+#    Otherwise A stays ("keep the simpler pipeline").
+#  - Tier-2 labels are SETS of allowed classes (built-up = {Residential, Industrial}, ...). Loss: partial-label
+#    negative log-likelihood, -log(sum of the softmax over the allowed set). EuroSAT images use a one-hot set.
+data_config: configs/noisy_labels.yaml
+india_finetune_config: configs/india_finetune.yaml
+audit_predictions: results/error_audit_predictions.csv
+base_run_dir: models/efficientnet_b0
+seeds: [42, 43, 44]
+# Stage B recipe (fixed, not tuned): like 4.4 but on the bigger tier-2 set.
+tier2:
+  epochs: 10
+  lr: 0.0001
+  weight_decay: 0.05
+  batch_size: 32
+  eurosat_images_per_epoch: 1800      # about as many EuroSAT images as tier-2 squares, so Europe is not forgotten
+                                      # (written down here, not tuned)
+run_prefix: noisy
+output_md: results/noisy_labels.md
+output_json: results/noisy_labels.json
