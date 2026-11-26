@@ -1,0 +1,51 @@
+{
+ "config": "configs/india_ablation.yaml",
+ "n_patches": 149,
+ "reference_loao": {
+  "per_seed": {
+   "42": 0.6375838926174496,
+   "43": 0.6577181208053692,
+   "44": 0.6711409395973155
+  },
+  "mean": 0.6554809843400448,
+  "std": 0.016890009922305962
+ },
+ "attempts": [
+  {
+   "id": "d",
+   "what": "test-time augmentation (8 flips/turns, mean softmax)",
+   "per_seed": {
+    "42": 0.6577181208053692,
+    "43": 0.6644295302013423,
+    "44": 0.7114093959731543
+   },
+   "mean": 0.6778523489932886,
+   "std": 0.02925435532577629,
+   "kept": false
+  },
+  {
+   "id": "e",
+   "what": "seed ensemble (mean softmax of 3 seeds)",
+   "accuracy": 0.6711409395973155,
+   "kept": false
+  },
+  {
+   "id": "a",
+   "what": "bigger context window per patch",
+   "status": "not run",
+   "reason": "needs patches cut with a wider window from the original scenes; not built"
+  },
+  {
+   "id": "b",
+   "what": "dry season + monsoon input",
+   "status": "not run",
+   "reason": "needs monsoon composites (8.7 data); 4.6 found 0 clear Jul-Aug scenes"
+  },
+  {
+   "id": "c",
+   "what": "pseudo-labels (tier 3)",
+   "status": "not run",
+   "reason": "needs a training run; left for after 8.3b/8.4 (one GPU)"
+  }
+ ]
+}
