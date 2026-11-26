@@ -13,7 +13,7 @@ import type { LiveConfig } from "../live/pipeline";
 
 const STEPS = [
   { t: "Find pictures", d: "Search the free Sentinel-2 archive for the clearest winter days over your box." },
-  { t: "Read only your box", d: "Fetch just the pixel blocks inside it, a few MB instead of whole 200 MB pictures." },
+  { t: "Read only your box", d: "Fetch just the pixel blocks inside it, a few MB instead of whole satellite pictures." },
   { t: "One clear picture per year", d: "Take the per-pixel median of up to 5 days, so clouds and haze drop out." },
   { t: "Name every square", d: "Run the fine-tuned EfficientNet-B0 on your graphics card (WebGPU) or processor." },
 ];

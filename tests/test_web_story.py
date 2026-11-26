@@ -77,3 +77,17 @@ def test_models_keep_table_order_and_average_over_seeds():
     assert m[0]["cpu_ms_per_image"]["mean"] == pytest.approx(2.2)
     assert m[0]["seeds"] == [42, 43, 44] and m[0]["source"] == "results/small.json"
     assert m[1]["accuracy"] == {"mean": 0.8, "std": 0.0}
+
+
+def test_engineering_copies_values_with_sources():
+    from src.web_story import engineering
+    e = engineering(
+        {"max_abs_logit_difference": 7e-6, "tolerance": 1e-4, "n_images": 20},
+        {"summary": {"runs_compared": 8, "squares_compared": 272, "squares_same_class": 272,
+                     "all_same_scenes": True, "max_centre_offset_m": 0.0,
+                     "median_browser_total_ms": 7406}},
+        {"fit_pixels": 3, "fit_areas": {"a": 1, "b": 2}, "gain": [1, 1, 1], "shift": [0, 0, 0]},
+        {"patches": 230, "per_split": {"train": 149, "test": 81}})
+    assert e["parity"]["squares_same_class"] == 272
+    assert e["calibration"]["n_fit_scenes"] == 2
+    assert all(v["source"].startswith("results/") for v in e.values())

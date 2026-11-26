@@ -15,13 +15,14 @@ export const Logo = () => (
   </svg>
 );
 
-export function SiteHeader({ page }: { page: "story" | "explorer" | "about" }) {
+export function SiteHeader({ page }: { page: "story" | "explorer" | "engineering" | "about" }) {
   return (
     <header className="site-nav">
       <a className="brand" href="/" aria-label="TerraScan home"><Logo /><span>TerraScan</span></a>
       <nav className="site-links" aria-label="Main">
         <a href="/" aria-current={page === "story" ? "page" : undefined}>Story</a>
         <a href="/explorer" aria-current={page === "explorer" ? "page" : undefined}>Explorer</a>
+        <a href="/engineering" aria-current={page === "engineering" ? "page" : undefined}>Engineering</a>
         <a href="/about" aria-current={page === "about" ? "page" : undefined}>About</a>
       </nav>
       <div className="site-tools">

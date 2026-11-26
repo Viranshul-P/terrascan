@@ -1,0 +1,65 @@
+/* The Engineering page: hero stats, three pipeline lanes, problem cards, rules and stack. */
+.eng-hero { position: relative; padding: var(--s-12) 0 var(--s-11); overflow: hidden; }
+/* A faint grid of 640 m squares behind the hero, fading out: the project's unit of everything. */
+.eng-hero::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 44px 44px; mask-image: radial-gradient(900px 420px at 75% 20%, #000 10%, transparent 75%); opacity: 0.7; }
+.eng-hero .wrap { position: relative; }
+.eng-hero h1 { margin: var(--s-4) 0 0; max-width: 20ch; font-size: var(--t-4xl); line-height: 0.98; letter-spacing: -0.045em; font-weight: 700; text-wrap: balance; }
+.eng-hero .lead { margin: var(--s-6) 0 0; max-width: 60ch; color: var(--ink-2); font-size: var(--t-lg); line-height: 1.5; text-wrap: pretty; }
+.eng-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gutter); margin: var(--s-10) 0 0; }
+.eng-stats > div { display: grid; gap: 6px; align-content: start; padding: var(--s-5); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--e1), var(--ring); }
+.eng-stats dt { order: 2; font-size: var(--t-xs); color: var(--ink-3); line-height: 1.35; }
+.eng-stats dd { order: 1; margin: 0; font: 700 2rem/1 var(--mono); letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; }
+.eng-stats dd small { font-size: 0.55em; color: var(--ink-3); font-weight: 600; }
+.eng-stats > div:first-child dd { color: var(--verified); }
+.eng-stats .eng-src { order: 3; }
+.eng-src { font: 500 11px var(--mono); color: var(--ink-3); text-decoration: none; overflow-wrap: anywhere; }
+.eng-src::before { content: "↗ "; }
+.eng-src:hover { color: var(--accent); }
+
+/* Pipeline lanes */
+.lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
+.lane { border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--e1), var(--ring); padding: var(--s-5); }
+.lane.live { box-shadow: inset 0 0 0 1.5px var(--accent-fill), var(--e2); }
+.lane-head { display: grid; gap: 2px; margin-bottom: var(--s-5); }
+.lane-head b { font-size: var(--t-md); letter-spacing: -0.01em; }
+.lane-head span { font: 500 11.5px var(--mono); color: var(--ink-3); }
+.lane ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; counter-reset: n; }
+.lane li { position: relative; display: grid; gap: 2px; padding: 9px 10px 9px 30px; border-radius: var(--r-md); counter-increment: n; }
+.lane li::before { content: counter(n); position: absolute; left: 6px; top: 10px; width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font: 700 9.5px var(--mono); background: var(--surface-2); color: var(--ink-3); box-shadow: inset 0 0 0 1px var(--line-strong); }
+/* the connecting line between steps */
+.lane li:not(:last-child)::after { content: ""; position: absolute; left: 13.5px; top: 27px; bottom: -9px; width: 1px; background: var(--line-strong); }
+.lane li b { font-size: var(--t-sm); }
+.lane li span { font-size: 12px; color: var(--ink-3); line-height: 1.4; }
+.lane li.hot { background: var(--accent-wash); }
+.lane li.hot::before { background: var(--accent); color: #11151a; box-shadow: none; }
+.checks { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-6); margin-top: var(--s-6); padding: var(--s-4) var(--s-5); border-radius: var(--r-md); border: 1px dashed var(--line-strong); font-size: var(--t-sm); color: var(--ink-2); }
+.checks span { display: inline-flex; align-items: center; gap: 8px; }
+.checks i { width: 8px; height: 8px; border-radius: 50%; background: var(--verified); box-shadow: 0 0 0 3px var(--accent-wash); }
+
+/* Hard problems */
+.hard { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
+.hard article { display: grid; align-content: start; gap: var(--s-3); padding: var(--s-6); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--e1), var(--ring); }
+.hard h3 { margin: 0; font-size: var(--t-md); line-height: 1.25; letter-spacing: -0.01em; }
+.hard p { margin: 0; font-size: var(--t-sm); color: var(--ink-2); line-height: 1.55; text-wrap: pretty; }
+.hard p b { color: var(--accent); font-weight: 600; }
+.hard code, .rules code { font: 500 0.9em var(--mono); padding: 1px 5px; border-radius: 4px; background: var(--surface-2); }
+
+/* Rules */
+.rules { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6) var(--gutter); }
+.rules li { padding-top: var(--s-4); border-top: 2px solid var(--accent-fill); font-size: var(--t-sm); color: var(--ink-2); line-height: 1.55; }
+.rules b { display: block; margin-bottom: 4px; color: var(--ink); font-size: var(--t-md); }
+
+/* Stack */
+.stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border-radius: var(--r-lg); overflow: hidden; background: var(--line); box-shadow: var(--ring); }
+.stack > div { display: grid; gap: 4px; padding: var(--s-5); background: var(--surface); }
+.stack span { font: 600 11px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; }
+.stack b { font-size: var(--t-sm); font-weight: 500; color: var(--ink); line-height: 1.5; }
+.eng-cta { display: flex; gap: var(--s-3); margin-top: var(--s-8); flex-wrap: wrap; }
+
+@media (max-width: 1100px) { .eng-stats { grid-template-columns: repeat(2, 1fr); } .lanes, .hard { grid-template-columns: 1fr 1fr; } .lanes .live { grid-column: 1 / -1; } }
+@media (max-width: 720px) {
+  .eng-hero { padding: var(--s-10) 0 var(--s-8); }
+  .eng-stats, .lanes, .hard, .rules, .stack { grid-template-columns: 1fr; }
+}

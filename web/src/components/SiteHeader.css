@@ -24,7 +24,11 @@
   .site-gh span { display: none; }
 }
 @media (max-width: 420px) {
+  .site-nav { gap: var(--s-2); }
   .site-nav .brand span { display: none; }
-  .site-links a { padding: 0 10px; }
-  .site-links a[aria-current="page"]::after { left: 10px; right: 10px; }
+  .site-links { gap: 0; min-width: 0; }
+  .site-links a { padding: 0 7px; font-size: 13.5px; }
+  .site-links a[aria-current="page"]::after { left: 7px; right: 7px; }
+  .site-tools { gap: 0; }
+  .site-gh { display: none; } /* GitHub stays in the footer; four page links need the room */
 }

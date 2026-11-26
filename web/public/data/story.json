@@ -146,5 +146,45 @@
     }
    }
   ]
+ },
+ "engineering": {
+  "onnx": {
+   "source": "results/onnx_check.json",
+   "max_abs_logit_difference": 7.152557373046875e-06,
+   "tolerance": 0.0001,
+   "n_images": 20
+  },
+  "parity": {
+   "source": "results/browser_parity.json",
+   "runs_compared": 8,
+   "squares_compared": 272,
+   "squares_same_class": 272,
+   "all_same_scenes": true,
+   "max_centre_offset_m": 0.0,
+   "median_browser_total_ms": 7406
+  },
+  "calibration": {
+   "source": "results/imagery_calibration.json",
+   "fit_pixels": 3284992,
+   "n_fit_scenes": 3,
+   "gain": [
+    0.9073893629612131,
+    0.9051338832553644,
+    0.8391807629371203
+   ],
+   "shift": [
+    69.705536025904,
+    233.94753560294103,
+    564.8164152970617
+   ]
+  },
+  "dataset": {
+   "source": "results/india_dataset.json",
+   "patches": 230,
+   "per_split": {
+    "train": 149,
+    "test": 81
+   }
+  }
  }
 }
