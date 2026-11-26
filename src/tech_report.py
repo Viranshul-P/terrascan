@@ -57,7 +57,13 @@ def make(template, n):
     return template.format(**n)
 
 
-def main(repro_note="not re-checked for this build"):
+# Checked by hand from a fresh `git clone` (commit a42a381, 2026-11-26): pytest and the web tests
+# (npm ci, vitest, tsc) all passed; tests that need the git-ignored data or models were skipped.
+REPRO = ("checked from a fresh clone on 2026-11-26: all passed; tests needing the git-ignored data "
+         "or model files skip themselves")
+
+
+def main(repro_note=REPRO):
     text = make(TEMPLATE.read_text(encoding="utf-8"), numbers(repro_note))
     for path in re.findall(r"`(results/[^`]+)`", text):
         assert Path(path).exists(), f"the report names a missing file: {path}"

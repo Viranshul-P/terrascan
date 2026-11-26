@@ -95,7 +95,7 @@ change (95% range 37%-65%), so of the 319 reported, about 163 is real
 
 Python 3.12 and pinned packages (`requirements.txt`); website in `web/` (`npm ci`). Every training script supports
 `--fast-dev-run`; seeds 42/43/44. Each step's command is in the docstring of its script and in `configs/`. Checked
-for this report: a fresh clone passes `pytest` and the website tests (not re-checked for this build).
+for this report: a fresh clone passes `pytest` and the website tests (checked from a fresh clone on 2026-11-26: all passed; tests needing the git-ignored data or model files skip themselves).
 
 ## References
 
