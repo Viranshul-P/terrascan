@@ -57,13 +57,13 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 8.3a Spectral bands: data + code (HIGH; split from 8.3 on 2026-11-08, user OK'd)
 - [ ] 8.3b Spectral bands: comparison + decision (HIGH)  <!-- STOPPED half-way 2026-11-09; RESUMED 2026-11-26 by Claude (user: "complete the project"), running -->
 - [x] 8.4 Noisy labels at scale (medium)  <!-- done 2026-11-26 by Claude: WorldCover tier-2 HURT (0.575 vs 0.655), hand-only kept -->
-- [-] 8.5 Satellite foundation model (HIGH)  <!-- not done: wrapped up -->
+- [x] 8.5 Satellite foundation model (HIGH)  <!-- done 2026-11-26 by Claude: frozen Prithvi-EO-2.0 probe 0.570 vs 0.655, not better -->
 - [~] 8.6 Other ways to improve accuracy (medium)  <!-- d, e done 2026-11-26 (neither kept); a, b not run (no data); c pending -->
 - [-] 8.7 Multi-city imagery (medium)  <!-- not done: wrapped up -->
 - [-] 8.8 Final evaluation (HIGH)  <!-- not done: wrapped up -->
 - [x] 8.9 Optional extension: surface temperature (medium)  <!-- done 2026-11-26 by Claude, EXTENSION only -->
 - [-] 8.10 Website update (medium)  <!-- not done: wrapped up (only the one-line model note was added) -->
-- [-] 8.11 Technical report draft (medium)  <!-- not done: wrapped up -->
+- [~] 8.11 Technical report draft (medium)  <!-- generator + draft 2026-11-26; regenerated when 8.3b ends -->
 - [x] 8.12 Run it on a new area (CLI or notebook) (medium)  <!-- done 2026-11-26 by Claude -->
 - [x] 6.3 README (done 2026-11-09 after the wrap-up decision; Phase 8 results are NOT in it, see Wrap-up)
 - [-] 6.4 Short technical write-up  <!-- SKIPPED: project wrapped up as a portfolio piece -->

@@ -1,0 +1,50 @@
+{
+ "config": "configs/foundation.yaml",
+ "candidates": [
+  {
+   "model": "Prithvi-EO-2.0-300M",
+   "source": "https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-300M",
+   "licence": "Apache-2.0",
+   "inputs": "6 HLS bands (B,G,R,narrow NIR,SWIR1,SWIR2), 224 px, up to 4 time steps",
+   "params_encoder": 303886336,
+   "peak_vram_gb_inference": 2.67,
+   "vram_note": "fp16 autocast, batch 32, encoder only",
+   "fits": true,
+   "run": "linear probe",
+   "full_finetune": "not attempted: ~4.8 GB for fp32 weights + AdamW state before activations on an 8 GB GPU"
+  },
+  {
+   "model": "Clay v1.5",
+   "source": "https://huggingface.co/made-with-clay/Clay",
+   "licence": "Apache-2.0",
+   "run": "not run: its page lists no inputs or size"
+  }
+ ],
+ "probe": {
+  "eurosat_val": {
+   "per_seed": {
+    "42": 0.9602469135802469,
+    "43": 0.9641975308641976,
+    "44": 0.9587654320987654
+   },
+   "mean": 0.9610699588477366,
+   "std": 0.002808020100285126
+  },
+  "india_loao": {
+   "per_seed": {
+    "42": 0.5302013422818792,
+    "43": 0.6040268456375839,
+    "44": 0.5771812080536913
+   },
+   "mean": 0.5704697986577182,
+   "std": 0.037367546059261895
+  }
+ },
+ "reference_india_loao": {
+  "what": "fine-tuned EfficientNet-B0 (8.1 LOAO models)",
+  "mean": 0.6554809843400448,
+  "std": 0.016890009922305962
+ },
+ "better_than_reference": false,
+ "input_note": "EuroSAT_MS is Level-1C top-of-atmosphere; the Indian values are Level-2A calibrated to it (8.3a); Prithvi was pretrained on HLS surface reflectance."
+}

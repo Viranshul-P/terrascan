@@ -200,6 +200,12 @@
     "source": "results/india_ablation.json"
    },
    {
+    "question": "Does a frozen satellite foundation model (Prithvi-EO-2.0, 304M parameters) beat our fine-tuned CNN?",
+    "result": "linear probe 0.570 \u00b1 0.037 vs reference 0.655 \u00b1 0.017",
+    "decision": "Not better by the rule.",
+    "source": "results/foundation_models.json"
+   },
+   {
     "question": "Extension: how warm is each land use on a winter morning?",
     "result": "coolest River 24.8 \u00b0C, warmest Pasture 27.1 \u00b0C (median of squares, one Landsat date)",
     "decision": "Descriptive only; not a main result.",
