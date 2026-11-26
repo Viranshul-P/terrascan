@@ -1,0 +1,21 @@
+# Step 8.4 (part 1: data). Tier-2 "noisy reference" labels from ESA WorldCover for many Indian squares.
+#   python -m src.noisy_labels --config configs/noisy_labels.yaml
+# Squares: the 2026 showcase composites of the four Gujarat cities (configs/showcase.yaml, scenes already cached),
+# cut into 64 x 64 px squares exactly as the showcase does. Every square within buffer_km of ANY hand-labelled area
+# (the 2 TEST areas and the 3 fine-tune areas, configs/india.yaml) is dropped, so neither the test areas nor the
+# leave-one-area-out validation can see these labels.
+# Label: the WorldCover class covering most of the square, kept only if it covers at least min_share of it, turned
+# into a SET of allowed classes with the 8.2 mapping (configs/classes_india.yaml, source "worldcover"); a class with
+# an empty set (bare, wetland, ...) is dropped. Built-up -> {Residential, Industrial} etc.: training uses a partial-
+# label loss over the set (part 2). These labels are TIER 2: never ground truth, never used to evaluate.
+showcase_config: configs/showcase.yaml
+india_config: configs/india.yaml
+class_scheme_config: configs/classes_india.yaml
+labels_csv: data/india/labels_reviewed.csv       # tier 1, used here ONLY for the agreement rate
+collection: esa-worldcover
+worldcover_version: "2.0.0"                      # the 2021 map (v200)
+year: "2026"
+buffer_km: 2.0
+min_share: 0.7
+out_npz: data/india_tier2/worldcover_squares.npz
+output_json: results/noisy_labels_data.json

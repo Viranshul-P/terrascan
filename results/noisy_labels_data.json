@@ -1,0 +1,67 @@
+{
+ "what": "Tier-2 (noisy reference) labels from ESA WorldCover 2021 v200; never ground truth",
+ "config": "configs/noisy_labels.yaml",
+ "worldcover_tiles": [
+  "ESA_WorldCover_10m_2021_v200_N21E069",
+  "ESA_WorldCover_10m_2021_v200_N21E072"
+ ],
+ "licence": "ESA WorldCover: CC-BY-4.0 (Planetary Computer collection 'esa-worldcover'); credit: (c) ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium",
+ "time_gap_note": "map from 2021, pictures from the 2026 dry season",
+ "n_squares": 1722,
+ "per_city": {
+  "ahmedabad": 720,
+  "vadodara": 185,
+  "surat": 349,
+  "rajkot": 468
+ },
+ "dropped_near_labelled_areas": 995,
+ "dropped_mixed_or_unmapped": 2371,
+ "worldcover_class_kept": {
+  "10": 27,
+  "20": 22,
+  "30": 2,
+  "40": 947,
+  "50": 679,
+  "80": 45
+ },
+ "allowed_sets": {
+  "10": [
+   "Forest"
+  ],
+  "20": [
+   "HerbaceousVegetation",
+   "Pasture"
+  ],
+  "30": [
+   "HerbaceousVegetation",
+   "Pasture"
+  ],
+  "40": [
+   "AnnualCrop",
+   "PermanentCrop"
+  ],
+  "50": [
+   "Residential",
+   "Industrial"
+  ],
+  "60": [],
+  "70": [],
+  "80": [
+   "River",
+   "SeaLake"
+  ],
+  "90": [],
+  "95": [
+   "Forest"
+  ],
+  "100": []
+ },
+ "agreement_with_hand_labels": {
+  "hand_labelled_squares": 230,
+  "compared": 155,
+  "would_be_dropped": 75,
+  "agree": 134,
+  "agreement_rate": 0.8645,
+  "note": "share of compared squares whose hand label is in WorldCover's allowed set"
+ }
+}
