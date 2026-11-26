@@ -100,6 +100,67 @@ def engineering(onnx, parity, calibration, dataset):
     }
 
 
+def ms(d):
+    return f"{d['mean']:.3f} ± {d['std']:.3f}"
+
+
+def experiments():
+    """The Phase 8 experiments, each with its question, result, decision and source file.
+
+    Only experiments whose result file exists are listed (the rest are still running or not done).
+    """
+    out = []
+    p = RESULTS / "noisy_labels.json"
+    if p.exists():
+        full = read(p)
+        r, n = full["stages"], full["data"]["n_squares"]
+        out.append({"question": f"Do {n:,} extra squares labelled from ESA WorldCover help?",
+                    "result": f"hand labels only {ms(r['A_hand_only'])}; WorldCover only "
+                              f"{ms(r['B_tier2_only'])}; WorldCover then hand "
+                              f"{ms(r['C_tier2_then_hand'])}",
+                    "decision": "No: coarse map labels made it worse. Hand labels only stay.",
+                    "source": "results/noisy_labels.json"})
+    p = RESULTS / "india_ablation.json"
+    if p.exists():
+        r = read(p)
+        d = next(a for a in r["attempts"] if a["id"] == "d")
+        e = next(a for a in r["attempts"] if a["id"] == "e")
+        out.append({"question": "Average each answer over 8 flips and turns? Over 3 seeds?",
+                    "result": f"reference {ms(r['reference_loao'])}; flips/turns {ms(d)}; "
+                              f"seed ensemble {e['accuracy']:.3f}",
+                    "decision": "Not kept: a small gain inside the seed-to-seed spread.",
+                    "source": "results/india_ablation.json"})
+    p = RESULTS / "foundation_models.json"
+    if p.exists():
+        r = read(p)
+        out.append({"question": "Does a frozen satellite foundation model (Prithvi-EO-2.0, "
+                                f"{r['candidates'][0]['params_encoder'] / 1e6:.0f}M parameters) "
+                                "beat our fine-tuned CNN?",
+                    "result": f"linear probe {ms(r['probe']['india_loao'])} vs reference "
+                              f"{ms(r['reference_india_loao'])}",
+                    "decision": "Better by the rule." if r["better_than_reference"]
+                                else "Not better by the rule.",
+                    "source": "results/foundation_models.json"})
+    p = RESULTS / "bands_comparison.json"
+    if p.exists():
+        r = read(p)
+        out.append({"question": "Do near-infrared and shortwave-infrared bands help?",
+                    "result": r.get("summary_line", "see the file"),
+                    "decision": r.get("decision_line", "see the file"),
+                    "source": "results/bands_comparison.json"})
+    p = RESULTS / "lst_ahmedabad.json"
+    if p.exists():
+        r = read(p)["by_class"]
+        lo, hi = min(r, key=lambda c: r[c]["median_c"]), max(
+            (c for c in r if not r[c]["too_few"]), key=lambda c: r[c]["median_c"])
+        out.append({"question": "Extension: how warm is each land use on a winter morning?",
+                    "result": f"coolest {lo} {r[lo]['median_c']:.1f} °C, warmest {hi} "
+                              f"{r[hi]['median_c']:.1f} °C (median of squares, one Landsat date)",
+                    "decision": "Descriptive only; not a main result.",
+                    "source": "results/lst_ahmedabad.json"})
+    return out
+
+
 def build(check, after, results, eng=None):
     """story.json as a dict.
 
@@ -132,6 +193,7 @@ def main():
     results = {e["name"]: read(folder / f"{e['name']}.json") for e in cfg["models"]}
     eng = engineering(*(read(RESULTS / f"{n}.json") for n in
                         ["onnx_check", "browser_parity", "imagery_calibration", "india_dataset"]))
+    eng["experiments"] = experiments()
     out = build(read(RESULTS / "change_check.json"), read(RESULTS / "india_after.json"), results,
                 eng)
     OUT.write_text(json.dumps(out, indent=1), encoding="utf-8")

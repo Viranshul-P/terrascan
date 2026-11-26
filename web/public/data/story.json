@@ -185,6 +185,26 @@
     "train": 149,
     "test": 81
    }
-  }
+  },
+  "experiments": [
+   {
+    "question": "Do 1,722 extra squares labelled from ESA WorldCover help?",
+    "result": "hand labels only 0.655 \u00b1 0.017; WorldCover only 0.438 \u00b1 0.010; WorldCover then hand 0.575 \u00b1 0.024",
+    "decision": "No: coarse map labels made it worse. Hand labels only stay.",
+    "source": "results/noisy_labels.json"
+   },
+   {
+    "question": "Average each answer over 8 flips and turns? Over 3 seeds?",
+    "result": "reference 0.655 \u00b1 0.017; flips/turns 0.678 \u00b1 0.029; seed ensemble 0.671",
+    "decision": "Not kept: a small gain inside the seed-to-seed spread.",
+    "source": "results/india_ablation.json"
+   },
+   {
+    "question": "Extension: how warm is each land use on a winter morning?",
+    "result": "coolest River 24.8 \u00b0C, warmest Pasture 27.1 \u00b0C (median of squares, one Landsat date)",
+    "decision": "Descriptive only; not a main result.",
+    "source": "results/lst_ahmedabad.json"
+   }
+  ]
  }
 }

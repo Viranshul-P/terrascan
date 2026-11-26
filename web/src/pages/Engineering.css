@@ -63,3 +63,13 @@
   .eng-hero { padding: var(--s-10) 0 var(--s-8); }
   .eng-stats, .lanes, .hard, .rules, .stack { grid-template-columns: 1fr; }
 }
+
+/* Experiments */
+.exps { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; border-radius: var(--r-lg); overflow: hidden; background: var(--line); box-shadow: var(--ring); counter-reset: x; }
+.exps li { display: grid; grid-template-columns: 44px 1.1fr 1.4fr 1fr; gap: var(--s-4); align-items: start; padding: var(--s-5); background: var(--surface); counter-increment: x; }
+.exps li::before { content: counter(x, decimal-leading-zero); font: 600 12px var(--mono); color: var(--accent); padding-top: 3px; }
+.exps b { font-size: var(--t-sm); line-height: 1.4; }
+.exp-res { font: 500 12.5px/1.5 var(--mono); color: var(--ink-2); }
+.exp-dec { font-size: var(--t-sm); color: var(--ink); line-height: 1.45; }
+.exps .eng-src { grid-column: 2 / -1; }
+@media (max-width: 900px) { .exps li { grid-template-columns: 32px 1fr; } .exps li > :not(.eng-src) { grid-column: 2; } }

@@ -15,6 +15,7 @@ type Eng = {
   parity: { source: string; runs_compared: number; squares_compared: number; squares_same_class: number; all_same_scenes: boolean; max_centre_offset_m: number; median_browser_total_ms: number };
   calibration: { source: string; fit_pixels: number; n_fit_scenes: number };
   dataset: { source: string; patches: number; per_split: { train: number; test: number } };
+  experiments?: { question: string; result: string; decision: string; source: string }[];
 };
 
 const pct = (v: number, d = 1) => `${(v * 100).toFixed(d)}%`;
@@ -151,6 +152,27 @@ function Body({ s, e }: { s: StoryData; e: Eng }) {
           </div>
         </div>
       </section>
+
+      {e.experiments && e.experiments.length > 0 && (
+        <section className="sec" aria-labelledby="expTitle">
+          <div className="wrap">
+            <div className="sec-head">
+              <div><span className="eyebrow">Experiments</span><h2 id="expTitle">Ideas tested, including the ones that failed.</h2></div>
+              <p>Each rule was committed to git before its run. Most ideas did not beat the simple fine-tuned model, and that is reported as it came out.</p>
+            </div>
+            <ol className="exps">
+              {e.experiments.map((x) => (
+                <li key={x.source}>
+                  <b>{x.question}</b>
+                  <span className="exp-res">{x.result}</span>
+                  <span className="exp-dec">{x.decision}</span>
+                  <Src f={x.source} />
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
 
       <section className="sec" aria-labelledby="rigourTitle">
         <div className="wrap">
