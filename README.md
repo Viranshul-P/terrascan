@@ -10,6 +10,22 @@ hand-labelled patches from Gujarat, India. A map website and a change study of A
 - Live site: https://terrascan-five.vercel.app
 - Model: https://huggingface.co/viranshul/terrascan-efficientnet-b0-india
 - Indian dataset: https://huggingface.co/datasets/viranshul/terrascan-india-gujarat
+- How it is built: https://terrascan-five.vercel.app/engineering
+
+### Technical highlights
+
+- **Domain shift, measured honestly.** Split by area, test areas kept out of every choice, mean ± std over 3 seeds: Indian test accuracy
+  0.4486 ± 0.0071 before fine-tuning and 0.6831 ± 0.0311 after (`results/india_after.json`; the test areas were also scored in steps 4.3/4.4).
+- **Colour calibration across processing levels.** EuroSAT is Level-1C, the archive is Level-2A; a per-colour linear fit made on
+  European scenes only maps one to the other (`results/imagery_calibration.json`). The +1000 offset of newer scenes is removed per
+  scene from its processing baseline, never from the date.
+- **The whole pipeline runs in the browser.** STAC search, Cloud-Optimised GeoTIFF range reads, UTM projection, median composite,
+  calibration and ONNX Runtime Web (WebGPU / WebAssembly) in a Web Worker: any box, one year or a change map, no server.
+- **Two pipelines, checked to agree.** A parity harness compares browser and Python on the same boxes:
+  272 of 272 squares get the same class (`results/browser_parity.json`); PyTorch vs ONNX logits differ by
+  at most 7.2e-06 (`results/onnx_check.json`).
+- **Change claims checked by eye.** Of 50 randomly sampled "changed" squares in Ahmedabad, 51% held up
+  (`results/change_check.json`).
 
 ## The question and the short answer
 

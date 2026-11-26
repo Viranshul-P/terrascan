@@ -172,6 +172,7 @@ def parity_numbers():
         "parity_squares": s["squares_compared"],
         "parity_offset_m": s["max_centre_offset_m"],
         "parity_median_s": round(s["median_browser_total_ms"] / 1000, 1),
+        "onnx_max_diff": f"{load_json('results/onnx_check.json')['max_abs_logit_difference']:.1e}",
     }
 
 

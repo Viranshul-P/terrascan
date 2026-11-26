@@ -51,7 +51,7 @@ export function HowItWorks({ index, story }: { index: Index; story: StoryData })
           <li><a href={REPO} rel="noopener"><b>Source code</b><span>GitHub</span></a></li>
           <li><a href={DATASET} rel="noopener"><b>Indian dataset</b><span>Hugging Face</span></a></li>
           <li><a href={MODEL} rel="noopener"><b>Model card</b><span>Hugging Face</span></a></li>
-          <li><span className="soon"><b>Blog post</b><span>Coming soon</span></span></li>
+          <li><a href="/engineering"><b>How it is built</b><span>Engineering</span></a></li>
         </ul>
       </div>
     </section>

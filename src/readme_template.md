@@ -10,6 +10,22 @@ hand-labelled patches from Gujarat, India. A map website and a change study of A
 - Live site: {live_site}
 - Model: https://huggingface.co/{model_repo}
 - Indian dataset: https://huggingface.co/datasets/{dataset_repo}
+- How it is built: {live_site}/engineering
+
+### Technical highlights
+
+- **Domain shift, measured honestly.** Split by area, test areas kept out of every choice, mean ± std over 3 seeds: Indian test accuracy
+  {india_acc_before} before fine-tuning and {india_acc_after} after (`results/india_after.json`; the test areas were also scored in steps 4.3/4.4).
+- **Colour calibration across processing levels.** EuroSAT is Level-1C, the archive is Level-2A; a per-colour linear fit made on
+  European scenes only maps one to the other (`results/imagery_calibration.json`). The +1000 offset of newer scenes is removed per
+  scene from its processing baseline, never from the date.
+- **The whole pipeline runs in the browser.** STAC search, Cloud-Optimised GeoTIFF range reads, UTM projection, median composite,
+  calibration and ONNX Runtime Web (WebGPU / WebAssembly) in a Web Worker: any box, one year or a change map, no server.
+- **Two pipelines, checked to agree.** A parity harness compares browser and Python on the same boxes:
+  {parity_same} of {parity_squares} squares get the same class (`results/browser_parity.json`); PyTorch vs ONNX logits differ by
+  at most {onnx_max_diff} (`results/onnx_check.json`).
+- **Change claims checked by eye.** Of {change_n_pairs} randomly sampled "changed" squares in Ahmedabad, {real_rate} held up
+  (`results/change_check.json`).
 
 ## The question and the short answer
 
