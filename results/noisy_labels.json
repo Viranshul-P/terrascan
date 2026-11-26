@@ -1,0 +1,107 @@
+{
+ "config": "configs/noisy_train.yaml",
+ "seeds": [
+  42,
+  43,
+  44
+ ],
+ "per_seed": {
+  "A_hand_only": {
+   "42": 0.6375838926174496,
+   "43": 0.6577181208053692,
+   "44": 0.6711409395973155
+  },
+  "B_tier2_only": {
+   "42": 0.42953020134228187,
+   "43": 0.44966442953020136,
+   "44": 0.436241610738255
+  },
+  "C_tier2_then_hand": {
+   "42": 0.5973154362416108,
+   "43": 0.5771812080536913,
+   "44": 0.5503355704697986
+  }
+ },
+ "stages": {
+  "A_hand_only": {
+   "mean": 0.6554809843400448,
+   "std": 0.016890009922305962
+  },
+  "B_tier2_only": {
+   "mean": 0.43847874720357943,
+   "std": 0.01025184719229496
+  },
+  "C_tier2_then_hand": {
+   "mean": 0.5749440715883669,
+   "std": 0.02356969519653859
+  }
+ },
+ "decision": "A_hand_only",
+ "data": {
+  "what": "Tier-2 (noisy reference) labels from ESA WorldCover 2021 v200; never ground truth",
+  "config": "configs/noisy_labels.yaml",
+  "worldcover_tiles": [
+   "ESA_WorldCover_10m_2021_v200_N21E069",
+   "ESA_WorldCover_10m_2021_v200_N21E072"
+  ],
+  "licence": "ESA WorldCover: CC-BY-4.0 (Planetary Computer collection 'esa-worldcover'); credit: (c) ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium",
+  "time_gap_note": "map from 2021, pictures from the 2026 dry season",
+  "n_squares": 1722,
+  "per_city": {
+   "ahmedabad": 720,
+   "vadodara": 185,
+   "surat": 349,
+   "rajkot": 468
+  },
+  "dropped_near_labelled_areas": 995,
+  "dropped_mixed_or_unmapped": 2371,
+  "worldcover_class_kept": {
+   "10": 27,
+   "20": 22,
+   "30": 2,
+   "40": 947,
+   "50": 679,
+   "80": 45
+  },
+  "allowed_sets": {
+   "10": [
+    "Forest"
+   ],
+   "20": [
+    "HerbaceousVegetation",
+    "Pasture"
+   ],
+   "30": [
+    "HerbaceousVegetation",
+    "Pasture"
+   ],
+   "40": [
+    "AnnualCrop",
+    "PermanentCrop"
+   ],
+   "50": [
+    "Residential",
+    "Industrial"
+   ],
+   "60": [],
+   "70": [],
+   "80": [
+    "River",
+    "SeaLake"
+   ],
+   "90": [],
+   "95": [
+    "Forest"
+   ],
+   "100": []
+  },
+  "agreement_with_hand_labels": {
+   "hand_labelled_squares": 230,
+   "compared": 155,
+   "would_be_dropped": 75,
+   "agree": 134,
+   "agreement_rate": 0.8645,
+   "note": "share of compared squares whose hand label is in WorldCover's allowed set"
+  }
+ }
+}
