@@ -143,11 +143,7 @@ def experiments():
                     "source": "results/foundation_models.json"})
     p = RESULTS / "bands_comparison.json"
     if p.exists():
-        r = read(p)
-        out.append({"question": "Do near-infrared and shortwave-infrared bands help?",
-                    "result": r.get("summary_line", "see the file"),
-                    "decision": r.get("decision_line", "see the file"),
-                    "source": "results/bands_comparison.json"})
+        out.append(bands_row(read(p)))
     p = RESULTS / "lst_ahmedabad.json"
     if p.exists():
         r = read(p)["by_class"]
@@ -159,6 +155,21 @@ def experiments():
                     "decision": "Descriptive only; not a main result.",
                     "source": "results/lst_ahmedabad.json"})
     return out
+
+
+def bands_row(r):
+    """The band comparison (8.3b): arm A's reference vs its best other input, and the decision."""
+    t, d = r["table"], r["decision"]["A"]
+    ref = d["reference"]
+    others = [k for k in d["verdicts"]]
+    best = max(others, key=lambda k: t[k]["loao"]["calibrated"]["mean"])
+    kept = d["kept"]
+    return {"question": "Do extra spectral bands (near- and shortwave infrared, indices) help?",
+            "result": f"RGB {ms(t[ref]['loao']['calibrated'])}; best other input ({best}, "
+                      f"{t[best]['n_channels']} channels) {ms(t[best]['loao']['calibrated'])}",
+            "decision": (f"No: RGB stays ({len(others)} other inputs tried)." if kept == ref
+                         else f"Better by the rule: {kept} is kept."),
+            "source": "results/bands_comparison.json"}
 
 
 def build(check, after, results, eng=None):

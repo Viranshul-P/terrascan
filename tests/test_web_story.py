@@ -91,3 +91,16 @@ def test_engineering_copies_values_with_sources():
     assert e["parity"]["squares_same_class"] == 272
     assert e["calibration"]["n_fit_scenes"] == 2
     assert all(v["source"].startswith("results/") for v in e.values())
+
+
+def test_bands_row_names_the_best_other_input_and_the_decision():
+    from src.web_story import bands_row
+    ms = lambda m: {"mean": m, "std": 0.01}  # noqa: E731
+    r = {"table": {"rgb": {"loao": {"calibrated": ms(0.65)}, "n_channels": 3},
+                   "rgb_nir": {"loao": {"calibrated": ms(0.66)}, "n_channels": 4},
+                   "all_bands": {"loao": {"calibrated": ms(0.60)}, "n_channels": 13}},
+         "decision": {"A": {"reference": "rgb", "verdicts": {"rgb_nir": "x", "all_bands": "y"},
+                            "kept": "rgb"}}}
+    row = bands_row(r)
+    assert "rgb_nir, 4 channels" in row["result"]
+    assert row["decision"].startswith("No: RGB stays (2 other")
