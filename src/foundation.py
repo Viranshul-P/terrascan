@@ -88,9 +88,11 @@ def main(argv=None):
         f = cache / f"eurosat_{split}.npz"
         rows = idx[idx["split"] == split]
         if not f.exists():
-            raw = np.asarray(arr[rows["row"].to_numpy()], dtype=np.float32)
-            np.savez(f, x=features(enc, raw, cfg, pc, all_bands, device),
-                     y=np.array([CLASSES.index(c) for c in rows["label"]]))
+            r = rows["row"].to_numpy()
+            x = np.concatenate([features(enc, np.asarray(arr[r[i:i + 2048]], dtype=np.float32),
+                                         cfg, pc, all_bands, device)
+                                for i in range(0, len(r), 2048)])  # 2048 at a time: RAM
+            np.savez(f, x=x, y=np.array([CLASSES.index(c) for c in rows["label"]]))
         feats[split] = np.load(f)
         print(split, feats[split]["x"].shape)
     peak_gb = torch.cuda.max_memory_allocated() / 1e9 if device.type == "cuda" else None
