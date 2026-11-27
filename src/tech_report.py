@@ -15,6 +15,8 @@ from src.web_story import experiments
 
 TEMPLATE = Path("src/tech_report_template.md")
 OUT = Path("reports/technical_report.md")
+WRITEUP_TEMPLATE = Path("src/writeup_template.md")  # step 6.4: the short public write-up (a draft)
+WRITEUP = Path("reports/writeup.md")
 README_CONFIG = Path("configs/readme.yaml")
 
 
@@ -46,6 +48,9 @@ def numbers(repro_note):
         "phase8_table": table,
         "phase8_summary": summary,
         "phase8_list": ", ".join(SHORT[r["source"]] for r in rows),
+        "phase8_short_table": "\n".join(
+            f"| {SHORT[r['source']][:1].upper()}{SHORT[r['source']][1:]} | {r['result']} | "
+            f"{r['decision']} |" for r in rows),
         "repro_note": repro_note,
     })
     return n
@@ -64,7 +69,9 @@ REPRO = ("checked from a fresh clone on 2026-11-26: all passed; tests needing th
 
 
 def main(repro_note=REPRO):
-    text = make(TEMPLATE.read_text(encoding="utf-8"), numbers(repro_note))
+    n = numbers(repro_note)
+    WRITEUP.write_text(make(WRITEUP_TEMPLATE.read_text(encoding="utf-8"), n), encoding="utf-8")
+    text = make(TEMPLATE.read_text(encoding="utf-8"), n)
     for path in re.findall(r"`(results/[^`]+)`", text):
         assert Path(path).exists(), f"the report names a missing file: {path}"
     OUT.parent.mkdir(parents=True, exist_ok=True)
