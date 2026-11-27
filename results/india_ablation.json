@@ -43,9 +43,27 @@
   },
   {
    "id": "c",
-   "what": "pseudo-labels (tier 3)",
-   "status": "not run",
-   "reason": "needs a training run; left for after 8.3b/8.4 (one GPU)"
+   "what": "pseudo-labels (tier 3, confidence >= 0.9)",
+   "per_seed": {
+    "42": 0.6644295302013423,
+    "43": 0.6442953020134228,
+    "44": 0.7449664429530202
+   },
+   "mean": 0.6845637583892618,
+   "std": 0.05327016062546158,
+   "kept": false,
+   "pseudo_labels_kept_per_fold": {
+    "42_ahmedabad_city": 479,
+    "42_ankleshwar_industrial": 531,
+    "42_narmada_bharuch": 320,
+    "43_ahmedabad_city": 514,
+    "43_ankleshwar_industrial": 606,
+    "43_narmada_bharuch": 311,
+    "44_ahmedabad_city": 567,
+    "44_ankleshwar_industrial": 811,
+    "44_narmada_bharuch": 330
+   },
+   "config": "configs/pseudo_labels.yaml"
   }
  ]
 }

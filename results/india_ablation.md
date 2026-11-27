@@ -9,6 +9,6 @@ Metric: Indian leave-one-area-out accuracy on 149 fine-tune patches, seeds 42/43
 | e: seed ensemble (mean softmax of 3 seeds) | 0.6711 (one number) | no |
 | a: bigger context window per patch | not run: needs patches cut with a wider window from the original scenes; not built | no |
 | b: dry season + monsoon input | not run: needs monsoon composites (8.7 data); 4.6 found 0 clear Jul-Aug scenes | no |
-| c: pseudo-labels (tier 3) | not run: needs a training run; left for after 8.3b/8.4 (one GPU) | no |
+| c: pseudo-labels (tier 3, confidence >= 0.9) | 0.6846 ± 0.0533 | no |
 
 Made by `src/india_ablation.py`; numbers in `results/india_ablation.json`.
