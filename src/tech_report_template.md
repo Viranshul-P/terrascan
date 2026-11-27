@@ -67,7 +67,7 @@ Indian test areas ({n_india_test} patches; also scored in steps 4.3/4.4): {india
 ### 4.4 Change in Ahmedabad, 2018 to 2026
 
 {change_n_pairs} randomly sampled "changed" squares were checked by eye on before/after pictures: {real_rate} were real
-change (95% range {real_rate_range}), so of the {reported_changed_km2} km² reported, about {real_km2} is real
+change (95% range {real_rate_range}), so of the {reported_changed_km2} km² reported, about {real_km2} km² is real
 (`results/change_check.json`).
 
 ### 4.5 Browser vs Python
