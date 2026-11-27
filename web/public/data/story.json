@@ -194,9 +194,9 @@
     "source": "results/noisy_labels.json"
    },
    {
-    "question": "Average each answer over 8 flips and turns? Over 3 seeds?",
-    "result": "reference 0.655 \u00b1 0.017; flips/turns 0.678 \u00b1 0.029; seed ensemble 0.671",
-    "decision": "Not kept: a small gain inside the seed-to-seed spread.",
+    "question": "Average each answer over 8 flips and turns, or over 3 seeds? Train on the model's own confident guesses (pseudo-labels)?",
+    "result": "reference 0.655 \u00b1 0.017; flips/turns 0.678 \u00b1 0.029; seed ensemble 0.671; pseudo-labels 0.685 \u00b1 0.053",
+    "decision": "None kept: each gain is inside the seed-to-seed spread.",
     "source": "results/india_ablation.json"
    },
    {

@@ -19,7 +19,7 @@ README_CONFIG = Path("configs/readme.yaml")
 
 
 SHORT = {"results/noisy_labels.json": "WorldCover-derived training squares",
-         "results/india_ablation.json": "test-time augmentation and a seed ensemble",
+         "results/india_ablation.json": "test-time augmentation, a seed ensemble and pseudo-labels",
          "results/foundation_models.json": "a frozen satellite foundation model",
          "results/bands_comparison.json": "extra spectral bands"}
 

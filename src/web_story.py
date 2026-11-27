@@ -125,10 +125,13 @@ def experiments():
         r = read(p)
         d = next(a for a in r["attempts"] if a["id"] == "d")
         e = next(a for a in r["attempts"] if a["id"] == "e")
-        out.append({"question": "Average each answer over 8 flips and turns? Over 3 seeds?",
+        c = next((a for a in r["attempts"] if a["id"] == "c" and "mean" in a), None)
+        out.append({"question": "Average each answer over 8 flips and turns, or over 3 seeds? "
+                                "Train on the model's own confident guesses (pseudo-labels)?",
                     "result": f"reference {ms(r['reference_loao'])}; flips/turns {ms(d)}; "
-                              f"seed ensemble {e['accuracy']:.3f}",
-                    "decision": "Not kept: a small gain inside the seed-to-seed spread.",
+                              f"seed ensemble {e['accuracy']:.3f}"
+                              + (f"; pseudo-labels {ms(c)}" if c else ""),
+                    "decision": "None kept: each gain is inside the seed-to-seed spread.",
                     "source": "results/india_ablation.json"})
     p = RESULTS / "foundation_models.json"
     if p.exists():
