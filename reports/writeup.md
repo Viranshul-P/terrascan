@@ -34,7 +34,7 @@ reflectance. Same field, different numbers. I fitted a per-colour straight-line 
 **A hidden +1000.** Sentinel-2 scenes processed with baseline 04.00 or later add 1000 to every pixel value. Old scenes
 that were re-processed carry it too, so the date tells you nothing: the fix has to read each scene's metadata.
 
-**A change map that cries wolf.** Compare 2018 and 2026 square by square and the model flags 319 of
+**A change map that cries wolf.** Compare 2018 and 2026 square by square and the model flags 319 km² of
 Ahmedabad as changed. I checked 50 random flagged squares by eye: only **51%** were real change.
 The rest was the model changing its mind, not the land changing. The website says so next to the map.
 

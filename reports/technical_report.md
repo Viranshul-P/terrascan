@@ -73,7 +73,7 @@ Indian test areas (81 patches; also scored in steps 4.3/4.4): 0.4486 ± 0.0071 b
 ### 4.4 Change in Ahmedabad, 2018 to 2026
 
 50 randomly sampled "changed" squares were checked by eye on before/after pictures: 51% were real
-change (95% range 37%-65%), so of the 319 reported, about 163 is real
+change (95% range 37%-65%), so of the 319 km² reported, about 163 is real
 (`results/change_check.json`).
 
 ### 4.5 Browser vs Python
