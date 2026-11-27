@@ -206,6 +206,12 @@
     "source": "results/foundation_models.json"
    },
    {
+    "question": "Do extra spectral bands (near- and shortwave infrared, indices) help?",
+    "result": "EfficientNet RGB 0.673 \u00b1 0.039; best other input all_bands (13 channels) 0.749 \u00b1 0.014 calibrated, 0.711 \u00b1 0.036 uncalibrated; satellite ResNet-18: sat_all 0.687 \u00b1 0.056 vs its RGB 0.575 \u00b1 0.048",
+    "decision": "RGB stays for the site's model (all_bands: fragile by the rule). Extra bands clearly help the satellite-pretrained ResNet, but it still does not beat the EfficientNet.",
+    "source": "results/bands_comparison.json"
+   },
+   {
     "question": "Extension: how warm is each land use on a winter morning?",
     "result": "coolest River 24.8 \u00b0C, warmest Pasture 27.1 \u00b0C (median of squares, one Landsat date)",
     "decision": "Descriptive only; not a main result.",

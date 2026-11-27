@@ -10,7 +10,7 @@ A small research-style project on **domain shift** in satellite image classifica
 Sentinel-2 patches (10 m per pixel, so 640 m × 640 m) were trained on the European EuroSAT dataset, then tested on
 hand-labelled patches from Gujarat, India. A map website and a change study of Ahmedabad (2018 vs 2026) were built on top.
 
-**Status: finished as a portfolio / learning project (wrapped up 2026-11-09). It is not a mapping product.** Read
+**Status: finished as a portfolio / learning project (last updated 2026-11-27). It is not a mapping product.** Read
 [Known limitations](#known-limitations) before trusting any map.
 
 - Live site: https://terrascan-five.vercel.app
@@ -179,13 +179,27 @@ yes. Squares with the same class: **272 of 272**; largest gap between square cen
 0.0 m (`results/browser_parity.json`). Median time for one box-year in headless Chromium (WebAssembly, no GPU):
 7.4 s. The UTM maths, rounding and median steps also have unit tests (`web/src/live/live.test.ts`).
 
+## Attempts to improve Indian accuracy (Phase 8)
+
+Each idea was scored by leave-one-area-out accuracy on the 149 fine-tune patches (the test areas are never used), with a
+decision rule committed to git before its run: kept only if the mean beats the reference by more than the two stds
+added together. Also done: an error audit (`results/error_audit.md`) and a class-scheme check (`results/class_scheme.md`:
+no evidence for merging classes).
+
+| Question | Result | Decision | File |
+|---|---|---|---|
+| Do 1,722 extra squares labelled from ESA WorldCover help? | hand labels only 0.655 ± 0.017; WorldCover only 0.438 ± 0.010; WorldCover then hand 0.575 ± 0.024 | No: coarse map labels made it worse. Hand labels only stay. | `results/noisy_labels.json` |
+| Average each answer over 8 flips and turns, or over 3 seeds? Train on the model's own confident guesses (pseudo-labels)? | reference 0.655 ± 0.017; flips/turns 0.678 ± 0.029; seed ensemble 0.671; pseudo-labels 0.685 ± 0.053 | None kept: each gain is inside the seed-to-seed spread. | `results/india_ablation.json` |
+| Does a frozen satellite foundation model (Prithvi-EO-2.0, 304M parameters) beat our fine-tuned CNN? | linear probe 0.570 ± 0.037 vs reference 0.655 ± 0.017 | Not better by the rule. | `results/foundation_models.json` |
+| Do extra spectral bands (near- and shortwave infrared, indices) help? | EfficientNet RGB 0.673 ± 0.039; best other input all_bands (13 channels) 0.749 ± 0.014 calibrated, 0.711 ± 0.036 uncalibrated; satellite ResNet-18: sat_all 0.687 ± 0.056 vs its RGB 0.575 ± 0.048 | RGB stays for the site's model (all_bands: fragile by the rule). Extra bands clearly help the satellite-pretrained ResNet, but it still does not beat the EfficientNet. | `results/bands_comparison.json` |
+
+Full write-up: [`reports/technical_report.md`](reports/technical_report.md).
+
 ## What was not done
 
-The plan had a second phase meant to improve Indian accuracy: more spectral bands, large noisy label sets from public land-cover
-maps, a satellite foundation model and a multi-city evaluation. The project was wrapped up before it. Only the error audit above, a class-scheme check
-(`results/class_scheme.md`: no evidence for merging classes, so the 10 EuroSAT classes were kept) and the data code for extra bands
-were finished. A band comparison was started but not completed, so **no result from it is reported anywhere**. There are no multi-city results,
-no label-efficiency curves, and no GIF of the Compare slider.
+No multi-city evaluation and no label-efficiency curves (steps 8.7/8.8): both need new human labels in other cities.
+Two ideas from 8.6 (a wider view around each square, and monsoon pictures) need data that does not exist yet. No GIF of the
+Compare slider.
 
 ## Run it yourself
 

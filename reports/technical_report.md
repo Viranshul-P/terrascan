@@ -8,7 +8,7 @@ Land-use classifiers trained on EuroSAT reach about 98.52%-98.74% test accuracy 
 images, consistent with the 98.57% reported by the dataset's authors. On 81 hand-labelled patches
 from two held-out areas in Gujarat, India, the model picked for India (EfficientNet-B0) falls to 0.4486 ± 0.0071
 (mean ± std, 3 seeds). Fine-tuning on 149 labelled Indian patches from three other areas raises this to
-0.6831 ± 0.0311 (`results/india_after.json`). Further attempts to improve it (WorldCover-derived training squares, test-time augmentation, a seed ensemble and pseudo-labels, a frozen satellite foundation model) are reported with decision rules fixed before each
+0.6831 ± 0.0311 (`results/india_after.json`). Further attempts to improve it (WorldCover-derived training squares, test-time augmentation, a seed ensemble and pseudo-labels, a frozen satellite foundation model, extra spectral bands) are reported with decision rules fixed before each
 run: none beat the simple fine-tuned model. A change map of Ahmedabad 2018-2026 over-reports
 change: 51% of 50 randomly checked changed squares held up. The full inference pipeline also runs in
 a web browser and matches the Python pipeline on 272 of 272 squares.
@@ -69,6 +69,7 @@ Indian test areas (81 patches; also scored in steps 4.3/4.4): 0.4486 ± 0.0071 b
 | Do 1,722 extra squares labelled from ESA WorldCover help? | hand labels only 0.655 ± 0.017; WorldCover only 0.438 ± 0.010; WorldCover then hand 0.575 ± 0.024 | No: coarse map labels made it worse. Hand labels only stay. | `results/noisy_labels.json` |
 | Average each answer over 8 flips and turns, or over 3 seeds? Train on the model's own confident guesses (pseudo-labels)? | reference 0.655 ± 0.017; flips/turns 0.678 ± 0.029; seed ensemble 0.671; pseudo-labels 0.685 ± 0.053 | None kept: each gain is inside the seed-to-seed spread. | `results/india_ablation.json` |
 | Does a frozen satellite foundation model (Prithvi-EO-2.0, 304M parameters) beat our fine-tuned CNN? | linear probe 0.570 ± 0.037 vs reference 0.655 ± 0.017 | Not better by the rule. | `results/foundation_models.json` |
+| Do extra spectral bands (near- and shortwave infrared, indices) help? | EfficientNet RGB 0.673 ± 0.039; best other input all_bands (13 channels) 0.749 ± 0.014 calibrated, 0.711 ± 0.036 uncalibrated; satellite ResNet-18: sat_all 0.687 ± 0.056 vs its RGB 0.575 ± 0.048 | RGB stays for the site's model (all_bands: fragile by the rule). Extra bands clearly help the satellite-pretrained ResNet, but it still does not beat the EfficientNet. | `results/bands_comparison.json` |
 
 ### 4.4 Change in Ahmedabad, 2018 to 2026
 

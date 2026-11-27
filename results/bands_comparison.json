@@ -1,0 +1,695 @@
+{
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "table": {
+    "rgb": {
+      "arm": "A",
+      "channels": [
+        "B04",
+        "B03",
+        "B02"
+      ],
+      "n_channels": 3,
+      "eurosat_val": {
+        "mean": 0.9922633744855966,
+        "std": 0.0007543334477293801
+      },
+      "eurosat_val_f1": {
+        "mean": 0.9920781453450521,
+        "std": 0.0008733686836710146
+      },
+      "eurosat_val_per_seed": [
+        0.9920987654320987,
+        0.9930864197530864,
+        0.9916049382716049
+      ],
+      "train_seconds_per_seed": [
+        716.9437336921692,
+        1126.0116639137268,
+        1291.4913802146912
+      ],
+      "best_epoch_per_seed": [
+        43,
+        42,
+        49
+      ],
+      "loao": {
+        "calibrated": {
+          "mean": 0.6733780760626398,
+          "std": 0.039325270315988675
+        }
+      },
+      "loao_macro_f1": {
+        "calibrated": {
+          "mean": 0.3975246864020273,
+          "std": 0.022936072314303092
+        }
+      },
+      "loao_per_seed": {
+        "calibrated": [
+          0.7181208053691275,
+          0.6442953020134228,
+          0.6577181208053692
+        ]
+      },
+      "loao_per_area": {
+        "calibrated": {
+          "ahmedabad_city": {
+            "mean": 0.8045977011494253,
+            "std": 0.009954314986027986
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6896551724137931,
+            "std": 0.03448275862068967
+          },
+          "narmada_bharuch": {
+            "mean": 0.543010752688172,
+            "std": 0.09171355972705367
+          }
+        }
+      },
+      "rgb_only_so_calibration_does_not_matter": true
+    },
+    "rgb_nir": {
+      "arm": "A",
+      "channels": [
+        "B04",
+        "B03",
+        "B02",
+        "B08"
+      ],
+      "n_channels": 4,
+      "eurosat_val": {
+        "mean": 0.9939917695473252,
+        "std": 0.0008671319961195678
+      },
+      "eurosat_val_f1": {
+        "mean": 0.9937189420064291,
+        "std": 0.000906283020707614
+      },
+      "eurosat_val_per_seed": [
+        0.9940740740740741,
+        0.9948148148148148,
+        0.9930864197530864
+      ],
+      "train_seconds_per_seed": [
+        1039.5801796913147,
+        739.6261246204376,
+        778.2439286708832
+      ],
+      "best_epoch_per_seed": [
+        49,
+        43,
+        43
+      ],
+      "loao": {
+        "calibrated": {
+          "mean": 0.6442953020134228,
+          "std": 0.05067002976691777
+        },
+        "uncalibrated": {
+          "mean": 0.6375838926174496,
+          "std": 0.037367546059261895
+        }
+      },
+      "loao_macro_f1": {
+        "calibrated": {
+          "mean": 0.4779700254850803,
+          "std": 0.09595375818911622
+        },
+        "uncalibrated": {
+          "mean": 0.4630706168744268,
+          "std": 0.04980486545976604
+        }
+      },
+      "loao_per_seed": {
+        "calibrated": [
+          0.5973154362416108,
+          0.697986577181208,
+          0.6375838926174496
+        ],
+        "uncalibrated": [
+          0.6040268456375839,
+          0.6778523489932886,
+          0.6308724832214765
+        ]
+      },
+      "loao_per_area": {
+        "calibrated": {
+          "ahmedabad_city": {
+            "mean": 0.7873563218390804,
+            "std": 0.055423280235591676
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6206896551724138,
+            "std": 0.03448275862068967
+          },
+          "narmada_bharuch": {
+            "mean": 0.521505376344086,
+            "std": 0.08276776515236911
+          }
+        },
+        "uncalibrated": {
+          "ahmedabad_city": {
+            "mean": 0.7988505747126436,
+            "std": 0.03589079309424368
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6551724137931034,
+            "std": 0.05972588991616817
+          },
+          "narmada_bharuch": {
+            "mean": 0.478494623655914,
+            "std": 0.0917135597270537
+          }
+        }
+      },
+      "rgb_only_so_calibration_does_not_matter": false
+    },
+    "rgb_nir_swir": {
+      "arm": "A",
+      "channels": [
+        "B04",
+        "B03",
+        "B02",
+        "B08",
+        "B11",
+        "B12"
+      ],
+      "n_channels": 6,
+      "eurosat_val": {
+        "mean": 0.9934156378600824,
+        "std": 0.0009978893541548852
+      },
+      "eurosat_val_f1": {
+        "mean": 0.9932162563006083,
+        "std": 0.000960742910263576
+      },
+      "eurosat_val_per_seed": [
+        0.994320987654321,
+        0.9935802469135803,
+        0.9923456790123457
+      ],
+      "train_seconds_per_seed": [
+        1044.3955364227295,
+        1192.3328795433044,
+        1185.091611623764
+      ],
+      "best_epoch_per_seed": [
+        50,
+        39,
+        42
+      ],
+      "loao": {
+        "calibrated": {
+          "mean": 0.6868008948545862,
+          "std": 0.04100738876917982
+        },
+        "uncalibrated": {
+          "mean": 0.6756152125279642,
+          "std": 0.016890009922305903
+        }
+      },
+      "loao_macro_f1": {
+        "calibrated": {
+          "mean": 0.3999777909474636,
+          "std": 0.03418192499099215
+        },
+        "uncalibrated": {
+          "mean": 0.3998631773513791,
+          "std": 0.005105397318178919
+        }
+      },
+      "loao_per_seed": {
+        "calibrated": [
+          0.7315436241610739,
+          0.6510067114093959,
+          0.6778523489932886
+        ],
+        "uncalibrated": [
+          0.6912751677852349,
+          0.6778523489932886,
+          0.6577181208053692
+        ]
+      },
+      "loao_per_area": {
+        "calibrated": {
+          "ahmedabad_city": {
+            "mean": 0.7816091954022989,
+            "std": 0.0199086299720561
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.632183908045977,
+            "std": 0.019908629972056037
+          },
+          "narmada_bharuch": {
+            "mean": 0.6236559139784946,
+            "std": 0.08883178302074357
+          }
+        },
+        "uncalibrated": {
+          "ahmedabad_city": {
+            "mean": 0.8448275862068966,
+            "std": 0.017241379310344807
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6091954022988506,
+            "std": 0.07178158618848737
+          },
+          "narmada_bharuch": {
+            "mean": 0.5483870967741935,
+            "std": 0.04838709677419356
+          }
+        }
+      },
+      "rgb_only_so_calibration_does_not_matter": false
+    },
+    "rgb_indices": {
+      "arm": "A",
+      "channels": [
+        "B04",
+        "B03",
+        "B02",
+        "ndvi",
+        "ndwi",
+        "ndbi"
+      ],
+      "n_channels": 6,
+      "eurosat_val": {
+        "mean": 0.9925925925925926,
+        "std": 0.0006532719286579022
+      },
+      "eurosat_val_f1": {
+        "mean": 0.9923861225446066,
+        "std": 0.0007504906112440356
+      },
+      "eurosat_val_per_seed": [
+        0.9920987654320987,
+        0.9923456790123457,
+        0.9933333333333333
+      ],
+      "train_seconds_per_seed": [
+        1298.2098174095154,
+        1291.2668299674988,
+        1264.2800951004028
+      ],
+      "best_epoch_per_seed": [
+        47,
+        38,
+        42
+      ],
+      "loao": {
+        "calibrated": {
+          "mean": 0.6621923937360179,
+          "std": 0.04045445485464233
+        },
+        "uncalibrated": {
+          "mean": 0.6420581655480985,
+          "std": 0.06722585772401213
+        }
+      },
+      "loao_macro_f1": {
+        "calibrated": {
+          "mean": 0.4032149738639264,
+          "std": 0.08328532686835308
+        },
+        "uncalibrated": {
+          "mean": 0.412197509453554,
+          "std": 0.0708661042134098
+        }
+      },
+      "loao_per_seed": {
+        "calibrated": [
+          0.7046979865771812,
+          0.6241610738255033,
+          0.6577181208053692
+        ],
+        "uncalibrated": [
+          0.7181208053691275,
+          0.5906040268456376,
+          0.6174496644295302
+        ]
+      },
+      "loao_per_area": {
+        "calibrated": {
+          "ahmedabad_city": {
+            "mean": 0.7931034482758621,
+            "std": 0.06216467716317223
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6091954022988506,
+            "std": 0.0199086299720561
+          },
+          "narmada_bharuch": {
+            "mean": 0.564516129032258,
+            "std": 0.14060964334002174
+          }
+        },
+        "uncalibrated": {
+          "ahmedabad_city": {
+            "mean": 0.7988505747126436,
+            "std": 0.05267328385006711
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6436781609195402,
+            "std": 0.07178158618848736
+          },
+          "narmada_bharuch": {
+            "mean": 0.4946236559139785,
+            "std": 0.17396440524046708
+          }
+        }
+      },
+      "rgb_only_so_calibration_does_not_matter": false
+    },
+    "all_bands": {
+      "arm": "A",
+      "channels": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B8A"
+      ],
+      "n_channels": 13,
+      "eurosat_val": {
+        "mean": 0.9939094650205762,
+        "std": 0.0009347997277037341
+      },
+      "eurosat_val_f1": {
+        "mean": 0.9936243295669556,
+        "std": 0.0010520101454044796
+      },
+      "eurosat_val_per_seed": [
+        0.9928395061728396,
+        0.994320987654321,
+        0.994567901234568
+      ],
+      "train_seconds_per_seed": [
+        1243.8876776695251,
+        1289.5466766357422,
+        1297.8654625415802
+      ],
+      "best_epoch_per_seed": [
+        43,
+        49,
+        43
+      ],
+      "loao": {
+        "calibrated": {
+          "mean": 0.7494407158836689,
+          "std": 0.013970912748094831
+        },
+        "uncalibrated": {
+          "mean": 0.7114093959731543,
+          "std": 0.03551344041697438
+        }
+      },
+      "loao_macro_f1": {
+        "calibrated": {
+          "mean": 0.49738317176416885,
+          "std": 0.10834276975838386
+        },
+        "uncalibrated": {
+          "mean": 0.5800412001394223,
+          "std": 0.16623755366919174
+        }
+      },
+      "loao_per_seed": {
+        "calibrated": [
+          0.7449664429530202,
+          0.738255033557047,
+          0.7651006711409396
+        ],
+        "uncalibrated": [
+          0.697986577181208,
+          0.7516778523489933,
+          0.6845637583892618
+        ]
+      },
+      "loao_per_area": {
+        "calibrated": {
+          "ahmedabad_city": {
+            "mean": 0.8275862068965517,
+            "std": 0.04561640191490672
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6666666666666666,
+            "std": 0.0199086299720561
+          },
+          "narmada_bharuch": {
+            "mean": 0.7150537634408602,
+            "std": 0.009312101115961698
+          }
+        },
+        "uncalibrated": {
+          "ahmedabad_city": {
+            "mean": 0.8448275862068966,
+            "std": 0.03448275862068967
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6091954022988506,
+            "std": 0.05267328385006712
+          },
+          "narmada_bharuch": {
+            "mean": 0.6344086021505376,
+            "std": 0.05664329974652011
+          }
+        }
+      },
+      "rgb_only_so_calibration_does_not_matter": false
+    },
+    "sat_rgb": {
+      "arm": "B",
+      "channels": [
+        "B04",
+        "B03",
+        "B02"
+      ],
+      "n_channels": 3,
+      "eurosat_val": {
+        "mean": 0.9865843621399176,
+        "std": 0.0005702224880885371
+      },
+      "eurosat_val_f1": {
+        "mean": 0.9862354000409445,
+        "std": 0.0005786329038462562
+      },
+      "eurosat_val_per_seed": [
+        0.9869135802469136,
+        0.9859259259259259,
+        0.9869135802469136
+      ],
+      "train_seconds_per_seed": [
+        547.6621129512787,
+        544.4056262969971,
+        470.2329149246216
+      ],
+      "best_epoch_per_seed": [
+        50,
+        46,
+        42
+      ],
+      "loao": {
+        "calibrated": {
+          "mean": 0.5749440715883669,
+          "std": 0.0476147576147489
+        }
+      },
+      "loao_macro_f1": {
+        "calibrated": {
+          "mean": 0.3477054089916329,
+          "std": 0.06315664978704708
+        }
+      },
+      "loao_per_seed": {
+        "calibrated": [
+          0.6174496644295302,
+          0.5838926174496645,
+          0.5234899328859061
+        ]
+      },
+      "loao_per_area": {
+        "calibrated": {
+          "ahmedabad_city": {
+            "mean": 0.764367816091954,
+            "std": 0.026336641925033568
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.6551724137931034,
+            "std": 0.059725889916168236
+          },
+          "narmada_bharuch": {
+            "mean": 0.3602150537634409,
+            "std": 0.08276776515236908
+          }
+        }
+      },
+      "rgb_only_so_calibration_does_not_matter": true
+    },
+    "sat_all": {
+      "arm": "B",
+      "channels": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B09",
+        "B10",
+        "B11",
+        "B12"
+      ],
+      "n_channels": 13,
+      "eurosat_val": {
+        "mean": 0.9919341563786008,
+        "std": 0.0014040100501425711
+      },
+      "eurosat_val_f1": {
+        "mean": 0.9915782809257507,
+        "std": 0.0014686610997183026
+      },
+      "eurosat_val_per_seed": [
+        0.9923456790123457,
+        0.9930864197530864,
+        0.9903703703703703
+      ],
+      "train_seconds_per_seed": [
+        723.0288932323456,
+        768.3353679180145,
+        756.9005761146545
+      ],
+      "best_epoch_per_seed": [
+        48,
+        40,
+        40
+      ],
+      "loao": {
+        "calibrated": {
+          "mean": 0.6868008948545862,
+          "std": 0.05628521532621534
+        },
+        "uncalibrated": {
+          "mean": 0.7046979865771812,
+          "std": 0.030755541576884836
+        }
+      },
+      "loao_macro_f1": {
+        "calibrated": {
+          "mean": 0.43943499852847384,
+          "std": 0.0645624182583291
+        },
+        "uncalibrated": {
+          "mean": 0.2906052697568091,
+          "std": 0.014786586850473177
+        }
+      },
+      "loao_per_seed": {
+        "calibrated": [
+          0.6577181208053692,
+          0.6510067114093959,
+          0.7516778523489933
+        ],
+        "uncalibrated": [
+          0.7315436241610739,
+          0.6711409395973155,
+          0.7114093959731543
+        ]
+      },
+      "loao_per_area": {
+        "calibrated": {
+          "ahmedabad_city": {
+            "mean": 0.8390804597701149,
+            "std": 0.06968020490219623
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.5517241379310345,
+            "std": 0.09123280382981344
+          },
+          "narmada_bharuch": {
+            "mean": 0.6075268817204301,
+            "std": 0.08276776515236908
+          }
+        },
+        "uncalibrated": {
+          "ahmedabad_city": {
+            "mean": 0.7701149425287357,
+            "std": 0.0717815861884873
+          },
+          "ankleshwar_industrial": {
+            "mean": 0.5402298850574713,
+            "std": 0.019908629972056037
+          },
+          "narmada_bharuch": {
+            "mean": 0.7204301075268817,
+            "std": 0.009312101115961698
+          }
+        }
+      },
+      "rgb_only_so_calibration_does_not_matter": false
+    }
+  },
+  "decision": {
+    "A": {
+      "reference": "rgb",
+      "verdicts": {
+        "rgb_nir": "no clear gain",
+        "rgb_nir_swir": "no clear gain",
+        "rgb_indices": "no clear gain",
+        "all_bands": "fragile"
+      },
+      "reasons": {
+        "rgb_nir": [
+          "India gain, calibrated: no",
+          "India gain, uncalibrated: no",
+          "EuroSAT val clearly worse: no"
+        ],
+        "rgb_nir_swir": [
+          "India gain, calibrated: no",
+          "India gain, uncalibrated: no",
+          "EuroSAT val clearly worse: no"
+        ],
+        "rgb_indices": [
+          "India gain, calibrated: no",
+          "India gain, uncalibrated: no",
+          "EuroSAT val clearly worse: no"
+        ],
+        "all_bands": [
+          "India gain, calibrated: yes",
+          "India gain, uncalibrated: no",
+          "EuroSAT val clearly worse: no"
+        ]
+      },
+      "kept": "rgb"
+    },
+    "B": {
+      "reference": "sat_rgb",
+      "verdicts": {
+        "sat_all": "keep"
+      },
+      "reasons": {
+        "sat_all": [
+          "India gain, calibrated: yes",
+          "India gain, uncalibrated: yes",
+          "EuroSAT val clearly worse: no"
+        ]
+      },
+      "kept": "sat_all"
+    }
+  }
+}

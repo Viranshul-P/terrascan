@@ -101,6 +101,7 @@ def test_bands_row_names_the_best_other_input_and_the_decision():
                    "all_bands": {"loao": {"calibrated": ms(0.60)}, "n_channels": 13}},
          "decision": {"A": {"reference": "rgb", "verdicts": {"rgb_nir": "x", "all_bands": "y"},
                             "kept": "rgb"}}}
+    r["decision"]["A"]["verdicts"] = {"rgb_nir": "no clear gain", "all_bands": "fragile"}
     row = bands_row(r)
-    assert "rgb_nir, 4 channels" in row["result"]
-    assert row["decision"].startswith("No: RGB stays (2 other")
+    assert "best other input rgb_nir (4 channels) 0.660" in row["result"]
+    assert row["decision"] == "RGB stays for the site's model (rgb_nir: no clear gain by the rule)."

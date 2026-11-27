@@ -10,9 +10,10 @@ done
 <!-- one of: not started | in progress | waiting on you | done -->
 
 ## Waiting on you
-(nothing). Optional, only if the project is ever picked up again: 8.3b was stopped half-way (see Wrap-up). To continue it, run
-`.venv\Scripts\python.exe -u -m src.bands_train --config configs/bands_compare.yaml --runs rgb rgb_nir rgb_nir_swir rgb_indices all_bands sat_rgb sat_all > logs\bands_resume.log 2>&1`
-(about 4 hours; it skips finished pieces), then `python -m src.bands_report --config configs/bands_compare.yaml`.
+1. Read `reports/writeup.md` (step 6.4 draft, written by Claude). If you are happy with it, rewrite it in your own voice and post
+   it yourself (DEV / Medium / Hashnode). Nothing has been posted.
+2. Optional, only if you want the multi-city study (8.7/8.8): it needs new human-reviewed labels in other cities. Tell Claude
+   and it will propose cities and a labelling plan for you to review.
 The 5.3d friends test (3 people, no explaining; then fix the top 3 problems) was deferred and is not planned any more.
 Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" bug), so packages are added with
 `npx -y npm@11.21.1 install ...`; plain `npm ci` works fine.
@@ -55,7 +56,7 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [x] 8.1 Error audit (effort: medium)
 - [x] 8.2 Class scheme (medium)
 - [x] 8.3a Spectral bands: data + code (HIGH; split from 8.3 on 2026-11-08, user OK'd)
-- [ ] 8.3b Spectral bands: comparison + decision (HIGH)  <!-- STOPPED half-way 2026-11-09; RESUMED 2026-11-26 by Claude (user: "complete the project"), running -->
+- [x] 8.3b Spectral bands: comparison + decision (HIGH)  <!-- done 2026-11-27 by Claude: RGB stays (all_bands 'fragile'); arm B sat_all kept within its arm, does not beat arm A -->
 - [x] 8.4 Noisy labels at scale (medium)  <!-- done 2026-11-26 by Claude: WorldCover tier-2 HURT (0.575 vs 0.655), hand-only kept -->
 - [x] 8.5 Satellite foundation model (HIGH)  <!-- done 2026-11-26 by Claude: frozen Prithvi-EO-2.0 probe 0.570 vs 0.655, not better -->
 - [x] 8.6 Other ways to improve accuracy (medium)  <!-- 2026-11-26/27 by Claude: d, e, c run, none kept; a, b not run (no data) -->
@@ -63,10 +64,10 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - [-] 8.8 Final evaluation (HIGH)  <!-- not done: wrapped up -->
 - [x] 8.9 Optional extension: surface temperature (medium)  <!-- done 2026-11-26 by Claude, EXTENSION only -->
 - [-] 8.10 Website update (medium)  <!-- not done: wrapped up (only the one-line model note was added) -->
-- [~] 8.11 Technical report draft (medium)  <!-- generator + draft 2026-11-26; regenerated when 8.3b ends -->
+- [x] 8.11 Technical report draft (medium)  <!-- done 2026-11-27 by Claude: reports/technical_report.md, generated from results/ -->
 - [x] 8.12 Run it on a new area (CLI or notebook) (medium)  <!-- done 2026-11-26 by Claude -->
 - [x] 6.3 README (done 2026-11-09 after the wrap-up decision; Phase 8 results are NOT in it, see Wrap-up)
-- [-] 6.4 Short technical write-up  <!-- SKIPPED: project wrapped up as a portfolio piece -->
+- [~] 6.4 Short technical write-up  <!-- draft 2026-11-27 by Claude: reports/writeup.md; WAITING ON YOU to read, approve and post -->
 - [x] 7.1 Open-source polish  <!-- done 2026-11-26 by Claude: CITATION.cff, CONTRIBUTING.md, issue templates, good first issues, badges, licence links -->
 - [-] 7.2 Launch  <!-- SKIPPED: project wrapped up as a portfolio piece -->
 - [-] 9.1 Optional, last: live "Map your own area" API  <!-- not done -->
@@ -134,6 +135,8 @@ Note for adding npm packages: npm 10.9.2 crashes when adding vitest ("edgesOut" 
 - Follow-up polish (2026-11-25/26, Claude): Story "Map any place" section (replay of real model output from overlay_2026.png, parity badge read from live.json, "Try it" opens /explorer?area=1); Explorer first-visit tips card, year-switch scan line, shared links start on the city (headless load 1.3 s, web/scripts/time-explorer.mjs), highlighted "Map your own area" entry; picture reads in 128 KB blocks (120 -> 45 requests per year, web/scripts/count-reads.mjs), parity re-run still 272/272, median box-year 7.4 s (results/browser_parity.json). Lighthouse 12.0.0 mobile, front page, 3 runs: performance 89 / 95 / 92, accessibility 100, best practices 100, simulated LCP 2.73-2.84 s, CLS 0.001 (reports/design/polish-2026-11/lighthouse.json). Commit 101a397 failed typecheck (fixed in d5e7664).
 
 - Engineering page (2026-11-26, Claude): /engineering shows the three pipelines (train, precomputed maps, live in-browser), six hard problems each with its evidence file, the evaluation rules and the stack; numbers come from story.json's new "engineering" block (src/web_story.py, from results/onnx_check.json, browser_parity.json, imagery_calibration.json, india_dataset.json). README gained "Technical highlights" (generated). Header has four links (GitHub icon hidden under 420 px). 8.3b band comparison resumed with the command in "Waiting on you" (logs/bands_resume.log, ~23 s per epoch, so about 6-7 h, not 4).
+
+- Phase 8 finished (2026-11-26/27, Claude; user: "complete the project"): 8.3b (results/bands_comparison.md: arm A RGB stays, all_bands 0.749 +- 0.014 calibrated but 0.711 +- 0.036 uncalibrated = "fragile"; arm B sat_all 0.687 +- 0.056 kept over sat_rgb 0.575 +- 0.048 but not better than arm A's RGB 0.673 +- 0.039 by the rule), 8.4 (WorldCover tier 2 hurts), 8.5 (frozen Prithvi probe not better), 8.6 (TTA, seed ensemble, pseudo-labels: none kept), 8.9 (LST extension), 8.11 (technical report), 8.12 (CLI), 7.1, 6.4 draft. Not done: 8.7/8.8 (need new tier-1 labels in other cities, user's review), 8.10 (no new best model to deploy), 8.6 a/b (no data). The site's model is unchanged.
 
 - Wrap-up (2026-11-09, user's decision: "wrapping TerraScan up as a finished portfolio project. No new models or experiments"):
   (1) `git push origin main` (3fc119c..bf3408b); (2) one-line note on the Explorer map: "Model predictions. Accuracy on Indian data: 68% ± 3 (81 test patches). Some areas are mislabelled." (web/src/lib/story.ts `modelNote`, read from web/public/data/story.json = results/india_after.json; 1 new web test, 83 pass, tsc clean; checked on screen at desktop and phone size);

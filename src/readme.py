@@ -155,9 +155,18 @@ def build_readme_numbers(cfg):
             "ft_areas": ", ".join(after["finetune_areas"]),
             "test_areas": ", ".join(after["test_areas"]),
             **parity_numbers(),
+            "phase8_table": phase8_table(),
         }
     )
     return n
+
+
+def phase8_table():
+    """Phase 8 rows, shared with the website and the technical report (src/web_story.py)."""
+    from src.web_story import experiments
+    rows = experiments()
+    return "\n".join(f"| {r['question']} | {r['result']} | {r['decision']} | `{r['source']}` |"
+                     for r in rows if "Extension" not in r["question"])
 
 
 def parity_numbers():

@@ -161,17 +161,27 @@ def experiments():
 
 
 def bands_row(r):
-    """The band comparison (8.3b): arm A's reference vs its best other input, and the decision."""
-    t, d = r["table"], r["decision"]["A"]
-    ref = d["reference"]
-    others = [k for k in d["verdicts"]]
-    best = max(others, key=lambda k: t[k]["loao"]["calibrated"]["mean"])
-    kept = d["kept"]
+    """The band comparison (8.3b): each arm's reference, best other input and verdict."""
+    t, dec = r["table"], r["decision"]
+    a = dec["A"]
+    best = max(a["verdicts"], key=lambda k: t[k]["loao"]["calibrated"]["mean"])
+    loao = t[best]["loao"]
+    parts = [f"EfficientNet RGB {ms(t[a['reference']]['loao']['calibrated'])}; best other input "
+             f"{best} ({t[best]['n_channels']} channels) {ms(loao['calibrated'])} calibrated"
+             + (f", {ms(loao['uncalibrated'])} uncalibrated" if "uncalibrated" in loao else "")]
+    b = dec.get("B")
+    if b and b["kept"] != b["reference"]:
+        k = b["kept"]
+        parts.append(f"satellite ResNet-18: {k} {ms(t[k]['loao']['calibrated'])} vs its RGB "
+                     f"{ms(t[b['reference']]['loao']['calibrated'])}")
+    verdict = a["verdicts"][best]
+    decision = (f"RGB stays for the site's model ({best}: {verdict} by the rule)."
+                if a["kept"] == a["reference"] else f"Better by the rule: {a['kept']} is kept.")
+    if b and b["kept"] != b["reference"]:
+        decision += (" Extra bands clearly help the satellite-pretrained ResNet, but it still"
+                     " does not beat the EfficientNet.")
     return {"question": "Do extra spectral bands (near- and shortwave infrared, indices) help?",
-            "result": f"RGB {ms(t[ref]['loao']['calibrated'])}; best other input ({best}, "
-                      f"{t[best]['n_channels']} channels) {ms(t[best]['loao']['calibrated'])}",
-            "decision": (f"No: RGB stays ({len(others)} other inputs tried)." if kept == ref
-                         else f"Better by the rule: {kept} is kept."),
+            "result": "; ".join(parts), "decision": decision,
             "source": "results/bands_comparison.json"}
 
 
